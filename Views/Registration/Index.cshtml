@@ -4,26 +4,33 @@
 
 <div>
     <div class="container">
-        <div class="p-5">
+        <div class="registration-container p-5 container">
 
             <p class="h4">Registrera dig hos Sinder</p>
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Email</span>
+                    <span class="input-group-text"><span class="fas fa-envelope fa-lg"></span> </span>
                 </div>
                 <input type="text" class="form-control" name="email" placeholder="email" aria-label="email" aria-describedby="email">
             </div>
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1"><span class="fa fa-passport"></span>$</span>
+                    <span class="input-group-text"><span class="fas fa-lock fa-lg"></span> </span>
                 </div>
-                <input type="password" class="form-control" name="password" aria-label="password" aria-describedby="password">
+                <input type="password" class="form-control" name="password" placeholder="lösenord" aria-label="password" aria-describedby="password">
             </div>
 
             <div class="input-group mb-3">
-                <button  type="submit" class="btn btn-primary">Registrera</button>
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><span class="fas fa-camera-retro fa-lg"></span></span>
+                </div>
+                <input type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.tif,.tiff,.bmp">
+            </div>
+
+            <div class="input-group mb-3 d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary btn-lg">Registrera</button>
             </div>
 
         </div>
@@ -32,12 +39,14 @@
 
 <script>
 
-    var [email, password] = [...document.querySelectorAll('input[name]')]
+    var [email, password, image] = [...document.querySelectorAll('input[name]')].map(el => el.value)
     var submitButton = document.querySelector('button[type="submit"]')
 
     submitButton.addEventListener('click', (ev) => {
         // { Email: 'user@email.com', Password: 'passypassy' }
-        var dataToSend = { Password: password.value, Email: email.value }
+        var dataToSend = { Password: password, Email: email, Image: image }
+
+        // todo; email, image and name validations
 
         fetch('/api/register', {
             method: 'POST',
@@ -56,8 +65,5 @@
             })
             .catch(err => console.log(err));
     })
-
-
-    
 
 </script>

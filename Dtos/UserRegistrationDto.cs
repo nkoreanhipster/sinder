@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sinder
 {
-    public class UserRegistrationModel
+    public class UserRegistrationDto
     {
         [Required]
         [EmailAddress]

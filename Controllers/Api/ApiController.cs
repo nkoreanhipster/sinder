@@ -44,17 +44,14 @@ namespace Sinder.Controllers
         // POST api/[type]
         [HttpPost("{type}")]
         [Produces("application/json")]
-        public async  Task<IActionResult> Post(string type, [FromBody] UserRegistrationModel user )
+        public async  Task<IActionResult> Post(string type, [FromBody] UserRegistrationDto user )
         {
             bool result = false;
             switch (type)
             {
                 case "login":
-                    
                     break;
                 case "register":
-                    var UserPasswords = PasswordHelper.GetPassword(user.Password);
-                    await AddNewUser(user ,UserPasswords.passwordhash, UserPasswords.salt);
                     break;
                 case "search":
                     break;
@@ -68,17 +65,7 @@ namespace Sinder.Controllers
             });
         }
 
-        private async Task AddNewUser(UserRegistrationModel user ,byte[] passwordHash, byte[] salt)
-        {
-            UserModel newUser = new UserModel();
-            newUser.Email = user.Email;
-            newUser.Firstname = user.FirstName;
-            newUser.Surname = user.Surname;
-            newUser.Age = user.Age;
-            newUser.Gender = user.Gender;
-            newUser.HashedPassword = passwordHash;
-            newUser.Salt = salt;
-        }
+        
 
         //// PUT api/<ApiController>/5
         //[HttpPut("{id}")]

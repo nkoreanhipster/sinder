@@ -55,7 +55,17 @@ namespace Sinder
         {
             using (var connection = CreateDBConnection())
             {
-                //connection.QueryAsync<UserModel>
+                await connection.ExecuteAsync($"INSERT INTO Users (Email, Firstname, Surname, Location, Age, HashedPassword, Salt, Gender) " +
+                    $"Values (@Email, @Firstname, @Surname, @Location, @Age, @HashedPassword, @Salt, @Gender);", user);
+            }
+        }
+
+        public async Task<List<UserModel>> ReadUsers(string email)
+        {
+            using(var connection = CreateDBConnection())
+            {
+                var users = (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Email = Users.Email", new { Email = email })).ToList();
+                return users;
             }
         }
         #endregion

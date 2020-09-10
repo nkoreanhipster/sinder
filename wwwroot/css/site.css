@@ -1,1 +1,7 @@
-﻿
+﻿.registration-container {
+    max-width: 450px;
+}
+
+input.form-control[name] {
+    max-width: 400px;
+}

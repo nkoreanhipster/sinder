@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Westwind.AspNetCore.LiveReload;
+//using Westwind.AspNetCore.LiveReload;
 
 namespace Sinder
 {
@@ -26,7 +26,7 @@ namespace Sinder
         {
             services.AddControllersWithViews();
             // Live reload config
-            services.AddLiveReload();
+            //services.AddLiveReload();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -95,7 +95,7 @@ namespace Sinder
             });
 
             // Live reload config
-            app.UseLiveReload();
+            //app.UseLiveReload();
         }
     }
 }

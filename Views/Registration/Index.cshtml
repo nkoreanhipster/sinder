@@ -17,9 +17,23 @@
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
+                    <span class="input-group-text"><span class="fas fa-envelope fa-lg"></span> </span>
+                </div>
+                <input type="text" class="form-control" name="firstname" placeholder="firstname" aria-label="firstname" aria-describedby="firstname">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><span class="fas fa-envelope fa-lg"></span> </span>
+                </div>
+                <input type="text" class="form-control" name="surname" placeholder="surname" aria-label="surname" aria-describedby="surname">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
                     <span class="input-group-text"><span class="fas fa-lock fa-lg"></span> </span>
                 </div>
-                <input type="password" class="form-control" name="password" placeholder="lösenord" aria-label="password" aria-describedby="password">
+                <input type="password" minlength="6" maxlength="20" class="form-control" name="password" placeholder="lösenord" aria-label="password" aria-describedby="password">
             </div>
 
             <div class="input-group mb-3">
@@ -36,6 +50,20 @@
                 <input type="number" name="image" min="18" max="99" value="18">
             </div>
 
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><span class="fas fa-envelope fa-lg"></span> </span>
+                </div>
+                <input type="text" class="form-control" name="gender" placeholder="gender" aria-label="gender" aria-describedby="gender">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><span class="fas fa-envelope fa-lg"></span> </span>
+                </div>
+                <input type="text" class="form-control" name="location" placeholder="location" aria-label="location" aria-describedby="location">
+            </div>
+
             <div class="input-group mb-3 d-flex justify-content-center">
                 <button type="submit" class="btn btn-primary btn-lg">Registrera</button>
             </div>
@@ -46,13 +74,26 @@
 
 <script>
 
-    var [email, password, image] = [...document.querySelectorAll('input[name]')].map(el => el.value)
+    
     var submitButton = document.querySelector('button[type="submit"]')
 
     submitButton.addEventListener('click', (ev) => {
-        // { Email: 'user@email.com', Password: 'passypassy' }
-        var dataToSend = { Password: password, Email: email, Image: image }
 
+        var [email, firstName, surName, password, image, age, gender, location] = [...document.querySelectorAll('input[name]')].map(el => el.value)
+
+        // { Email: 'user@email.com', Password: 'passypassy' }
+        var dataToSend = {
+            Password: password,
+            Firstname: firstName,
+            Surname:surName,
+            Email: email,
+            Image: image,
+            Age: Math.trunc(age) || 18,
+            Gender: gender,
+            Location:location
+        }
+
+        console.log("dataToSend", dataToSend)
         // todo; email, image and name validations
 
         fetch('/api/register', {

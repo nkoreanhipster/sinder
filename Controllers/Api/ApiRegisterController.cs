@@ -10,7 +10,7 @@ using Sinder.Helpers;
 
 namespace Sinder.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/register")]
     [ApiController]
     public class ApiRegisterController : ControllerBase
     {

@@ -13,8 +13,8 @@ namespace Sinder
         public string Surname { get; set; }
         public string Location { get; set; }
         public int Age { get; set; }
-        public string HashedPassword { get; set; }
-        public string Salt { get; set; }
+        public byte[] HashedPassword { get; set; }
+        public byte[] Salt { get; set; }
         public string Gender { get; set; }
     }
 }

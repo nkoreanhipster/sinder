@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Sinder.Helpers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -43,8 +44,9 @@ namespace Sinder.Controllers
         // POST api/[type]
         [HttpPost("{type}")]
         [Produces("application/json")]
-        public IActionResult Post(string type, [FromBody] UserModel userModel)
+        public async  Task<IActionResult> Post(string type, [FromBody] UserRegistrationDto user )
         {
+            bool result = false;
             switch (type)
             {
                 case "login":
@@ -57,11 +59,13 @@ namespace Sinder.Controllers
                     break;
             }
 
-            return new JsonResult(new ResponseModel { Status = "Success", Message = "Användaren är nu registrerad" }, new JsonSerializerOptions
+            return new JsonResult(new ResponseModel { Status = result.ToString(), Message = "Användaren är nu registrerad" }, new JsonSerializerOptions
             {
                 WriteIndented = true,
             });
         }
+
+        
 
         //// PUT api/<ApiController>/5
         //[HttpPut("{id}")]

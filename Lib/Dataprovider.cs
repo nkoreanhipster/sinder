@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 
 namespace Sinder
 {
@@ -19,7 +20,7 @@ namespace Sinder
 
         /// To ensure it's thread safe and constructor only returns a single instance; null check and lock to enforce a single thread
         public static Dataprovider Instance { get { lock (padlock) { return instance ?? new Dataprovider(); } } }
-        public MySqlConnection GetDBConnection() => con;
+        public MySqlConnection CreateDBConnection() => con;
 
         #region Methods
         /// <summary>
@@ -31,7 +32,7 @@ namespace Sinder
             bool isSuccess = true;
             try
             {
-                MySqlConnection c = GetDBConnection();
+                MySqlConnection c = CreateDBConnection();
                 c.Open();
                 string query = "SELECT Value FROM Log;";
                 MySqlCommand cmd = new MySqlCommand(query, c);
@@ -48,6 +49,14 @@ namespace Sinder
                 isSuccess = false;
             }
             return isSuccess;
+        }
+
+        public async Task RegisterNewUser(UserModel user)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                //connection.QueryAsync<UserModel>
+            }
         }
         #endregion
     }

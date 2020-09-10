@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Sinder.Helpers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -43,13 +44,17 @@ namespace Sinder.Controllers
         // POST api/[type]
         [HttpPost("{type}")]
         [Produces("application/json")]
-        public IActionResult Post(string type, [FromBody] UserModel userModel)
+        public async  Task<IActionResult> Post(string type, [FromBody] UserRegistrationModel user )
         {
+            bool result = false;
             switch (type)
             {
                 case "login":
+                    
                     break;
                 case "register":
+                    var UserPasswords = PasswordHelper.GetPassword(user.Password);
+                    await AddNewUser(user ,UserPasswords.passwordhash, UserPasswords.salt);
                     break;
                 case "search":
                     break;
@@ -57,10 +62,22 @@ namespace Sinder.Controllers
                     break;
             }
 
-            return new JsonResult(new ResponseModel { Status = "Success", Message = "Användaren är nu registrerad" }, new JsonSerializerOptions
+            return new JsonResult(new ResponseModel { Status = result.ToString(), Message = "Användaren är nu registrerad" }, new JsonSerializerOptions
             {
                 WriteIndented = true,
             });
+        }
+
+        private async Task AddNewUser(UserRegistrationModel user ,byte[] passwordHash, byte[] salt)
+        {
+            UserModel newUser = new UserModel();
+            newUser.Email = user.Email;
+            newUser.Firstname = user.FirstName;
+            newUser.Surname = user.Surname;
+            newUser.Age = user.Age;
+            newUser.Gender = user.Gender;
+            newUser.HashedPassword = passwordHash;
+            newUser.Salt = salt;
         }
 
         //// PUT api/<ApiController>/5

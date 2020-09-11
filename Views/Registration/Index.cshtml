@@ -2,13 +2,77 @@
     ViewData["Title"] = "Registrera dig";
 }
 
-<div>
-    <div class="container">
+@* Register boxes *@
+<article class="card-body mx-auto" style="max-width: 400px;">
+    <p class="h4 m-md-4 text-center">Registrera dig hos Sinder</p>
+    <form>
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fas fa-envelope" style=" color: #eb6864"></i> </span>
+            </div>
+            <input type="text" name="email" class="form-control" placeholder="Email">
+        </div>
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fas fa-signature" style=" color: #eb6864"></i> </span>
+            </div>
+            <input type="text" name="firstname" class="form-control" placeholder="Förnamn">
+            <input type="text" name="surname" class="form-control ml-1" placeholder="Efternamn">
+        </div>
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fas fa-clock" style=" color: #eb6864"></i> </span>
+            </div>
+            <input type="date" name="age" class="form-control" placeholder="Ålder">
+        </div>
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fas fa-venus-mars" style=" color: #eb6864"></i> </span>
+            </div>
+            <input type="text" name="gender" class="form-control" placeholder="Kön">
+        </div>
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fas fa-map-marker-alt" style=" color: #eb6864"></i> </span>
+            </div>
+            <input type="text" name="location" class="form-control" placeholder="Stad">
+        </div>
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fas fa-camera-retro" style=" color: #eb6864"></i> </span>
+            </div>
+            <input type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.tif,.tiff,.bmp">
+        </div>
+
+
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fas fa-lock" style=" color: #eb6864"></i> </span>
+            </div>
+            <input type="password" name="password" class="form-control" placeholder="Lösenord">
+        </div>
+        <div class="form-group input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"> <i class="fas fa-lock" style=" color: #eb6864"></i> </span>
+            </div>
+            <input type="password" name="confirm-password" class="form-control" placeholder="Bekräfta Lösenord">
+        </div>
+        @* Button submit *@
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary btn-block"> Registrera  </button>
+        </div>
+    </form>
+</article>
+
+
+
+@*<div>
+    <div class="container row-6">
         <div class="registration-container p-5 container">
 
             <p class="h4">Registrera dig hos Sinder</p>
 
-            <div class="input-group mb-lg-10 mb-md-7 mb-sm-4">
+            <div class="input-group row-1">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><span class="fas fa-envelope fa-lg" style=" color: #eb6864"></span> </span>
                 </div>
@@ -70,7 +134,7 @@
 
         </div>
     </div>
-</div>
+</div>*@
 
 <script>
 
@@ -78,23 +142,28 @@
     var submitButton = document.querySelector('button[type="submit"]')
 
     submitButton.addEventListener('click', (ev) => {
-
-        var [email, firstName, surName, password, image, age, gender, location] = [...document.querySelectorAll('input[name]')].map(el => el.value)
-
+        ev.preventDefault()
+        var [email, firstname, surname, age, gender, location, image, password, confirmPassword] = [...document.querySelectorAll('input[name]')].map(el => el.value)
+    console.log(age)
         // { Email: 'user@email.com', Password: 'passypassy' }
         var dataToSend = {
             Password: password,
-            Firstname: firstName,
-            Surname:surName,
+            Firstname: firstname,
+            Surname:surname,
             Email: email,
             Image: image,
-            Age: Math.trunc(age) || 18,
+            Age: new Date(age),
             Gender: gender,
             Location:location
         }
 
         console.log("dataToSend", dataToSend)
         // todo; email, image and name validations
+
+        if (confirmPassword !== password) {
+            alert("Lösenord stämmer inte överens")
+            return;
+        }
 
         fetch('/api/register', {
             method: 'POST',

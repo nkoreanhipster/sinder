@@ -5,3 +5,7 @@
 input.form-control[name] {
     max-width: 400px;
 }
+
+span.input-group-text {
+    width: 50px;
+}

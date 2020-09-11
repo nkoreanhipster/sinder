@@ -72,6 +72,10 @@ input.form-control[name] {
     max-width: 400px;
 }
 
+span.input-group-text {
+    width: 50px;
+}
+
 /*Aniamtions for -> #toastbox*/
 #toast_box {
     transition: width 250ms, height 250ms, background-color 250ms, transform 250ms;

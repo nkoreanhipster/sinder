@@ -30,9 +30,8 @@ namespace Sinder
 
         public string Location { get; set; }
 
-        [Required(ErrorMessage ="Du måste fylla i ålder")]
-        [Range(18,100, ErrorMessage ="Ålder måste vara mellan 18-100 år")]
-        public int Age { get; set; }
+        //[Required]
+        public DateTime Age { get; set; }
 
         [Required(ErrorMessage ="Felaktig inmatning vid kön")]
         [RegularExpression(@"[Mm]an|[Kk]vinna|[Aa]nnat", ErrorMessage = "Felaktig inmatning vid kön")]

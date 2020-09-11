@@ -10,7 +10,7 @@ using Sinder.Helpers;
 
 namespace Sinder.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/login")]
     [ApiController]
     public class ApiLoginController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace Sinder.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "value5", "value2" };
         }
 
         // GET api/<ApiLoginController>/5
@@ -33,7 +33,7 @@ namespace Sinder.Controllers
         public async Task<IActionResult> Post([FromBody] UserLoginDto userLogin)
         {
             var Users = await Dataprovider.Instance.ReadUsers(userLogin.Email);
-
+            
             if (Users.Count < 1)
             {
                 return Unauthorized("Incorrect email");

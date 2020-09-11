@@ -59,7 +59,7 @@ namespace Sinder.Controllers
                     break;
             }
 
-            return new JsonResult(new ResponseModel { Status = result.ToString(), Message = "Användaren är nu registrerad" }, new JsonSerializerOptions
+            return new JsonResult(new ResponseModel { Status = result.ToString(), Message = "I AM GENERIC, WHO U" }, new JsonSerializerOptions
             {
                 WriteIndented = true,
             });

@@ -3,7 +3,7 @@
 }
 
 @* Register boxes *@
-<article class="card-body mx-auto" style="max-width: 400px;">
+<article id="page_register" class="card-body mx-auto" style="max-width: 400px;">
     <p class="h4 m-md-4 text-center">Registrera dig hos Sinder</p>
     <form>
         <div class="form-group input-group">
@@ -43,8 +43,6 @@
             </div>
             <input type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.tif,.tiff,.bmp">
         </div>
-
-
         <div class="form-group input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fas fa-lock" style=" color: #eb6864"></i> </span>
@@ -64,101 +62,25 @@
     </form>
 </article>
 
-
-
-@*<div>
-    <div class="container row-6">
-        <div class="registration-container p-5 container">
-
-            <p class="h4">Registrera dig hos Sinder</p>
-
-            <div class="input-group row-1">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><span class="fas fa-envelope fa-lg" style=" color: #eb6864"></span> </span>
-                </div>
-                <input type="text" class="form-control" name="email" placeholder="email" aria-label="email" aria-describedby="email">
-            </div>
-
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><span class="fas fa-signature fa-lg" style=" color: #eb6864"></span> </span>
-                </div>
-                <input type="text" class="form-control" name="firstname" placeholder="firstname" aria-label="firstname" aria-describedby="firstname">
-            </div>
-
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><span class="fas fa-signature fa-lg" style=" color: #eb6864"></span> </span>
-                </div>
-                <input type="text" class="form-control" name="surname" placeholder="surname" aria-label="surname" aria-describedby="surname">
-            </div>
-
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><span class="fas fa-lock fa-lg" style=" color: #eb6864"></span> </span>
-                </div>
-                <input type="password" minlength="6" maxlength="20" class="form-control" name="password" placeholder="lösenord" aria-label="password" aria-describedby="password">
-            </div>
-
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><span class="fas fa-camera-retro fa-lg" style=" color: #eb6864"></span></span>
-                </div>
-                <input type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.tif,.tiff,.bmp">
-            </div>
-
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><span class="fas fa-clock fa-lg" style=" color: #eb6864"></span></span>
-                </div>
-                <input type="number" name="image" min="18" max="99" value="18">
-            </div>
-
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><span class="fas fa-venus-mars fa-lg" style=" color: #eb6864"></span> </span>
-                </div>
-                <input type="text" class="form-control" name="gender" placeholder="gender" aria-label="gender" aria-describedby="gender">
-            </div>
-
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><span class="fas fa-map-marker fa-lg" style=" color: #eb6864"></span> </span>
-                </div>
-                <input type="text" class="form-control" name="location" placeholder="location" aria-label="location" aria-describedby="location">
-            </div>
-
-            <div class="input-group mb-3 d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary btn-lg">Registrera</button>
-            </div>
-
-        </div>
-    </div>
-</div>*@
-
 <script>
 
-    
     var submitButton = document.querySelector('button[type="submit"]')
 
     submitButton.addEventListener('click', (ev) => {
         ev.preventDefault()
         var [email, firstname, surname, age, gender, location, image, password, confirmPassword] = [...document.querySelectorAll('input[name]')].map(el => el.value)
-    console.log(age)
+
         // { Email: 'user@email.com', Password: 'passypassy' }
         var dataToSend = {
             Password: password,
             Firstname: firstname,
-            Surname:surname,
+            Surname: surname,
             Email: email,
             Image: image,
             Age: new Date(age),
             Gender: gender,
-            Location:location
+            Location: location
         }
-
-        console.log("dataToSend", dataToSend)
-        // todo; email, image and name validations
 
         if (confirmPassword !== password) {
             alert("Lösenord stämmer inte överens")

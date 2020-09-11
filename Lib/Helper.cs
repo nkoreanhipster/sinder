@@ -13,5 +13,6 @@ namespace Sinder
     {
         public static string GetConnectionString() => ConfigurationManager.ConnectionStrings["tjackobacco.com"].ConnectionString;
         public static string GetConnectionString(string name) => ConfigurationManager.ConnectionStrings[name].ConnectionString;
+        public static string GetSecretApiKey() => ConfigurationManager.AppSettings["secret"];
     }
 }

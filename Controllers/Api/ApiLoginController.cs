@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Renci.SshNet.Messages.Authentication;
@@ -33,18 +34,35 @@ namespace Sinder.Controllers
         public async Task<IActionResult> Post([FromBody] UserLoginDto userLogin)
         {
             var Users = await Dataprovider.Instance.ReadUsers(userLogin.Email);
-            
+            bool isSuccess = true;
+            string status = null;
+            string message = null;
+            string token = null;
+
             if (Users.Count < 1)
             {
-                return Unauthorized("Incorrect email");
+                isSuccess = false;
+                status = "Fail";
+                message = "Incorrect email";
+
             }
-            if (!PasswordHelper.VerifyPasswordHash(userLogin.Password, Users[0].HashedPassword, Users[0].Salt))
+            if (!SecurityHelper.VerifyPasswordHash(userLogin.Password, Users[0].HashedPassword, Users[0].Salt))
             {
-                return Unauthorized("Incorrect password");
+                isSuccess = false;
+                status = "Fail";
+                message = "Incorrect password";
             }
 
-            return Accepted("Welcome");
+            // If success, generate JWT token
+            if (isSuccess)
+            {
+                token = SecurityHelper.GenerateToken();
+            }
 
+            return new JsonResult(new ResponseModel { Status = status, Message = message, Token = token, IsSuccess = isSuccess }, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            });
         }
 
         // PUT api/<ApiLoginController>/5

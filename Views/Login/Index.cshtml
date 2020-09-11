@@ -58,12 +58,13 @@
             })
                 .then(res => {
                     if (res.ok)
-                        return res.status
-                        //return res.json();
+                        return res.json();
+                    //return res.json();
                     return Promise.reject(res);
                 })
                 .then(data => {
-                    alert(data)
+                    console.log({data:data})
+                    localStorageExtender.save('token', data.Token)
                 })
                 .catch(err => console.log(err));
 

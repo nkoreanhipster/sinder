@@ -9,10 +9,14 @@ Forked from -> [niklastheman:Systemutvecklingsprojekt](https://github.com/niklas
 
 ## Installation
 1. Add an App.config file with containing the following;
+XXX = secrets
 ```
   <connectionStrings>
     <add name="tjackobacco.com" connectionString="server=XXX;port=XXX;database=XXX;uid=XXX;pwd=XXX;"/>
   </connectionStrings>
+  <appSettings>
+    <add key="secret" value="XXX" />
+  </appSettings>
 ```
 
 ## Run

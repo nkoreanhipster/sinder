@@ -41,7 +41,7 @@ namespace Sinder.Controllers
                     WriteIndented = true,
                 });
             }
-            var UserPasswords = PasswordHelper.GetPassword(user.Password);
+            var UserPasswords = SecurityHelper.GetPassword(user.Password);
             await AddNewUser(user, UserPasswords.passwordhash, UserPasswords.salt);
 
             // IF EXIST, DONT

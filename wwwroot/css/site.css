@@ -79,12 +79,13 @@ span.input-group-text {
 /*Aniamtions for -> #toastbox*/
 #toast_box {
     transition: width 250ms, height 250ms, background-color 250ms, transform 250ms;
+    margin: 0 auto;
 }
 
 #toast_box.show {
-    transform:translateY(-400px);
+    transform:translateY(-1px);
 }
 
 #toast_box.hide {
-    transform: translateY(400px);
+    transform: translateY(250px);
 }

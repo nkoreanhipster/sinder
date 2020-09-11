@@ -80,18 +80,6 @@ namespace Sinder
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute(
-                    name: "login",
-                    pattern: "{controller=Login}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute(
-                    name: "register",
-                    pattern: "{controller=Registration}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute(
-                    name: "search",
-                    pattern: "{controller=Search}/{action=Index}/{id?}");
-                //endpoints.MapControllerRoute(
-                //    name: "api", 
-                //    pattern: "{controller=ApiController}/{action=Index}/{id?}");
             });
 
             // Live reload config

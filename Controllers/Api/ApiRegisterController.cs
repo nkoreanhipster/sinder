@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -32,9 +33,18 @@ namespace Sinder.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserRegistrationDto user)
         {
+            List<UserModel> emails = await Dataprovider.Instance.ReadUsers(user.Email);
+            if(emails.Count > 0)
+            {
+                return new JsonResult(new ResponseModel { Status = "Failed attempt", Message = "Emailen är redan registrerad" }, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                });
+            }
             var UserPasswords = PasswordHelper.GetPassword(user.Password);
             await AddNewUser(user, UserPasswords.passwordhash, UserPasswords.salt);
 
+            // IF EXIST, DONT
             return new JsonResult(new ResponseModel { Status = "Success", Message = "Användaren är nu registrerad" }, new JsonSerializerOptions
             {
                 WriteIndented = true,

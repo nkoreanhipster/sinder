@@ -33,7 +33,7 @@ namespace Sinder.Controllers
         public async Task<IActionResult> Post([FromBody] UserLoginDto userLogin)
         {
             var Users = await Dataprovider.Instance.ReadUsers(userLogin.Email);
-
+            
             if (Users.Count < 1)
             {
                 return Unauthorized("Incorrect email");

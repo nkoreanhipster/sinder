@@ -25,7 +25,7 @@ namespace Sinder
         public string Location { get; set; }
 
         //[Required]
-        public int Age { get; set; }
+        public DateTime Age { get; set; }
 
         //[Required]
         public string Gender { get; set; }

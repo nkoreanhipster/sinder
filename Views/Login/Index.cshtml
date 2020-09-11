@@ -2,29 +2,83 @@
     ViewData["Title"] = "Login";
 }
 
-<<div>
-    <div class="container">
-        <div class="Login-container p-5 container">
+<div id="page_login">
+    <div class="login-container p-5 container">
 
-            <p class="h4">Logain till  Sinder</p>
+        <p class="h4">Logga in till Sinder</p>
 
-            <div class="input-group mb-3" ">
-
-                <input id="email" type="email" class="form-control" name="email" placeholder="skriv ditt email" aria-label="email" aria-describedby="email" style="width:70%">
-            </div>
-
-            <div class="input-group mb-3">
-
-                <input type="password" minlength="6" maxlength="20" class="form-control" name="password" placeholder="skriv ditt lösenord" sstyle="width:70%">
-            </div>
-            <div class="checkbox">
-                <label><input type="checkbox"> Remember me</label>
-            </div>
-            <div class="input-group mb-5 d-flex justify-content-lg-center">
-                <button type="submit" class="btn btn-primary btn-lg">Login</button>
-            </div>
-
+        <div class="input-group mb-3 mt-1">
+            <input id="email" type="email" class="form-control" name="email" placeholder="Email" aria-label="email" aria-describedby="email">
         </div>
+
+        <div class="input-group mb-3">
+            <input type="password" minlength="6" maxlength="20" class="form-control" name="password" placeholder="Lösenord">
+        </div>
+
+        <div class="input-group mb-1 d-flex justify-content-center">
+            <button type="submit" class="btn btn-primary btn-lg">Login</button>
+        </div>
+
+        <div class="input-group mb-0 d-flex justify-content-center">
+            <div class="checkbox">
+                <label><input type="checkbox">Remember me</label>
+            </div>
+        </div>
+
     </div>
+    <script>
+        var submitButton = document.querySelector('button[type="submit"]')
+        var [email, password] = [...document.querySelectorAll('input[name]')]
+
+
+        submitButton.addEventListener('click', (ev) => {
+            var dataToSend = {
+                Email: email.value,
+                Password: password.value,
+            }
+
+            if (email.value === "") {
+                email.classList.add('is-invalid')
+                submitButton.setAttribute('disabled', "")
+                return;
+            }
+
+            if (password.value === "") {
+                password.classList.add('is-invalid')
+                submitButton.setAttribute('disabled', "")
+                return;
+            }
+
+            fetch('/api/login', {
+                method: 'POST',
+                body: JSON.stringify(dataToSend),
+                headers: {
+                    'Content-type': 'application/json'
+                }
+            })
+                .then(res => {
+                    if (res.ok)
+                        return res.status
+                        //return res.json();
+                    return Promise.reject(res);
+                })
+                .then(data => {
+                    alert(data)
+                })
+                .catch(err => console.log(err));
+
+        })
+
+        email.addEventListener('input', (ev) => {
+            email.classList.remove('is-invalid')
+            submitButton.removeAttribute('disabled')
+        })
+
+        password.addEventListener('input', (ev) => {
+            password.classList.remove('is-invalid')
+            submitButton.removeAttribute('disabled')
+        })
+
+    </script>
 </div>
 

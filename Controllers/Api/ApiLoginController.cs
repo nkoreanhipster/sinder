@@ -10,7 +10,7 @@ using Sinder.Helpers;
 
 namespace Sinder.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/login")]
     [ApiController]
     public class ApiLoginController : ControllerBase
     {
@@ -18,7 +18,7 @@ namespace Sinder.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "value5", "value2" };
         }
 
         // GET api/<ApiLoginController>/5

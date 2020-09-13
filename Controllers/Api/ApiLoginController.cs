@@ -44,7 +44,10 @@ namespace Sinder.Controllers
                 isSuccess = false;
                 status = "Fail";
                 message = "Incorrect email";
-
+                return new JsonResult(new ResponseModel { Status = status, Message = message, Token = token, IsSuccess = isSuccess }, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                });
             }
             if (!SecurityHelper.VerifyPasswordHash(userLogin.Password, Users[0].HashedPassword, Users[0].Salt))
             {

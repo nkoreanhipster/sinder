@@ -232,3 +232,4 @@ _Pvt_Extensions
 /.dotnet
 *.env
 App.config
+/.vscode

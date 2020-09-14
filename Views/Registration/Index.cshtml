@@ -105,11 +105,11 @@
     email.addEventListener('input', (ev) =>
     {
         
-        if (!validateEmail(ev.target.value))
+        if (!isValidEmail(ev.target.value))
         {
             ev.target.classList.add("is-invalid")
         }
-        if (validateEmail(ev.target.value) )
+        if (isValidEmail(ev.target.value) )
         {
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")

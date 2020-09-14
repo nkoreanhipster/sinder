@@ -10,6 +10,10 @@ namespace Sinder.Controllers
     {
         public IActionResult Index()
         {
+            // Validate, else redirect to /login
+            var cookies = Request.Cookies["token"];
+            if (cookies == null)
+                return Redirect("/login");
             return View();
         }
     }

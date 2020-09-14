@@ -10,16 +10,13 @@ const Queue = (function () {
 // -//- but with namespaces
 const NamedspacedQueue = (function () {
     this.queue = []
-
     var queueItem = (ns, item) => {
         return {
             key: ns,
             item: item
         }
     }
-
     var getItemWithNamespace = (ns) => this.queue.filter(item => item.key === ns).shift()
-
     this.enqueue = (ns, ...args) => [...args].map(item => this.queue.push(queueItem(ns, item)))
     this.dequeue = (ns) => getItemWithNamespace(ns) || null
     this.getByNs = (ns) => this.queue.filter(item => item.key === ns)
@@ -49,8 +46,36 @@ var localStorageExtender = (function () {
     return this
 })();
 
+
+// Set active browser cookie
+function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; samesite=None" + "; path=/; Secure";
+}
+
+// Retrieve active browser cookie
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+// Delete specified cookie
+function eraseCookie(name) {
+    document.cookie = name + '=; Max-Age=-99999999;';
+
 //Check if email is valid
-function validateEmail(email) {
+function isValidEmail(email) {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
@@ -81,6 +106,39 @@ var toggableElements = [...document.querySelectorAll('*[data-toggle]')]
 
 
 // Reactive stuff set up
+
+// Add info to footer, todo; set somewhere else
+if (getCookie('token') !== null) {
+    var footerContainer = document.querySelector('footer > .container')
+    var span = document.createElement('span')
+    span.style.overflow = "hidden"
+    span.style.whiteSpace = "nowrap"
+    span.style.display = "block"
+    span.style.fontSize = "0.8rem"
+    span.innerHTML = `token=${getCookie('token')}`;
+    footerContainer.append(span)
+}
+
+// Log out listener
+var logoutButton = document.querySelector('ul.navbar-nav > .nav-item > a.nav-link[href="/logout"]')
+// Remove token and reload home page
+logoutButton.addEventListener('click', (ev) => {
+    ev.preventDefault()
+    eraseCookie('token')
+    window.location.replace('/home')
+})
+
+// Listeners for menu buttons
+var currentUrl = new URL(window.location.href)
+var navButtons = [...document.querySelectorAll('ul.navbar-nav > .nav-item')];
+//var currentPageMarker = document.querySelector('.nav-link > span.sr-only')
+navButtons.map(navBtn => {
+    // Switch navbutton page marker
+    if (navBtn.querySelector('a').href === currentUrl.href)
+        navBtn.classList.add('active')
+    else
+        navBtn.classList.remove('active')
+})
 
 // Remove all open drop-down toggles on window resize
 // To fix the UI-bug with a drop-down remaining open if window is resized

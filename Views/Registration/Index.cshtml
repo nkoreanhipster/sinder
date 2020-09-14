@@ -96,6 +96,9 @@
 </article>
 
 <script>
+    var ageCalender = document.querySelector('input[type="date"]')
+    ageCalender.setAttribute("max", "2002-12-31")
+    ageCalender.setAttribute("min", "1900-01-01")
 
     var submitButton = document.querySelector('button[type="submit"]')
 

@@ -30,7 +30,7 @@ namespace Sinder
 
         public string Location { get; set; }
 
-        //[Required]
+        [Required]
         public DateTime Age { get; set; }
 
         [Required(ErrorMessage ="Felaktig inmatning vid kön")]

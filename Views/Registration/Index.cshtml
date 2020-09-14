@@ -140,11 +140,8 @@
         }
     })
 
-    var dateReg = /^\d{2}([./-])\d{2}\1\d{4}$/
     var age = document.querySelector('input[name="age"]')
-    
     age.addEventListener('input', (ev) => {
-        //console.log(isValidDate(ev.target.value))
         console.log(ev.target.value, typeof ev.target.value)
         if (new Date(ev.target.value) === "Invalid Date") {
             ev.target.classList.add("is-invalid")
@@ -162,6 +159,41 @@
             ev.target.classList.add("is-invalid")
         }
         if (ev.target.value === "Man" || ev.target.value === "Kvinna") {
+            ev.target.classList.remove("is-invalid")
+            ev.target.classList.add("is-valid")
+        }
+    })
+
+    var location2 = document.querySelector('select[name="location"]')
+    location2.addEventListener('input', (ev) => {
+        if (ev.target.value.length < 3)
+        {
+            ev.target.classList.add("is-invalid")
+        }
+        else
+        {
+            ev.target.classList.remove("is-invalid")
+            ev.target.classList.add("is-valid")
+        }
+    })
+
+    var password = document.querySelector('input[name="password"]')
+    password.addEventListener('input', (ev) => {
+        if (ev.target.value.length < 6) {
+            ev.target.classList.add("is-invalid")
+        }
+        else {
+            ev.target.classList.remove("is-invalid")
+            ev.target.classList.add("is-valid")
+        }
+    })
+
+    var confirmpassword = document.querySelector('input[name="confirm-password"]')
+    confirmpassword.addEventListener('input', (ev) => {
+        if (ev.target.value.length < 6) {
+            ev.target.classList.add("is-invalid")
+        }
+        else {
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
         }

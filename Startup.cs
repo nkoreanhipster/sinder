@@ -25,6 +25,11 @@ namespace Sinder
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            //Dependency injection här!
+            //services.AddScoped<IInterface, Class >();
+            
+            
             // Live reload config
             //services.AddLiveReload();
         }

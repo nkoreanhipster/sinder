@@ -49,6 +49,67 @@ var localStorageExtender = (function () {
     return this
 })();
 
+function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+function eraseCookie(name) {   
+    document.cookie = name+'=; Max-Age=-99999999;';  
+}
+
+// const createCookie = (name, value, days = 365) => {
+//     //Name=;
+//     //Path
+//     //Expires=;
+//     //SameSite
+//     //Secure
+
+//     var date = new Date();
+//     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+
+//     var name = name || '',
+//         path = path || '',
+//         expires = date.toGMTString() || '',
+//         samesite = 'lax',
+//         secure = 'no'
+
+//     document.cookie = `cookieName=${name};path=${path};expires=${expires};samesite=${samesite};sercure=${secure};`
+// }
+
+// // Read cookie
+// const readCookie = (name) => {
+//     var nameEQ = name + "=";
+//     var ca = document.cookie.split(';');
+//     for (var i = 0; i < ca.length; i++) {
+//         var c = ca[i];
+//         while (c.charAt(0) === ' ') {
+//             c = c.substring(1, c.length);
+//         }
+//         if (c.indexOf(nameEQ) === 0) {
+//             return c.substring(nameEQ.length, c.length);
+//         }
+//     }
+//     return null;
+// }
+
+// // Erase cookie
+// const eraseCookie = (name) => document.cookie = `cookieName=${name}; expires = Thu, 01 Jan 1970 00:00:00 GMT`
+
 // Catch all elements with attribute 'data-toggle'
 var toggableElements = [...document.querySelectorAll('*[data-toggle]')]
     ; toggableElements.map(el => {

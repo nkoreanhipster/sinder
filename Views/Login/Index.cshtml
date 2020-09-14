@@ -61,6 +61,7 @@
                 .then(data => {
                     console.log({data:data})
                     localStorageExtender.save('token', data.Token)
+                    setCookie('token', data.Token, 365)
                 })
                 .catch(err => console.log(err));
 

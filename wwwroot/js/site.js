@@ -46,6 +46,7 @@ var localStorageExtender = (function () {
     return this
 })();
 
+
 // Set active browser cookie
 function setCookie(name, value, days) {
     var expires = "";
@@ -72,6 +73,15 @@ function getCookie(name) {
 // Delete specified cookie
 function eraseCookie(name) {
     document.cookie = name + '=; Max-Age=-99999999;';
+
+//Check if email is valid
+function isValidEmail(email) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+function isValidDate(d) {
+    return d instanceof Date && !isNaN(d);
 }
 
 // Catch all elements with attribute 'data-toggle'
@@ -92,6 +102,8 @@ var toggableElements = [...document.querySelectorAll('*[data-toggle]')]
         })
 
     })
+
+
 
 // Reactive stuff set up
 

@@ -1,7 +1,33 @@
 ﻿@{
-    ViewData["Title"] = "--";
+    ViewData["Title"] = "Search For User";
 }
 
-<span>
-    /Search
-</span>
+<div class="input-group">
+    <input type="text" class="form-control" placeholder="Search ">
+    <div class="input-group-append">
+        <button class="btn btn-secondary" type="button">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+</div>
+@*event handdler to a button and fetch back  the searched string*@
+<script>
+    var Button = document.querySelector('button[type="button"]')
+    var [email] = [...document.querySelectorAll('input[name]')]
+
+
+    Button.addEventListener('click', (ev) => {
+        var dataToSend = {
+            Email: email.value,
+           
+        }
+        fetch('/api/search', {
+            method: 'POST',
+            body: JSON.stringify(dataToSend),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+
+</script>

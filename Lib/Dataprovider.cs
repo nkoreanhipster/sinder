@@ -69,6 +69,17 @@ namespace Sinder
             }
         }
         #endregion
+        public async Task<List<UserModel>> SearchUser(string searchString)
+
+        {
+            using (var connection = CreateDBConnection())
+            {
+
+                string sql = string.Format("SELECT * FROM Users WHERE Name LIKE @searchQuery,", searchString);
+                var result = await connection.QueryAsync<UserModel>(sql, new { searchQuery = searchString });
+                return result.ToList();
+            }
+        }
     }
 }
 

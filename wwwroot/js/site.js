@@ -49,6 +49,16 @@ var localStorageExtender = (function () {
     return this
 })();
 
+//Check if email is valid
+function validateEmail(email) {
+    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
+
+function isValidDate(d) {
+    return d instanceof Date && !isNaN(d);
+}
+
 // Catch all elements with attribute 'data-toggle'
 var toggableElements = [...document.querySelectorAll('*[data-toggle]')]
     ; toggableElements.map(el => {
@@ -67,6 +77,8 @@ var toggableElements = [...document.querySelectorAll('*[data-toggle]')]
         })
 
     })
+
+
 
 // Reactive stuff set up
 

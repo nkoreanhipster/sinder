@@ -20,6 +20,7 @@ namespace Sinder.Controllers
 
         public IActionResult Index()
         {
+            var cookies = Request.Cookies;
             return View();
         }
 

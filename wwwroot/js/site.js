@@ -10,16 +10,13 @@ const Queue = (function () {
 // -//- but with namespaces
 const NamedspacedQueue = (function () {
     this.queue = []
-
     var queueItem = (ns, item) => {
         return {
             key: ns,
             item: item
         }
     }
-
     var getItemWithNamespace = (ns) => this.queue.filter(item => item.key === ns).shift()
-
     this.enqueue = (ns, ...args) => [...args].map(item => this.queue.push(queueItem(ns, item)))
     this.dequeue = (ns) => getItemWithNamespace(ns) || null
     this.getByNs = (ns) => this.queue.filter(item => item.key === ns)
@@ -49,66 +46,33 @@ var localStorageExtender = (function () {
     return this
 })();
 
-function setCookie(name,value,days) {
+// Set active browser cookie
+function setCookie(name, value, days) {
     var expires = "";
     if (days) {
         var date = new Date();
-        date.setTime(date.getTime() + (days*24*60*60*1000));
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
     }
     document.cookie = name + "=" + (value || "") + expires + "; samesite=None" + "; path=/; Secure";
 }
+
+// Retrieve active browser cookie
 function getCookie(name) {
     var nameEQ = name + "=";
     var ca = document.cookie.split(';');
-    for(var i=0;i < ca.length;i++) {
+    for (var i = 0; i < ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1,c.length);
-        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
     }
     return null;
 }
-function eraseCookie(name) {   
-    document.cookie = name+'=; Max-Age=-99999999;';  
+
+// Delete specified cookie
+function eraseCookie(name) {
+    document.cookie = name + '=; Max-Age=-99999999;';
 }
-
-// const createCookie = (name, value, days = 365) => {
-//     //Name=;
-//     //Path
-//     //Expires=;
-//     //SameSite
-//     //Secure
-
-//     var date = new Date();
-//     date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-
-//     var name = name || '',
-//         path = path || '',
-//         expires = date.toGMTString() || '',
-//         samesite = 'lax',
-//         secure = 'no'
-
-//     document.cookie = `cookieName=${name};path=${path};expires=${expires};samesite=${samesite};sercure=${secure};`
-// }
-
-// // Read cookie
-// const readCookie = (name) => {
-//     var nameEQ = name + "=";
-//     var ca = document.cookie.split(';');
-//     for (var i = 0; i < ca.length; i++) {
-//         var c = ca[i];
-//         while (c.charAt(0) === ' ') {
-//             c = c.substring(1, c.length);
-//         }
-//         if (c.indexOf(nameEQ) === 0) {
-//             return c.substring(nameEQ.length, c.length);
-//         }
-//     }
-//     return null;
-// }
-
-// // Erase cookie
-// const eraseCookie = (name) => document.cookie = `cookieName=${name}; expires = Thu, 01 Jan 1970 00:00:00 GMT`
 
 // Catch all elements with attribute 'data-toggle'
 var toggableElements = [...document.querySelectorAll('*[data-toggle]')]
@@ -130,6 +94,39 @@ var toggableElements = [...document.querySelectorAll('*[data-toggle]')]
     })
 
 // Reactive stuff set up
+
+// Add info to footer, todo; set somewhere else
+if (getCookie('token') !== null) {
+    var footerContainer = document.querySelector('footer > .container')
+    var span = document.createElement('span')
+    span.style.overflow = "hidden"
+    span.style.whiteSpace = "nowrap"
+    span.style.display = "block"
+    span.style.fontSize = "0.8rem"
+    span.innerHTML = `token=${getCookie('token')}`;
+    footerContainer.append(span)
+}
+
+// Log out listener
+var logoutButton = document.querySelector('ul.navbar-nav > .nav-item > a.nav-link[href="/logout"]')
+// Remove token and reload home page
+logoutButton.addEventListener('click', (ev) => {
+    ev.preventDefault()
+    eraseCookie('token')
+    window.location.replace('/home')
+})
+
+// Listeners for menu buttons
+var currentUrl = new URL(window.location.href)
+var navButtons = [...document.querySelectorAll('ul.navbar-nav > .nav-item')];
+//var currentPageMarker = document.querySelector('.nav-link > span.sr-only')
+navButtons.map(navBtn => {
+    // Switch navbutton page marker
+    if (navBtn.querySelector('a').href === currentUrl.href)
+        navBtn.classList.add('active')
+    else
+        navBtn.classList.remove('active')
+})
 
 // Remove all open drop-down toggles on window resize
 // To fix the UI-bug with a drop-down remaining open if window is resized

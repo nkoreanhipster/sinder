@@ -63,6 +63,10 @@
                     //localStorageExtender.save('token', data.Token)
                     eraseCookie('token')
                     setCookie('token', data.Token, 365)
+                    // Redirect if success
+                    window.setTimeout(() => {
+                        window.location.replace('/')
+                    }, 250)
                 })
                 .catch(err => console.log(err));
 

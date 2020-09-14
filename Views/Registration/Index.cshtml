@@ -1,4 +1,4 @@
-﻿
+
 @{
     ViewData["Title"] = "Registrera dig";
 }
@@ -41,7 +41,36 @@
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fas fa-map-marker-alt" style=" color: #eb6864"></i> </span>
             </div>
-            <input type="text" name="location" class="form-control" placeholder="Stad">
+            <!--25 landskap nedanför-->
+            <select class="form-control" name="location" id="location">
+                <option selected disabled>Välj Landskap..</option>
+                <option value="Blekinge">Blekinge</option>
+                <option value="Bohuslän">Bohuslän</option>
+                <option value="Dalarna">Dalarna</option>
+                <option value="Dalsland">Dalsland</option>
+                <option value="Gotland">Gotland</option>
+                <option value="Gästrikland">Gästrikland</option>
+                <option value="Halland">Halland</option>
+                <option value="Hälsingland">Hälsingland</option>
+                <option value="Härjedalen">Härjedalen</option>
+                <option value="Jämtland">Jämtland</option>
+                <option value="Lappland">Lappland</option>
+                <option value="Medelpad">Medelpad</option>
+                <option value="Norrbotten">Norrbotten</option>
+                <option value="Närke">Närke</option>
+                <option value="Skåne">Skåne</option>
+                <option value="Småland">Småland</option>
+                <option value="Södermanland">Södermanland</option>
+                <option value="Uppland">Uppland</option>
+                <option value="Värmland">Värmland</option>
+                <option value="Västerbotten">Västerbotten</option>
+                <option value="Västergötland">Västergötland</option>
+                <option value="Västmanland">Västmanland</option>
+                <option value="Ångermanland">Ångermanland</option>
+                <option value="Öland">Öland</option>
+                <option value="Östergötland">Östergötland</option>
+            </select>
+            @*<input type="text" name="location" class="form-control" placeholder="Stad">*@
         </div>
         <div class="form-group input-group">
             <div class="input-group-prepend">
@@ -69,6 +98,7 @@
 </article>
 
 <script>
+
     //var [email, firstname, surname, age, location, image, password, confirmPassword] = [...document.querySelectorAll('input[name]')].map(el => el.value)
 
     var email = document.querySelector('input[name="email"]')
@@ -139,14 +169,23 @@
 
 
 
+    var ageCalender = document.querySelector('input[type="date"]')
+    ageCalender.setAttribute("max", "2002-12-31")
+    ageCalender.setAttribute("min", "1900-01-01")
+
+
     var submitButton = document.querySelector('button[type="submit"]')
 
     submitButton.addEventListener('click', (ev) => {
         ev.preventDefault()
         
+
+        var [email, firstname, surname, age, image, password, confirmPassword] = [...document.querySelectorAll('input[name]')].map(el => el.value)
+
         var e = document.getElementById("gender")
         var gender = e.options[e.selectedIndex].value
-        
+        var d = document.getElementById("location")
+        var location = d.options[d.selectedIndex].value
         // { Email: 'user@email.com', Password: 'passypassy' }
         var dataToSend = {
             Password: password,

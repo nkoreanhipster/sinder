@@ -73,6 +73,7 @@ function getCookie(name) {
 // Delete specified cookie
 function eraseCookie(name) {
     document.cookie = name + '=; Max-Age=-99999999;';
+}
 
 //Check if email is valid
 function isValidEmail(email) {

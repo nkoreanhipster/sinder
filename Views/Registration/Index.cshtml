@@ -12,6 +12,7 @@
                 <span class="input-group-text"> <i class="fas fa-envelope" style=" color: #eb6864"></i> </span>
             </div>
             <input type="text" name="email" class="form-control" placeholder="Email">
+            <div class="invalid-feedback">Ange en email med rätt format.</div>
         </div>
         <div class="form-group input-group">
             <div class="input-group-prepend">
@@ -20,12 +21,14 @@
 
             <input type="text" name="firstname" class="form-control" placeholder="Förnamn">
             <input type="text" name="surname" class="form-control ml-1" placeholder="Efternamn">
+            <div class="invalid-feedback">Ange ett för och efternamn.</div>
         </div>
         <div class="form-group input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fas fa-clock" style=" color: #eb6864"></i> </span>
             </div>
             <input type="date" name="age" class="form-control" placeholder="Ålder">
+            <div class="invalid-feedback">Ange en korrekt ålder.</div>
         </div>
         <div class="form-group input-group">
             <div class="input-group-prepend">
@@ -36,6 +39,7 @@
                 <option value="Man">Man</option>
                 <option value="Kvinna">Kvinna</option>
             </select>
+            <div class="invalid-feedback">Ange Kön.</div>
         </div>
         <div class="form-group input-group">
             <div class="input-group-prepend">
@@ -70,7 +74,7 @@
                 <option value="Öland">Öland</option>
                 <option value="Östergötland">Östergötland</option>
             </select>
-            @*<input type="text" name="location" class="form-control" placeholder="Stad">*@
+            <div class="invalid-feedback">Välj ett landskap.</div>
         </div>
         <div class="form-group input-group">
             <div class="input-group-prepend">
@@ -83,12 +87,14 @@
                 <span class="input-group-text"> <i class="fas fa-lock" style=" color: #eb6864"></i> </span>
             </div>
             <input type="password" name="password" class="form-control" placeholder="Lösenord">
+            <div class="invalid-feedback">Lösenordet måste bestå av minst 6 tecken</div>
         </div>
         <div class="form-group input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fas fa-lock" style=" color: #eb6864"></i> </span>
             </div>
             <input type="password" name="confirm-password" class="form-control" placeholder="Bekräfta Lösenord">
+            <div class="invalid-feedback">Lösenordet måste bestå av minst 6 tecken</div>
         </div>
         @* Button submit *@
         <div class="form-group">
@@ -104,7 +110,6 @@
     var email = document.querySelector('input[name="email"]')
     email.addEventListener('input', (ev) =>
     {
-        
         if (!isValidEmail(ev.target.value))
         {
             ev.target.classList.add("is-invalid")
@@ -207,6 +212,16 @@
 
 
     var submitButton = document.querySelector('button[type="submit"]')
+
+    //document.body.addEventListener('click', (ev) =>
+    //{
+    //    console.log("Hello")
+    //    //submitButton.target.classList.add('disabled')
+    //    //if (isValidEmail(email.target.value) === false) {
+
+    //    //}
+    //})
+
 
     submitButton.addEventListener('click', (ev) => {
         ev.preventDefault()

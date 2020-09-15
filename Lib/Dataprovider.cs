@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Sinder
 {
@@ -60,14 +61,20 @@ namespace Sinder
             }
         }
 
+        public async Task<UserModel> ReadUserById(int id)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Id = Users.Id", new { Id = id })).First();   
+            }
+        }
         public async Task<UserModel> ReadUser(string email) => (await ReadUsers(email)).First();
 
         public async Task<List<UserModel>> ReadUsers(string email)
         {
             using(var connection = CreateDBConnection())
             {
-                var users = (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Email = Users.Email", new { Email = email })).ToList();
-                return users;
+                return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Email = Users.Email", new { Email = email })).ToList();  
             }
         }
 
@@ -77,13 +84,21 @@ namespace Sinder
             {
                //searchString = $"%{searchString}%";
                 string sql = (@"SELECT * 
-FROM Users
-WHERE (Firstname LIKE CONCAT('%', @searchQuery, '%')) 
-OR (Surname LIKE CONCAT('%', @searchQuery, '%'));");
+                    FROM Users
+                    WHERE (Firstname LIKE CONCAT('%', @searchQuery, '%')) 
+                    OR (Surname LIKE CONCAT('%', @searchQuery, '%'));");
                 var result = await connection.QueryAsync<UserModel>(sql, new { searchQuery = searchString });
                 return result.ToList();
             }
         }
+        public async Task UpdateUser(UserModel user)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync("UPDATE Users SET Users.Firstname = @Firstname, Users.Surname = @Surname, Users.HashedPassword = @HashedPassword, Users.Salt = @Salt WHERE Users.ID = @ID", user);
+            }
+        }
+
         #endregion
     }
 }

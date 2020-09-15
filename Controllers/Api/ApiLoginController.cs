@@ -59,7 +59,7 @@ namespace Sinder.Controllers
             // If success, generate JWT token
             if (isSuccess)
             {
-                token = SecurityHelper.GenerateToken();
+                token = SecurityHelper.GenerateToken(userLogin.Email);
             }
 
             return new JsonResult(new ResponseModel { Status = status, Message = message, Token = token, IsSuccess = isSuccess }, new JsonSerializerOptions

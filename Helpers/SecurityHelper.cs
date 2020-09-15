@@ -44,7 +44,7 @@ namespace Sinder.Helpers
             return true;
         }
 
-        public static string GenerateToken()
+        public static string GenerateToken(string email)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Helper.GetSecretApiKey()));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -55,7 +55,7 @@ namespace Sinder.Helpers
                 audience: "Sample",
                 claims: new[]
                 {
-                    new Claim(JwtRegisteredClaimNames.Sub, "meziantou")
+                    new Claim(JwtRegisteredClaimNames.Sub, email)
                 },
                 expires: DateTime.UtcNow.AddDays(365));
 
@@ -73,6 +73,13 @@ namespace Sinder.Helpers
             return true;
         }
 
+        public static string GetLoggedInUser(string token)
+        {           
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var validationParameters = GetValidationParameters();
+            var redToken = tokenHandler.ReadToken(token);
+            return "";
+        }
         public static TokenValidationParameters GetValidationParameters()
         {
             return new TokenValidationParameters()

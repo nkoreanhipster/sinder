@@ -1,12 +1,17 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Sinder.Helpers;
 
 namespace Sinder.Controllers
 {
     public class ProfileController : Controller
     {
-        public IActionResult Index(UserModel user)
+        public IActionResult Index()
         {
-            return View(user);
+            var cookies = Request.Cookies["token"];
+            if (cookies == null)
+                return Redirect("/login");
+            SecurityHelper.GetLoggedInUser(cookies);
+            return View();
         }
     }
 }

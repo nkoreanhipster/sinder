@@ -4,9 +4,9 @@ namespace Sinder.Controllers
 {
     public class ProfileController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(UserModel user)
         {
-            return View();
+            return View(user);
         }
     }
 }

@@ -1,7 +1,49 @@
 ﻿@{
-    ViewData["Title"] = "--";
+    ViewData["Title"] = "Search For User";
 }
 
-<span>
-    /Search
-</span>
+<div class="input-group">
+    <input type="text" id="input_usersearch" class="form-control" placeholder="Söka användare">
+    <div class="input-group-append">
+        <button id="search_button" class="btn btn-secondary" type="button">
+            <i class="fas fa-search"></i>
+        </button>
+    </div>
+
+</div>
+<ul id="search_results">
+</ul>
+
+@*event handdler to a button and fetch back  the searched string*@
+<script>
+    var searchButton = document.querySelector('#search_button')
+    var inputUserSearch = document.querySelector('#input_usersearch')
+    var searchResults = document.querySelector('#search_results')
+
+    var displayArray = function (arr) {
+        console.log(arr)
+
+        arr.map(item => {
+            var li = document.createElement('li')
+            var span = document.createElement('span')
+            span.innerText = `id:${item.id} email${item.email} firstname${item.firstname} surname${item.surname} age${item.age}`
+            li.append(span)
+            searchResults.append(li)
+        })
+    }
+
+    searchButton.addEventListener('click', (ev) => {
+
+        fetch('/api/search?q=' + inputUserSearch.value, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "GET"
+        })
+            .then(res => res.json())
+            .then(json => displayArray(json))
+            .catch(err => console.error(err))
+    })
+
+</script>

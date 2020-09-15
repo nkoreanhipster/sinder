@@ -27,13 +27,21 @@ const NamedspacedQueue = (function () {
 // Fjantig notifikations-kontroller
 var Cheesebox = (function () {
     this.element = document.querySelector('#toast_box')
+    this.body = document.querySelector('#toast_box > .toast-body')
     this.element.style = "transition: width 250ms, height 250ms, background-color 250ms, transform 250ms;"
 
+
+
     this.hide = () => this.element.classList.remove('show')
-    this.show = () => this.element.classList.add('show')
+    this.show = (text) => {
+        this.body.innerText = text
+        this.element.classList.add('show')
+    }
     this.element.querySelector('button[data-dismiss]').addEventListener('click', (ev) => {
         this.hide()
     })
+
+
 
     return this
 })();

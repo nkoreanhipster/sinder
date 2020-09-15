@@ -59,6 +59,7 @@ namespace Sinder.Controllers
             // If success, generate JWT token
             if (isSuccess)
             {
+                status = "Success";
                 token = SecurityHelper.GenerateToken(userLogin.Email);
             }
 

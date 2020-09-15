@@ -62,11 +62,15 @@
             })
                 .then(res => res.json())
                 .then(data => {
-                    console.log({data:data})
+                    console.log({ data: data })
+                    if (data.Status !== "Success") {
+                        alert('Som,ething wung');
+                        return;
+                    }
                     //localStorageExtender.save('token', data.Token)
                    // eraseCookie('token')
                     //setCookie('token', data.Token, 365)
-                    document.cookie ="token=" + data.Token
+                    document.cookie = "token=" + data.Token
                     // Redirect if success
                     window.setTimeout(() => {
                         window.location.replace('/')

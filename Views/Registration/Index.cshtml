@@ -154,7 +154,7 @@
 
     var age = document.querySelector('input[name="age"]')
     age.addEventListener('input', (ev) => {
-        console.log(ev.target.value, typeof ev.target.value)
+
         if (new Date(ev.target.value) === "Invalid Date") {
             ev.target.classList.add("is-invalid")
         }
@@ -234,7 +234,7 @@
 
         for (var i = 0; i < inputElements.length; i++) {
             const el = inputElements[i]
-            console.log(el.tagName, el.value.length)
+
             if (el.tagName === 'INPUT') {
                 isValid = el.value.length > 0 ? true : false
             }
@@ -274,7 +274,7 @@
             Gender: gender,
             Location: location
         }
-        console.log(dataToSend)
+
         if (gender == "Välj Kön...") {
             alert("Välj ett kön!")
             return;
@@ -294,7 +294,7 @@
         })
             .then(res => res.json())
             .then(data => {
-                console.log('OK',data)
+                Cheesebox.show(data.Message)
             })
             .catch(err => console.error(err));
     })

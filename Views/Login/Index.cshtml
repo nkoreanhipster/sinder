@@ -65,11 +65,12 @@
                     console.log({data:data})
                     //localStorageExtender.save('token', data.Token)
                    // eraseCookie('token')
-                    setCookie('token', data.Token, 365)
+                    //setCookie('token', data.Token, 365)
+                    document.cookie ="token=" + data.Token
                     // Redirect if success
-                    //window.setTimeout(() => {
-                    //    window.location.replace('/')
-                    //}, 250)
+                    window.setTimeout(() => {
+                        window.location.replace('/')
+                    }, 250)
                 })
                 .catch(err => console.log(err));
 

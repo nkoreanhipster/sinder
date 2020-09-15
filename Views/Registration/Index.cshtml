@@ -98,14 +98,18 @@
         </div>
         @* Button submit *@
         <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block"> Registrera  </button>
+            <button type="submit" class="btn btn-primary btn-block" disabled> Registrera  </button>
         </div>
     </form>
 </article>
 
 <script>
 
+
+
     //var [email, firstname, surname, age, location, image, password, confirmPassword] = [...document.querySelectorAll('input[name]')].map(el => el.value)
+    
+
 
     var email = document.querySelector('input[name="email"]')
     email.addEventListener('input', (ev) =>
@@ -119,6 +123,7 @@
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
         }
+        validateForm()
     })
 
     var firstname = document.querySelector('input[name="firstname"]')
@@ -132,6 +137,7 @@
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
         }
+        validateForm()
     })
 
     var surname = document.querySelector('input[name="surname"]')
@@ -143,6 +149,7 @@
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
         }
+        validateForm()
     })
 
     var age = document.querySelector('input[name="age"]')
@@ -156,6 +163,7 @@
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
         }
+        validateForm()
     })
 
     var gender = document.querySelector('select[name="gender"]')
@@ -167,6 +175,7 @@
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
         }
+        validateForm()
     })
 
     var location2 = document.querySelector('select[name="location"]')
@@ -180,6 +189,7 @@
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
         }
+        validateForm()
     })
 
     var password = document.querySelector('input[name="password"]')
@@ -191,6 +201,7 @@
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
         }
+        validateForm()
     })
 
     var confirmpassword = document.querySelector('input[name="confirm-password"]')
@@ -202,6 +213,7 @@
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
         }
+        validateForm()
     })
 
 
@@ -213,14 +225,32 @@
 
     var submitButton = document.querySelector('button[type="submit"]')
 
-    //document.body.addEventListener('click', (ev) =>
-    //{
-    //    console.log("Hello")
-    //    //submitButton.target.classList.add('disabled')
-    //    //if (isValidEmail(email.target.value) === false) {
+    function validateForm() {
+        var invalidElements = [...document.querySelectorAll('.is-invalid')];
 
-    //    //}
-    //})
+        var inputElements = [...document.querySelectorAll('input, select')];
+
+        var isValid =true
+
+        for (var i = 0; i < inputElements.length; i++) {
+            const el = inputElements[i]
+            console.log(el.tagName, el.value.length)
+            if (el.tagName === 'INPUT') {
+                isValid = el.value.length > 0 ? true : false
+            }
+            else if (el.tagName === 'SELECT' ) {
+                isValid = el.options.selectedIndex > 0 ? true : false
+            }
+            if (!isValid)
+                break;
+        }
+        if (invalidElements.length > 0 || !isValid) {
+            submitButton.setAttribute('disabled', '')
+        }
+        else {
+            submitButton.removeAttribute('disabled')
+        }
+    }
 
 
     submitButton.addEventListener('click', (ev) => {

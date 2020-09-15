@@ -18,26 +18,20 @@ namespace Sinder.Controllers.Api
         [HttpGet]
         public async Task<IActionResult> Get()
         {
+            string queryString = HttpContext.Request.Query["q"];
+            if (queryString == null)
+                queryString = "";
+            List<UserModel> users = await Dataprovider.Instance.SearchUsersBy(queryString);
 
-            var queryString = HttpContext.Request.Query["q"];
-            var users = Dataprovider.Instance.SearchUser(queryString);
 
-            return new JsonResult(new ResponseModel { Status = users.ToString(), Message = "welcome" }, new JsonSerializerOptions
+            return new JsonResult(users)
             {
-                WriteIndented = true,
-            });
+                StatusCode = 200
+            };
 
-
-
-            //return new JsonResult(name = users[0].Name, new JsonSerializerOptions
-            //{
-            //    WriteIndented = true,
-            //});
-
-            //return new string[] { users[0].Name.ToString() };
         }
-       
-        
+
+
 
         // GET api/<ApiSearchController>/5
         [HttpGet("{id}")]

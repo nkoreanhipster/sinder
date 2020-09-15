@@ -68,18 +68,21 @@ namespace Sinder
                 return users;
             }
         }
-        #endregion
-        public async Task<List<UserModel>> SearchUser(string searchString)
 
+        public async Task<List<UserModel>> SearchUsersBy(string searchString)
         {
             using (var connection = CreateDBConnection())
             {
-
-                string sql = (@"SELECT * FROM Users WHERE Name LIKE @searchQuery,"+ searchString);
+               //searchString = $"%{searchString}%";
+                string sql = (@"SELECT * 
+FROM Users
+WHERE (Firstname LIKE CONCAT('%', @searchQuery, '%')) 
+OR (Surname LIKE CONCAT('%', @searchQuery, '%'));");
                 var result = await connection.QueryAsync<UserModel>(sql, new { searchQuery = searchString });
                 return result.ToList();
             }
         }
+        #endregion
     }
 }
 

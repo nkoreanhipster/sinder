@@ -60,6 +60,8 @@ namespace Sinder
             }
         }
 
+        public async Task<UserModel> ReadUser(string email) => (await ReadUsers(email)).First();
+
         public async Task<List<UserModel>> ReadUsers(string email)
         {
             using(var connection = CreateDBConnection())

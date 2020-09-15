@@ -77,8 +77,10 @@ namespace Sinder.Helpers
         {           
             var tokenHandler = new JwtSecurityTokenHandler();
             var validationParameters = GetValidationParameters();
-            var redToken = tokenHandler.ReadToken(token);
-            return "";
+            //var readToken = tokenHandler.ReadToken(token);
+            var tokenS = tokenHandler.ReadToken(token) as JwtSecurityToken;
+            var jti = tokenS.Claims.First(claim => claim.Type == "sub").Value;
+            return jti;
         }
         public static TokenValidationParameters GetValidationParameters()
         {

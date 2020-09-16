@@ -1,156 +1,24 @@
-﻿@model UserModel 
+﻿@model UserModel
 @{
     ViewData["Title"] = "Profilsida";
 }
-
-<article id="page_profile" class="card-body mx-auto" style="max-width: 400px">
-    <p class="h4 m-md-4 text-center">Dina profiluppgifter</p>
-    <div class="invisible" id="id"> @Model.ID</div>
-    <form>
-        <div class="form-group input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fas fa-signature" style=" color: #eb6864"></i> </span>
+<div class="invisible" id="id"> @Model.ID</div>
+<div id="page_profile">
+    <div class="profile-container p-5 container">
+        <div class="card profile-border-color" style="width: 20rem;">
+            <img src="favicon.ico" class="card-img-top" alt="...">
+            <div class="card-title border-bottom profile-border-color">
+                <h5 class="card-title profile-container">@Model.Firstname @Model.Surname 42 år</h5>
             </div>
-            <input type="text" value="@Model.Firstname" name="firstname" class="form-control" placeholder="Förnamn">
-            <input type="text" value="@Model.Surname"name="surname" class="form-control ml-1" placeholder="Efternamn">
-            <div class="invalid-feedback">Ange ett förnamn och efternamn.</div>
-        </div>
-        <div class="form-group input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fas fa-map-marker-alt" style=" color: #eb6864"></i> </span>
+            
+            <div class="card-body profile-border-color">
+                <p class="font-style">@Model.Gender</p>
+                <p class="font-style">@Model.Email</p>
+                <p class="font-style">@Model.Location</p>
             </div>
-            <!--25 landskap nedanför-->
-            <select class="form-control" value="@Model.Location" name="location" id="location">
-                <option selected disabled>Välj Landskap..</option>
-                <option value="Blekinge">Blekinge</option>
-                <option value="Bohuslän">Bohuslän</option>
-                <option value="Dalarna">Dalarna</option>
-                <option value="Dalsland">Dalsland</option>
-                <option value="Gotland">Gotland</option>
-                <option value="Gästrikland">Gästrikland</option>
-                <option value="Halland">Halland</option>
-                <option value="Hälsingland">Hälsingland</option>
-                <option value="Härjedalen">Härjedalen</option>
-                <option value="Jämtland">Jämtland</option>
-                <option value="Lappland">Lappland</option>
-                <option value="Medelpad">Medelpad</option>
-                <option value="Norrbotten">Norrbotten</option>
-                <option value="Närke">Närke</option>
-                <option value="Skåne">Skåne</option>
-                <option value="Småland">Småland</option>
-                <option value="Södermanland">Södermanland</option>
-                <option value="Uppland">Uppland</option>
-                <option value="Värmland">Värmland</option>
-                <option value="Västerbotten">Västerbotten</option>
-                <option value="Västergötland">Västergötland</option>
-                <option value="Västmanland">Västmanland</option>
-                <option value="Ångermanland">Ångermanland</option>
-                <option value="Öland">Öland</option>
-                <option value="Östergötland">Östergötland</option>
-            </select>
-            <div class="invalid-feedback">Välj ett landskap.</div>
-        </div>
-        <div class="form-group input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fas fa-lock" style="color:#eb6864"></i></span>
+            <div class="card-body profile-container">
+                <a class="btn btn-primary" href="/profile/editprofile" >Redigera Profil</a>
             </div>
-            <input type="password" name="oldPassword" class="form-control" placeholder="Ange ditt gamla Lösenord">
-            <div class=" invalid-feedback">Lösenordet stämde inte överens</div>
-
         </div>
-        <div class="form-group input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fas fa-lock" style=" color: #eb6864"></i> </span>
-            </div>
-            <input type="password" name="password" class="form-control" placeholder="Lösenord">
-            <div class="invalid-feedback">Lösenordet måste bestå av minst 6 tecken</div>
-        </div>
-        <div class="form-group input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fas fa-lock" style=" color: #eb6864"></i> </span>
-            </div>
-            <input type="password" name="confirm-password" class="form-control" placeholder="Bekräfta Lösenord">
-            <div class="invalid-feedback">Lösenordet måste bestå av minst 6 tecken</div>
-        </div>
-        <div class="form-group input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fas fa-camera-retro" style=" color: #eb6864"></i> </span>
-            </div>
-            <input type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.tif,.tiff,.bmp">
-        </div>
-        <div class=" form-group">
-            <input type="submit" name="editbtn" class="btn btn-primary btn-block" value="Ändra uppgifter">
-        </div>
-    </form>
-</article>
-
-<script>
-    var firstname = document.querySelector('input[name="firstname"]')
-    firstname.addEventListener('input', (ev) =>
-    {
-        if (ev.target.value.length < 2)
-        {
-            ev.target.classList.add("is-invalid")
-        }
-        else
-        {
-            ev.target.classList.remove("is-invalid")
-            ev.target.classList.add("is-valid")
-        }
-        validateForm()
-    })
-    var surname = document.querySelector('input[name="surname"]')
-    surname.addEventListener('input', (ev) => {
-        if (ev.target.value.length < 2) {
-            ev.target.classList.add("is-invalid")
-        }
-        else {
-            ev.target.classList.remove("is-invalid")
-            ev.target.classList.add("is-valid")
-        }
-        validateForm()
-    })
-    var password = document.querySelector('input[name="password"]')
-    password.addEventListener('input', (ev) => {
-        if (ev.target.value.length < 6) {
-            ev.target.classList.add("is-invalid")
-        }
-        else {
-            ev.target.classList.remove("is-invalid")
-            ev.target.classList.add("is-valid")
-        }
-    })
-    var confirmPassword = document.querySelector('input[name="confirm-password"]')
-    confirmPassword.addEventListener('input', (ev) => {
-        if (ev.target.value.length < 6 || password.value != ev.target.value || ev.target.length > 20) {
-            ev.target.classList.add("is-invalid")
-        }
-        else {
-            ev.target.classList.remove("is-invalid")
-            ev.target.classList.add("is-valid")
-        }
-    })
-    var editbtn = document.querySelector('input[name="editbtn"]')
-    editbtn.addEventListener('click', (ev) => {
-        ev.preventDefault()
-        var data = { Firstname: firstname.value, Surname: surname.value, Password: password.value, ID: document.querySelector("#id").textContent.replace(' ', '')}
-
-        fetch(`/api/profile/${data.ID}`, {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => response.json())
-            .then(json => {
-                console.log(json)
-                
-            })
-        .catch(err => console.error(err))
-
-    })
-
-    
-</script>
+    </div>
+</div>

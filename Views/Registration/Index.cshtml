@@ -186,6 +186,18 @@
         validateForm()
     })
 
+    var image = document.querySelector('input[name="image"]')
+    image.addEventListener('input', (ev) => {
+        if (ev.target.value.length < 1) {
+            ev.target.classList.add("is-invalid")
+        }
+        if (ev.target.value.length > 0) {
+            ev.target.classList.remove("is-invalid")
+            ev.target.classList.add("is-valid")
+        }
+        validateForm()
+    })
+
     var password = document.querySelector('input[name="password"]')
     password.addEventListener('input', (ev) => {
         if (ev.target.value.length < 6) {
@@ -289,6 +301,11 @@
             .then(res => res.json())
             .then(data => {
                 Cheesebox.show(data.Message)
+                if (data.Status === "Success") {
+                    console.log('It worked')
+                    window.location.href = "/login";
+                    return;
+                }
             })
             .catch(err => console.error(err));
     })

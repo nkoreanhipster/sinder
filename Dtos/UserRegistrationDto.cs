@@ -36,5 +36,7 @@ namespace Sinder
         [Required(ErrorMessage ="Felaktig inmatning vid kön")]
         [RegularExpression(@"[Mm]an|[Kk]vinna|[Aa]nnat", ErrorMessage = "Felaktig inmatning vid kön")]
         public string Gender { get; set; }
+
+        public List<ImageModel> Images { get; set; } = new List<ImageModel>();
     }
 }

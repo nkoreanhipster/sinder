@@ -94,7 +94,7 @@
                 <span class="input-group-text"> <i class="fas fa-lock" style=" color: #eb6864"></i> </span>
             </div>
             <input type="password" name="confirm-password" class="form-control" placeholder="Bekräfta Lösenord">
-            <div class="invalid-feedback">Lösenordet måste bestå av minst 6 tecken</div>
+            <div class="invalid-feedback">Lösenordet måste bestå av minst 6 tecken och stämma överens med föregående fält</div>
         </div>
         @* Button submit *@
         <div class="form-group">
@@ -186,17 +186,17 @@
         validateForm()
     })
 
-    var image = document.querySelector('input[name="image"]')
-    image.addEventListener('input', (ev) => {
-        if (ev.target.value.length < 1) {
-            ev.target.classList.add("is-invalid")
-        }
-        if (ev.target.value.length > 0) {
-            ev.target.classList.remove("is-invalid")
-            ev.target.classList.add("is-valid")
-        }
-        validateForm()
-    })
+    //var image = document.querySelector('input[name="image"]')
+    //image.addEventListener('input', (ev) => {
+    //    if (ev.target.value.length < 1) {
+    //        ev.target.classList.add("is-invalid")
+    //    }
+    //    if (ev.target.value.length > 0) {
+    //        ev.target.classList.remove("is-invalid")
+    //        ev.target.classList.add("is-valid")
+    //    }
+    //    validateForm()
+    //})
 
     var password = document.querySelector('input[name="password"]')
     password.addEventListener('input', (ev) => {
@@ -212,7 +212,7 @@
 
     var confirmpassword = document.querySelector('input[name="confirm-password"]')
     confirmpassword.addEventListener('input', (ev) => {
-        if (ev.target.value.length < 6) {
+        if (ev.target.value.length < 6 || ev.target.value !== password.value) {
             ev.target.classList.add("is-invalid")
         }
         else {
@@ -233,7 +233,8 @@
     function validateForm() {
         var invalidElements = [...document.querySelectorAll('.is-invalid')];
 
-        var inputElements = [...document.querySelectorAll('input, select')];
+        var inputElements = [...document.querySelectorAll('input, select')]
+            .filter(a => a.type !== 'file') // Remove file input from validation check
 
         var isValid =true
 
@@ -263,6 +264,14 @@
 
         var [email, firstname, surname, age, password, confirmPassword] = [...document.querySelectorAll('input[name]')].map(el => el.value)
 
+        // Also get uploaded images
+        var images = [];
+        [...document.querySelectorAll('img[data-type="img-upload"]')]
+            .filter(el => !el.hasAttribute('data-source'))
+            .map(imgEle => {
+                images.push({ Url: imgEle.src})
+            })
+
         var e = document.getElementById("gender")
         var gender = e.options[e.selectedIndex].value
         var d = document.getElementById("location")
@@ -273,7 +282,7 @@
             Firstname: firstname,
             Surname: surname,
             Email: email,
-            //Image: image,
+            Images: images,
             Age: new Date(age),
             Gender: gender,
             Location: location

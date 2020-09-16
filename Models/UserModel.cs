@@ -17,5 +17,6 @@ namespace Sinder
         public byte[] Salt { get; set; }
         public string Gender { get; set; }
         public List<ImageModel> Images { get; set; } = new List<ImageModel>();
+        public string ImageString { get; set; }
     }
 }

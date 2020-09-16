@@ -34,7 +34,7 @@ namespace Sinder.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserLoginDto userLogin)
         {
-            var Users = await Dataprovider.Instance.ReadUsers(userLogin.Email);
+            var Users = await Dataprovider.Instance.ReadUsersByEmail(userLogin.Email);
             bool isSuccess = true;
             string status = null;
             string message = null;

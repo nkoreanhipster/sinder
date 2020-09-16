@@ -13,7 +13,7 @@ namespace Sinder.Controllers
             if (cookies == null || cookies =="null")
                 return Redirect("/login");
             string email = SecurityHelper.GetLoggedInUser(cookies);
-            UserModel user = await Dataprovider.Instance.ReadUser(email);
+            UserModel user = await Dataprovider.Instance.ReadUserByEmail(email);
             return View(user);
         }
         public async Task<IActionResult> User(int id)
@@ -29,7 +29,7 @@ namespace Sinder.Controllers
             if (cookies == null || cookies == "null")
                 return Redirect("/login");
             string email = SecurityHelper.GetLoggedInUser(cookies);
-            UserModel user = await Dataprovider.Instance.ReadUser(email);
+            UserModel user = await Dataprovider.Instance.ReadUserByEmail(email);
             return View(user);
         }
     }

@@ -65,16 +65,42 @@ namespace Sinder
         {
             using (var connection = CreateDBConnection())
             {
-                return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Id = Users.Id", new { Id = id })).First();   
+                //return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Id = Users.Id", new { Id = id })).First();
+                string query =
+                     $"SELECT u.*, GROUP_CONCAT(Url ORDER BY i.UserID) as ImageString " +
+                     $"FROM Users u " +
+                     $"JOIN Images i " +
+                     $"ON i.UserID = u.ID " +
+                     $"WHERE @Id = u.ID " +
+                     $"GROUP BY u.ID ;";
+                var user = (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Id = Users.Id", new { Id = id })).First();
+                user.ImageString.Split(',')
+                    .ToList()
+                    .ForEach(imageString => user.Images.Add(new ImageModel() { Url = imageString }));
+                return user;
             }
         }
-        public async Task<UserModel> ReadUser(string email) => (await ReadUsers(email)).First();
+        public async Task<UserModel> ReadUserByEmail(string email) => (await ReadUsersByEmail(email)).First();
 
-        public async Task<List<UserModel>> ReadUsers(string email)
+        public async Task<List<UserModel>> ReadUsersByEmail(string email)
         {
-            using(var connection = CreateDBConnection())
+            using (var connection = CreateDBConnection())
             {
-                return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Email = Users.Email", new { Email = email })).ToList();  
+                string query =
+                    $"SELECT u.*, GROUP_CONCAT(Url ORDER BY i.UserID) as ImageString " +
+                    $"FROM Users u " +
+                    $"JOIN Images i " +
+                    $"ON i.UserID = u.ID " +
+                    $"WHERE	@Email = u.Email " +
+                    $"GROUP BY u.ID ;";
+                var users = (await connection.QueryAsync<UserModel>(query, new { Email = email })).ToList();
+                users.ForEach(user =>
+                {
+                    user.ImageString.Split(',')
+                        .ToList()
+                        .ForEach(imageString => user.Images.Add(new ImageModel() { Url = imageString }));
+                });
+                return users;
             }
         }
 
@@ -82,7 +108,7 @@ namespace Sinder
         {
             using (var connection = CreateDBConnection())
             {
-               //searchString = $"%{searchString}%";
+                //searchString = $"%{searchString}%";
                 string sql = (@"SELECT * 
                     FROM Users
                     WHERE (Firstname LIKE CONCAT('%', @searchQuery, '%')) 
@@ -91,6 +117,7 @@ namespace Sinder
                 return result.ToList();
             }
         }
+
         public async Task UpdateUser(UserModel user)
         {
             using (var connection = CreateDBConnection())

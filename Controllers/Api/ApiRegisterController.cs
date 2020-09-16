@@ -35,7 +35,7 @@ namespace Sinder.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserRegistrationDto user)
         {
-            List<UserModel> emails = await Dataprovider.Instance.ReadUsers(user.Email);
+            List<UserModel> emails = await Dataprovider.Instance.ReadUsersByEmail(user.Email);
             if (emails.Count > 0)
             {
                 return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Failed attempt", Message = "Emailen är redan registrerad" }, new JsonSerializerOptions

@@ -142,6 +142,8 @@ if (getCookie('token') !== null) {
     var progressBar = document.querySelector('#upload_progressbar')
     var progressCounter = document.querySelector('#progress_counter')
     var uploadedImage = document.querySelector('#uploaded_image')
+    var imagePreviewList = document.querySelector('#image_preview_list')
+    
 
     const initializeProgress = function (numFiles) {
         progressBar.value = 0
@@ -179,7 +181,7 @@ if (getCookie('token') !== null) {
                 updateProgress(i, 100) // <- Add this
                 if (ev.target.response) {
                     var json = JSON.parse(ev.target.response)
-                    console.log('UPLOADED!', { json: json})
+                    console.log('UPLOADED!', { json: json })
                     uploadedImage.src = json.Data.shift().Url;
                 }
                 else {
@@ -215,8 +217,38 @@ if (getCookie('token') !== null) {
         ev.stopPropagation()
     }
 
-    const handleFiles = (files) => {
-        files = [...files];
+    const readURL = file => {
+        return new Promise((res, rej) => {
+            const reader = new FileReader();
+            reader.onload = e => res(e.target.result);
+            reader.onerror = e => rej(e);
+            reader.readAsDataURL(file);
+        });
+    };
+
+    const createImageElement = (src) => {
+        var img = document.createElement('img')
+        img.classList.add('img')
+        img.src = src
+        imagePreviewList.appendChild(img)
+    }
+
+    const handleFiles = async(event) => {
+
+        var urls = []
+
+        for (let i = 0; i < event.target.files.length; i++) {
+            const file = event.target.files[i]; 
+            await readURL(file)
+                .then(url => urls.push(url))
+
+        }
+
+        urls.map(url => createImageElement(url))
+    }
+
+    const handleDropFiles = async (event) => {
+        files = [...event];
         initializeProgress(files.length)
         files.map((file, iterator) => uploadFile(file, iterator))
     }
@@ -224,7 +256,7 @@ if (getCookie('token') !== null) {
     const handleDrop = (ev) => {
         var dt = ev.dataTransfer
         var files = dt.files
-        handleFiles(files)
+        handleDropFiles(files)
     }
 
     // Listens for change stuff

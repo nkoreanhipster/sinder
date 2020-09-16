@@ -22,5 +22,15 @@ namespace Sinder.Controllers
             UserModel user = await Dataprovider.Instance.ReadUserById(id);
             return View(user);
         }
+
+        public async Task<IActionResult> EditeProfile()
+        {
+            var cookies = Request.Cookies["token"];
+            if (cookies == null || cookies == "null")
+                return Redirect("/login");
+            string email = SecurityHelper.GetLoggedInUser(cookies);
+            UserModel user = await Dataprovider.Instance.ReadUser(email);
+            return View(user);
+        }
     }
 }

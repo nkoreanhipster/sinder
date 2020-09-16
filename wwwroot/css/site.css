@@ -68,6 +68,12 @@ body { /* Margin bottom by footer height */
     max-width: 450px;
 }
 
+.profile-container{
+    display:flex;
+    flex-flow:row;
+    justify-content:center;
+    align-content:center;
+}
 input.form-control[name] {
     max-width: 400px;
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ namespace Sinder.Controllers.Api
 
             return new JsonResult(users)
             {
-                StatusCode = 200
+                StatusCode = (int)HttpStatusCode.OK
             };
 
         }

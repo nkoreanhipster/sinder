@@ -134,6 +134,120 @@ if (getCookie('token') !== null) {
     footerContainer.append(span)
 }
 
+// File upload listener
+(function fileUploadListener() {
+
+    var dropArea = document.querySelector('.droparea')
+    var imageFileInput = document.querySelector('#image_file_input')
+    var progressBar = document.querySelector('#upload_progressbar')
+    var progressCounter = document.querySelector('#progress_counter')
+    var uploadedImage = document.querySelector('#uploaded_image')
+
+    const initializeProgress = function (numFiles) {
+        progressBar.value = 0
+        uploadProgress = []
+
+        for (let i = numFiles; i > 0; i--) {
+            uploadProgress.push(0)
+        }
+    }
+
+    const updateProgress = function (fileNumber, percent) {
+        uploadProgress[fileNumber] = percent
+        let total = uploadProgress.reduce((tot, curr) => tot + curr, 0) / uploadProgress.length
+        console.debug('update', fileNumber, percent, total)
+        progressCounter.textContent = `${percent}%`
+        progressBar.value = total
+    }
+
+    const uploadFile = function (file, i) {
+        var url = "/api/file"
+        var xhr = new XMLHttpRequest()
+        var formData = new FormData()
+        xhr.open('POST', url, true)
+        //xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+        //xhr.setRequestHeader('Access-Control-Allow-Origin', 'localhost')
+        //xhr.setRequestHeader('Content-Type', 'multipart/form-data')
+
+        // Update progress (can be used to show progress indicator)
+        xhr.upload.addEventListener("progress", function (e) {
+            updateProgress(i, (e.loaded * 100.0 / e.total) || 100)
+        })
+
+        xhr.addEventListener('readystatechange', function (ev) {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                updateProgress(i, 100) // <- Add this
+                if (ev.target.response) {
+                    var json = JSON.parse(ev.target.response)
+                    console.log('UPLOADED!', { json: json})
+                    uploadedImage.src = json.Data.shift().Url;
+                }
+                else {
+                    console.error('Files are wrong')
+                }
+            }
+            else if (xhr.readyState == 4 && xhr.status != 200) {
+                console.error('Something wung')
+            }
+        })
+
+        xhr.addEventListener('error', function (ev) {
+            console.error({ error: ev.error })
+        })
+        // Cover for existing file
+        //formData.append('cover', false)
+        //formData.append('upload_preset', 'ijfgiouahfbnuivboaefh')
+        formData.append('file', file)
+        console.log({ file: file, i: i, formData: formData })
+        xhr.send(formData)
+    }
+
+    const highlight = function (ev) {
+        dropArea.classList.add('bg-info')
+    }
+
+    const unhighlight = function (ev) {
+        dropArea.classList.remove('bg-info')
+    }
+
+    const preventDefaults = function (ev) {
+        ev.preventDefault()
+        ev.stopPropagation()
+    }
+
+    const handleFiles = (files) => {
+        files = [...files];
+        initializeProgress(files.length)
+        files.map((file, iterator) => uploadFile(file, iterator))
+    }
+
+    const handleDrop = (ev) => {
+        var dt = ev.dataTransfer
+        var files = dt.files
+        handleFiles(files)
+    }
+
+    // Listens for change stuff
+    imageFileInput.addEventListener('change', (ev) => handleFiles(ev))
+
+        // Prevent drag default behaviour
+        ;['dragenter', 'dragover', 'dragleave', 'drop']
+            .map(eventName => {
+                window.addEventListener(eventName, preventDefaults, false)
+            })
+        // Highlight drop area when item is dragged over it
+        ;['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false)
+        })
+        ;['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false)
+        })
+
+    // Handle dropped files
+    dropArea.addEventListener('drop', handleDrop, false)
+
+})()
+
 // Log out listener
 var logoutButton = document.querySelector('ul.navbar-nav > .nav-item > a.nav-link[href="/logout"]')
 

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sinder.Helpers;
 
@@ -34,9 +36,9 @@ namespace Sinder.Controllers
         public async Task<IActionResult> Post([FromBody] UserRegistrationDto user)
         {
             List<UserModel> emails = await Dataprovider.Instance.ReadUsers(user.Email);
-            if(emails.Count > 0)
+            if (emails.Count > 0)
             {
-                return new JsonResult(new ResponseModel { Status = "Failed attempt", Message = "Emailen är redan registrerad" }, new JsonSerializerOptions
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Failed attempt", Message = "Emailen är redan registrerad" }, new JsonSerializerOptions
                 {
                     WriteIndented = true,
                 });
@@ -45,7 +47,7 @@ namespace Sinder.Controllers
             await AddNewUser(user, UserPasswords.passwordhash, UserPasswords.salt);
 
             // IF EXIST, DONT
-            return new JsonResult(new ResponseModel { Status = "Success", Message = "Användaren är nu registrerad" }, new JsonSerializerOptions
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Användaren är nu registrerad" }, new JsonSerializerOptions
             {
                 WriteIndented = true,
             });

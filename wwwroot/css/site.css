@@ -109,11 +109,26 @@ span.input-group-text {
     height: 100vh;
     position: fixed;
     /* pointer-events: none; */
-    background: black;
-    opacity: .44;
+    background: #090909;
+    opacity: .66;
     z-index: -9;
 }
 
-#modal_fadebg:hover {
-    background-color: #676d50;
+.dotted {
+    border: 2px dashed #ccc;
+    border-radius: 20px;
+    width: 480px;
+    margin: 50px auto;
+    padding: 6rem 0.1rem;
 }
+
+.modal-dialog[role=document] {
+    max-width: 600px;
+}
+
+
+/* 
+#modal_fadebg:hover {
+    background-color: #1a1a1a;
+    transition: background-color 1000ms;
+} */

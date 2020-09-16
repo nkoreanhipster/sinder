@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Connections;
@@ -48,7 +49,7 @@ namespace Sinder.Controllers.Api
             updateUser.Surname = user.Surname;
             await Dataprovider.Instance.UpdateUser(updateUser);
 
-            return new JsonResult(new ResponseModel { Status = "Success", Message = "Användaren är nu uppdaterad" }, new JsonSerializerOptions
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Användaren är nu uppdaterad" }, new JsonSerializerOptions
             {
                 WriteIndented = true,
             });

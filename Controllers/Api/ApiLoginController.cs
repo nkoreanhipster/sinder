@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,7 @@ namespace Sinder.Controllers
                 isSuccess = false;
                 status = "Fail";
                 message = "Incorrect email";
-                return new JsonResult(new ResponseModel { Status = status, Message = message, Token = token, IsSuccess = isSuccess }, new JsonSerializerOptions
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.BadRequest, Status = status, Message = message, Token = token, IsSuccess = isSuccess }, new JsonSerializerOptions
                 {
                     WriteIndented = true,
                 });
@@ -63,7 +64,7 @@ namespace Sinder.Controllers
                 token = SecurityHelper.GenerateToken(userLogin.Email);
             }
 
-            return new JsonResult(new ResponseModel { Status = status, Message = message, Token = token, IsSuccess = isSuccess }, new JsonSerializerOptions
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = status, Message = message, Token = token, IsSuccess = isSuccess }, new JsonSerializerOptions
             {
                 WriteIndented = true,
             });

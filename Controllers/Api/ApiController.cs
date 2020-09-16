@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -59,7 +60,7 @@ namespace Sinder.Controllers
                     break;
             }
 
-            return new JsonResult(new ResponseModel { Status = result.ToString(), Message = "I AM GENERIC, WHO U" }, new JsonSerializerOptions
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = result.ToString(), Message = "I AM GENERIC, WHO U" }, new JsonSerializerOptions
             {
                 WriteIndented = true,
             });

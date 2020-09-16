@@ -111,3 +111,46 @@ span.input-group-text {
 #toast_box.hide {
     transform: translateY(250px);
 }
+
+.modal.open {
+    display: block;
+}
+
+.fade {
+    opacity: 0;
+    transition: opacity .15s linear;
+}
+
+.fade.show {
+    opacity: 1;
+    transition: opacity .15s linear;
+}
+
+#modal_fadebg {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    /* pointer-events: none; */
+    background: #090909;
+    opacity: .66;
+    z-index: -9;
+}
+
+.dotted {
+    border: 2px dashed #ccc;
+    border-radius: 20px;
+    width: 480px;
+    margin: 50px auto;
+    padding: 6rem 0.1rem;
+}
+
+.modal-dialog[role=document] {
+    max-width: 600px;
+}
+
+
+/* 
+#modal_fadebg:hover {
+    background-color: #1a1a1a;
+    transition: background-color 1000ms;
+} */

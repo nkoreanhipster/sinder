@@ -68,6 +68,44 @@
 
     </div>
 
+    @* Toggable modal with profile image upload *@
+    <div class="modal fade" id="image_modal" tabindex="-1" role="dialog">
+        @* Overlay with darkened background *@
+        <div id="modal_fadebg" data-target="#image_modal" data-toggle="modal"></div>
+        @* Content *@
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Ladda upp eller redigera profilbilder</h5>
+              <button type="button" class="close" data-target="#image_modal" data-toggle="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <div class="dotted droparea" style="text-align: center;">
+                    <p class="">Dra och släpp bilder hör eller tryck på knappen</p>
+                    <input type="file" id="image_file_input" multiple="" accept="image/*">
+                    <img class="img img-fluid" id="uploaded_image" />
+                </div>
+                <div class="d-flex justify-content-center my-1">
+                    <img class="img mx-1" data-source="http://api.jkb.zone/image/random?w=200&h=200" src="/images/placeholder160.png"/>
+                    <img class="img mx-1" data-source="http://api.jkb.zone/image/random?w=200&h=200" src="/images/placeholder160.png"/>
+                    <img class="img mx-1" data-source="http://api.jkb.zone/image/random?w=200&h=200" src="/images/placeholder160.png"/>
+                </div>
+                <div class="progress my-2">
+                    <div id="progress_counter"></div>
+                    <div id="upload_progressbar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-target="#image_modal" data-toggle="modal">Stäng</button>
+              <button type="button" class="btn btn-primary">Spara</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    @* End of modal  *@
+
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2020 - Sinder - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

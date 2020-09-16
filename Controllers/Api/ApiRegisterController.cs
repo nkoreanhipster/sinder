@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +45,10 @@ namespace Sinder.Controllers
             var UserPasswords = SecurityHelper.GetPassword(user.Password);
             await AddNewUser(user, UserPasswords.passwordhash, UserPasswords.salt);
 
-            // IF EXIST, DONT
+
+
+            // IF user is registered
+
             return new JsonResult(new ResponseModel { Status = "Success", Message = "Användaren är nu registrerad" }, new JsonSerializerOptions
             {
                 WriteIndented = true,

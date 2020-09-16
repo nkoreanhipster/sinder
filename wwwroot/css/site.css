@@ -68,10 +68,32 @@ body { /* Margin bottom by footer height */
     max-width: 450px;
 }
 
+.profile-container{
+    display:flex;
+    flex-flow:row;
+    justify-content:center;
+    align-content:center;
+}
+.card-profile{
+    display:flex;
+    flex-flow:row;
+    width:45px;
+    height:40px;
+    justify-content:center;
+    align-content:center;
+}
+.font-style{
+    font-family:'Comic Sans MS';
+    font-size:14px;
+}
 input.form-control[name] {
     max-width: 400px;
 }
 
+.profile-border-color{
+    border-color:gray;
+    border:medium;
+}
 span.input-group-text {
     width: 50px;
 }

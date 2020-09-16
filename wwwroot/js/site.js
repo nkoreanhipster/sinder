@@ -93,14 +93,18 @@ function isValidDate(d) {
     return d instanceof Date && !isNaN(d);
 }
 
+
 // Catch all elements with attribute 'data-toggle'
 var toggableElements = [...document.querySelectorAll('*[data-toggle]')]
     ; toggableElements.map(el => {
 
         el.addEventListener('click', (ev) => {
+            ev.preventDefault()
             var toggleType = el.getAttribute('data-toggle')
             var targetName = el.getAttribute('data-target')
             var targetEle = document.querySelector(targetName) || null
+
+            console.log(toggleType, targetName, targetEle)
 
             if (toggleType === 'collapse') {
                 targetEle.classList.toggle('collapse')
@@ -108,11 +112,13 @@ var toggableElements = [...document.querySelectorAll('*[data-toggle]')]
             if (toggleType === 'dropdown') {
                 targetEle.classList.toggle('show')
             }
+            if (toggleType == 'modal') {
+                console.log('closed')
+                targetEle.classList.toggle('show')
+                targetEle.classList.toggle('open')
+            }
         })
-
     })
-
-
 
 // Reactive stuff set up
 
@@ -130,6 +136,7 @@ if (getCookie('token') !== null) {
 
 // Log out listener
 var logoutButton = document.querySelector('ul.navbar-nav > .nav-item > a.nav-link[href="/logout"]')
+
 // Remove token and reload home page
 logoutButton.addEventListener('click', (ev) => {
     ev.preventDefault()
@@ -140,7 +147,7 @@ logoutButton.addEventListener('click', (ev) => {
 // Listeners for menu buttons
 var currentUrl = new URL(window.location.href)
 var navButtons = [...document.querySelectorAll('ul.navbar-nav > .nav-item')];
-//var currentPageMarker = document.querySelector('.nav-link > span.sr-only')
+
 navButtons.map(navBtn => {
     // Switch navbutton page marker
     if (navBtn.querySelector('a').href === currentUrl.href)
@@ -152,6 +159,13 @@ navButtons.map(navBtn => {
 // Remove all open drop-down toggles on window resize
 // To fix the UI-bug with a drop-down remaining open if window is resized
 NamedspacedQueue.enqueue('onWindowResize', (ev) => {
+    var dropdownElements = toggableElements.filter(el => el.hasAttribute('data-toggle') && el.getAttribute('data-toggle') === 'dropdown')
+    var targetElements = dropdownElements.map(el => document.querySelector(el.getAttribute('data-target')))
+    targetElements.map(el => el.classList.remove('show'))
+})
+
+// Watch for some stuff on window click
+NamedspacedQueue.enqueue('onWindowClick', (ev) => {
     var dropdownElements = toggableElements.filter(el => el.hasAttribute('data-toggle') && el.getAttribute('data-toggle') === 'dropdown')
     var targetElements = dropdownElements.map(el => document.querySelector(el.getAttribute('data-target')))
     targetElements.map(el => el.classList.remove('show'))

@@ -89,3 +89,31 @@ span.input-group-text {
 #toast_box.hide {
     transform: translateY(250px);
 }
+
+.modal.open {
+    display: block;
+}
+
+.fade {
+    opacity: 0;
+    transition: opacity .15s linear;
+}
+
+.fade.show {
+    opacity: 1;
+    transition: opacity .15s linear;
+}
+
+#modal_fadebg {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    /* pointer-events: none; */
+    background: black;
+    opacity: .44;
+    z-index: -9;
+}
+
+#modal_fadebg:hover {
+    background-color: #676d50;
+}

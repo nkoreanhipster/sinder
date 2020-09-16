@@ -1,22 +1,23 @@
-﻿@@model UserModel
+﻿@model UserModel
 @{
     ViewData["Title"] = "Profilsida";
 }
 <div class="invisible" id="id"> @Model.ID</div>
 <div id="page_profile">
     <div class="profile-container p-5 container">
-        <div class="card justify-content-center" style="width: 25rem;">
+        <div class="card profile-border-color" style="width: 20rem;">
             <img src="favicon.ico" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">Tindra</h5>
+            <div class="card-title border-bottom profile-border-color">
+                <h5 class="card-title profile-container">@Model.Firstname @Model.Surname 42 år</h5>
             </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">27 år</li>
-                <li class="list-group-item">Södermanland</li>
-                <li class="list-group-item">Kvinna</li>
-            </ul>
-            <div class="card-body">
-                <a href="#" class="card-link">Matcha</a>
+            
+            <div class="card-body profile-border-color">
+                <p class="font-style">@Model.Gender</p>
+                <p class="font-style">@Model.Email</p>
+                <p class="font-style">@Model.Location</p>
+            </div>
+            <div class="card-body profile-container">
+                <a class="btn btn-primary" href="/profile/editprofile" >Redigera Profil</a>
             </div>
         </div>
     </div>

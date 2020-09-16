@@ -23,7 +23,7 @@ namespace Sinder.Controllers
             return View(user);
         }
 
-        public async Task<IActionResult> EditeProfile()
+        public async Task<IActionResult> EditProfile()
         {
             var cookies = Request.Cookies["token"];
             if (cookies == null || cookies == "null")

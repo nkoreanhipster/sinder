@@ -108,7 +108,7 @@ namespace Sinder
             }
         }
 
-        public async Task<List<ImageModel>> GetUserImagesById(int imageId)
+        public async Task<List<ImageModel>> GetUserImagesByImageId(int imageId)
         {
             using (var connection = CreateDBConnection())
             {
@@ -116,7 +116,7 @@ namespace Sinder
             }
         }
 
-        public async Task<List<ImageModel>> GetUserImages(int userId)
+        public async Task<List<ImageModel>> GetUserImagesByUserID(int userId)
         {
             using (var connection = CreateDBConnection())
             {

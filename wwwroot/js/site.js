@@ -1,4 +1,10 @@
-﻿// Stuff events in an orderly queue
+﻿const Eggplant = (function () {
+    this.element = document.querySelector('#eggplant')
+    return this
+})()
+
+
+// Stuff events in an orderly queue
 const Queue = (function () {
     this.queue = []
     this.enqueue = (...args) => [...args].map(item => this.queue.push(item))
@@ -25,37 +31,67 @@ const NamedspacedQueue = (function () {
 })();
 
 // Fjantig notifikations-kontroller
-var Cheesebox = (function () {
-    this.element = document.querySelector('#toast_box')
-    this.body = document.querySelector('#toast_box > .toast-body')
-    this.element.style = "transition: width 250ms, height 250ms, background-color 250ms, transform 250ms;"
-
-    this.hide = () => this.element.classList.remove('show')
-    this.show = (text) => {
-        this.body.innerText = text
-        this.element.classList.add('show')
-    }
-    this.element.querySelector('button[data-dismiss]').addEventListener('click', (ev) => {
-        this.hide()
-    })
-    return this
-})();
-
 var Successbox = (function () {
-    this.element = document.querySelector('#success_box')
-    this.body = document.querySelector('#success_box > .toast-body')
-    this.element.style = "transition: width 250ms, height 250ms, background-color 250ms, transform 100ms;"
+    var self = {}
 
-    this.hide = () => this.element.classList.remove('show')
-    this.show = (text) => {
-        this.element.style = "transform: translateY(-100px); transition: all 1500ms; "
-        this.body.innerText = text
-        this.element.classList.add('show')
+    self.element = document.querySelector('#success_box')
+    self.body = self.element.querySelector('.toast-body')
+    self.title = self.element.querySelector('.toast-header > strong')
+
+    // Go away
+    self.hide = () => self.element.classList.remove('show')
+
+    self.setBackgroundColor = (color) => self.element.style.backgroundColor = color || '#fff'
+
+    self.setColor = (color) => self.element.style.color = color || '#fff'
+
+    self.setTitle = (text) => self.title.textContent = text
+
+    self.clearText = () => {
+        // Clear text and nodes
+        while (self.body.firstChild) {
+            self.body.removeChild(self.body.lastChild);
+        }
     }
-    this.element.querySelector('button[data-dismiss]').addEventListener('click', (ev) => {
-        this.hide()
+
+    self.setText = (text) => {
+        var p = document.createElement('p')
+        p.classList.add('display-1')
+        p.textContent = text
+        self.body.append(p)
+    }
+
+    // Flash annoyingly
+    self.flash = (durationMs = 1000) => {
+        var start = new Date().getTime();
+        var counter = 0;
+        var handle = window.setInterval(() => {
+            var flashingColors = ['blue', 'red', 'white', 'black']
+            var n = counter % 2
+            self.setBackgroundColor(flashingColors[n])
+            self.setColor(flashingColors[n + 2])
+
+            // Break loop if specified milliseconds has passed since start
+            var currentMs = new Date().getTime()
+
+            if (currentMs > (start + durationMs)) {
+                window.clearInterval(handle)
+            }
+
+            counter++
+        }, 2)
+    }
+
+    self.show = (text, title) => {
+        self.setTitle(title || '')
+        self.clearText()
+        self.setText(text || '')
+        self.element.classList.add('show')
+    }
+    self.element.querySelector('button[data-dismiss]').addEventListener('click', (ev) => {
+        self.hide()
     })
-    return this
+    return self
 })();
 
 // todo; namespaces and stuff
@@ -243,12 +279,12 @@ if (getCookie('token') !== null) {
         return img
     }
 
-    const handleFiles = async(ev) => {
+    const handleFiles = async (ev) => {
         initializeProgress(ev.target.files.length)
         var urls = []
 
         for (let i = 0; i < ev.target.files.length; i++) {
-            const file = ev.target.files[i]; 
+            const file = ev.target.files[i];
             await readURL(file)
                 .then(url => urls.push(url))
         }

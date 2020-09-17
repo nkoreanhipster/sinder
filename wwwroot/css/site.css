@@ -123,31 +123,24 @@ span.input-group-text {
     width: 50px;
 }
 
-/*Aniamtions for -> #toastbox*/
-#toast_box {
-    transition: all 1500ms;
-    margin: 0 auto;
-}
-
-#toast_box.show {
-    transform:translateY(-25px);
-}
-
-#toast_box.hide {
-    transform: translateY(250px);
+#eggplant {
+    cursor: pointer;
 }
 
 #success_box {
-    transition: all 1500ms;
-    margin: 0 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition:transform 175ms;
 }
 
 #success_box.show {
-    transform: translateY(-75px);
+    transform: translate(-50%, -60%);
 }
 
 #success_box.hide {
-    transform: translateY(250px);
+    transform: translateY(-50%, -25%);
 }
 
 .modal.open {

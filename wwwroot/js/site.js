@@ -258,7 +258,7 @@ if (getCookie('token') !== null) {
             .map(url => createImageElement(url))
             .map(imgEle => {
                 for (let i = 0; i < event.target.files.length; i++) {
-                    const tempFile = files[i]
+                    const tempFile = event.target.files[i]
                     uploadFile(tempFile, i, function (imageUrl) {
                         imgEle.src = imageUrl
                     })

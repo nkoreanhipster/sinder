@@ -135,7 +135,7 @@
         ev.preventDefault()
 
         if (confirmPassword !== password) {
-            Cheesebox.show("Lösenord stämmer inte överens")
+            Cheesebox.show("nya lösenord stämmer inte överens")
             return;
         }
         var data = { Firstname: firstname.value, Surname: surname.value, Password: password.value, ID: document.querySelector("#id").textContent.replace(' ', '') }

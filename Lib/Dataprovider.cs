@@ -65,19 +65,7 @@ namespace Sinder
         {
             using (var connection = CreateDBConnection())
             {
-                //return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Id = Users.Id", new { Id = id })).First();
-                string query =
-                     $"SELECT u.*, GROUP_CONCAT(Url ORDER BY i.UserID) as ImageString " +
-                     $"FROM Users u " +
-                     $"JOIN Images i " +
-                     $"ON i.UserID = u.ID " +
-                     $"WHERE @Id = u.ID " +
-                     $"GROUP BY u.ID ;";
-                var user = (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Id = Users.Id", new { Id = id })).First();
-                user.ImageString.Split(',')
-                    .ToList()
-                    .ForEach(imageString => user.Images.Add(new ImageModel() { Url = imageString }));
-                return user;
+                return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Id = Users.Id", new { Id = id })).First();
             }
         }
         public async Task<UserModel> ReadUserByEmail(string email) => (await ReadUsersByEmail(email)).First();
@@ -86,21 +74,7 @@ namespace Sinder
         {
             using (var connection = CreateDBConnection())
             {
-                string query =
-                    $"SELECT u.*, GROUP_CONCAT(Url ORDER BY i.UserID) as ImageString " +
-                    $"FROM Users u " +
-                    $"JOIN Images i " +
-                    $"ON i.UserID = u.ID " +
-                    $"WHERE	@Email = u.Email " +
-                    $"GROUP BY u.ID ;";
-                var users = (await connection.QueryAsync<UserModel>(query, new { Email = email })).ToList();
-                users.ForEach(user =>
-                {
-                    user.ImageString.Split(',')
-                        .ToList()
-                        .ForEach(imageString => user.Images.Add(new ImageModel() { Url = imageString }));
-                });
-                return users;
+                return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Email = Users.Email", new { Email = email })).ToList();
             }
         }
 

@@ -46,7 +46,7 @@
         arr.map(item => {
             var li = document.createElement('li')
             var span = document.createElement('span')
-            span.innerText = `id:${item.id} email${item.email} firstname${item.firstname} surname${item.surname} age${item.age}`
+            span.innerText = `${item.firstname} ${item.surname}, ${moment().diff(item.age, 'years')} år`
             li.append(span)
             searchResults.append(li)
         })

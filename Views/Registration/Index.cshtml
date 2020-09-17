@@ -266,11 +266,13 @@
 
         // Also get uploaded images
         var images = [];
-        [...document.querySelectorAll('img[data-type="img-upload"]')]
-            .filter(el => !el.hasAttribute('data-source'))
+        [...document.querySelectorAll('img.take-me')]
+            .filter(el => !el.classList.contains('placeholder'))
             .map(imgEle => {
                 images.push({ Url: imgEle.src})
             })
+
+        console.log({images:images})
 
         var e = document.getElementById("gender")
         var gender = e.options[e.selectedIndex].value

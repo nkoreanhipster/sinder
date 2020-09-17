@@ -1,0 +1,13 @@
+﻿@model UserModel
+@{
+    ViewData["Title"] = "Redigera Profil";
+}
+<tr>
+    <div class="invisible" id="id"> @Model.ID</div>
+    <div>
+        @foreach (var image in Model.Images)
+        {
+            <img src="@image.Url?w=160&h=160"/>
+        }
+    </div>
+</tr>

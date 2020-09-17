@@ -35,6 +35,9 @@ namespace Sinder.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] UserRegistrationDto user)
         {
+            if (user.Images.Count < 1)
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.BadRequest, Status = "Failed attempt", Message = "Saknas bilder" }, new JsonSerializerOptions { }); ;
+            
             List<UserModel> emails = await Dataprovider.Instance.ReadUsersByEmail(user.Email);
             if (emails.Count > 0)
             {
@@ -45,6 +48,7 @@ namespace Sinder.Controllers
             }
             var UserPasswords = SecurityHelper.GetPassword(user.Password);
             await AddNewUser(user, UserPasswords.passwordhash, UserPasswords.salt);
+            
 
             // IF EXIST, DONT
             return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Användaren är nu registrerad" }, new JsonSerializerOptions
@@ -76,8 +80,19 @@ namespace Sinder.Controllers
             newUser.HashedPassword = passwordHash;
             newUser.Salt = salt;
             newUser.Location = user.Location;
+            newUser.Images = user.Images;
 
             await Dataprovider.Instance.RegisterNewUser(newUser);
+
+            // Get user id from newly created row
+            var userRow = await Dataprovider.Instance.ReadUserByEmail(newUser.Email);
+            int id = userRow.ID;
+
+            // Also add images from register function
+            foreach (ImageModel image in newUser.Images)
+            {
+                await Dataprovider.Instance.AddUserImage(id, image.Url);
+            }
         }
     }
 }

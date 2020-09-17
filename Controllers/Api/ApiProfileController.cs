@@ -38,15 +38,33 @@ namespace Sinder.Controllers.Api
 
         // PUT api/<ApiUserController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id,[FromBody] UpdateUserDto user)
+        public async Task<IActionResult> Put(int id, [FromBody] UpdateUserDto user)
         {
             UserModel updateUser = new UserModel();
             updateUser = await Dataprovider.Instance.ReadUserById(id);
+            if (user.CurrentPassword != null)
+            {
+                if (SecurityHelper.VerifyPasswordHash(user.CurrentPassword, updateUser.HashedPassword, updateUser.Salt) == false)
+                {
+                    return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Gamla lösenordet stämde inte överrens" }, new JsonSerializerOptions
+                    {
+                        WriteIndented = true,
+                    });
+                }
+               
+            }
+
             var parts = SecurityHelper.GetPassword(user.Password);
             updateUser.HashedPassword = parts.passwordhash;
             updateUser.Salt = parts.salt;
-            updateUser.Firstname = user.FirstName;
-            updateUser.Surname = user.Surname;
+            if (!String.IsNullOrEmpty(user.FirstName))
+            {
+                updateUser.Firstname = user.FirstName;
+            }
+            if (!String.IsNullOrEmpty(user.Surname))
+            {
+                updateUser.Surname = user.Surname;
+            }
             await Dataprovider.Instance.UpdateUser(updateUser);
 
             return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Användaren är nu uppdaterad" }, new JsonSerializerOptions

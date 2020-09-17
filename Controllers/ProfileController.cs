@@ -15,13 +15,12 @@ namespace Sinder.Controllers
                 return Redirect("/login");
             string email = SecurityHelper.GetLoggedInUser(cookies);
             UserModel user = await Dataprovider.Instance.ReadUserByEmail(email);
-            List<ImageModel> images = await Dataprovider.Instance.GetAllUserImages();
+            List<ImageModel> images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
             user.Images = images;
             return View(user);
         }
         public async Task<IActionResult> User(int id)
         {
-
             UserModel user = await Dataprovider.Instance.ReadUserById(id);
             return View(user);
         }

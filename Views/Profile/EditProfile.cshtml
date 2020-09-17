@@ -50,28 +50,7 @@
             </select>
             <div class="invalid-feedback">Välj ett landskap.</div>
         </div>
-        <div class="form-group input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fas fa-lock" style="color:#eb6864"></i></span>
-            </div>
-            <input type="password" name="oldPassword" class="form-control" placeholder="Ange ditt gamla Lösenord">
-            <div class=" invalid-feedback">Lösenordet stämde inte överens</div>
 
-        </div>
-        <div class="form-group input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fas fa-lock" style=" color: #eb6864"></i> </span>
-            </div>
-            <input type="password" name="password" class="form-control" placeholder="Lösenord">
-            <div class="invalid-feedback">Lösenordet måste bestå av minst 6 tecken</div>
-        </div>
-        <div class="form-group input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fas fa-lock" style=" color: #eb6864"></i> </span>
-            </div>
-            <input type="password" name="confirm-password" class="form-control" placeholder="Bekräfta Lösenord">
-            <div class="invalid-feedback">Lösenordet måste bestå av minst 6 tecken och stämma överens med tidigare fält</div>
-        </div>
         <div class="form-group input-group">
             <div class="input-group-prepend">
                 <span class="input-group-text"> <i class="fas fa-camera-retro" style=" color: #eb6864"></i> </span>
@@ -81,59 +60,122 @@
         <div class=" form-group">
             <button type="submit" name="editbtn" class="btn btn-primary btn-block" disabled>Ändra uppgifter</button>
         </div>
-        <div class=" form-group">
-            <button name="backbtn" class="btn btn-primary btn-block">Tillbaka</button>
+        <div class="form-group">
+            <button class="btn btn-primary btn-block" data-toggle="collapse" href="#changePassword" role="button">Ändra lösenord</button>
         </div>
+
     </form>
+    <div class="collapse" id="changePassword">
+        <form>
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fas fa-lock" style="color:#eb6864"></i></span>
+                </div>
+                <input type="password" name="currentpassword" class="form-control" placeholder="Ange ditt gamla Lösenord">
+                <div class=" invalid-feedback">Lösenordet stämde inte överens</div>
+
+            </div>
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fas fa-lock" style=" color: #eb6864"></i> </span>
+                </div>
+                <input type="password" name="password" class="form-control" placeholder="Lösenord">
+                <div class="invalid-feedback">Lösenordet måste bestå av minst 6 tecken</div>
+            </div>
+            <div class="form-group input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fas fa-lock" style=" color: #eb6864"></i> </span>
+                </div>
+                <input type="password" name="confirm-password" class="form-control" placeholder="Bekräfta Lösenord">
+                <div class="invalid-feedback">Lösenordet måste bestå av minst 6 tecken och stämma överens med tidigare fält</div>
+            </div>
+            <button name="btnChangePassword" class="btn btn-primary btn-block" type="submit" disabled>Ändra Lösenord</button>
+        </form>
+    </div>
+    <div class="mt-4">
+        <button name="backbtn" class="btn btn-primary btn-block">Tillbaka</button>
+    </div>
 </article>
 
 <script>
+    var btnChangePassword = document.querySelector('button[name="btnChangePassword"]')
+    var editbtn = document.querySelector('button[name="editbtn"]')
+
     var firstname = document.querySelector('input[name="firstname"]')
     firstname.addEventListener('input', (ev) => {
         if (ev.target.value.length < 2) {
             ev.target.classList.add("is-invalid")
+            editbtn.setAttribute("disabled", "")
         }
         else {
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
+            editbtn.removeAttribute("disabled")
         }
-        validateForm()
+        
     })
     var surname = document.querySelector('input[name="surname"]')
     surname.addEventListener('input', (ev) => {
         if (ev.target.value.length < 2) {
             ev.target.classList.add("is-invalid")
+            editbtn.setAttribute("disabled", "")
+        }
+        else {
+            ev.target.classList.remove("is-invalid")
+            ev.target.classList.add("is-valid")
+            editbtn.removeAttribute("disabled")
+        }
+        
+    })
+
+    var currentPassword = document.querySelector('input[name="currentpassword"]')
+    currentPassword.addEventListener('input', (ev) => {
+        if (ev.target.value.length < 6) {
+            ev.target.classList.add("is-invalid")
         }
         else {
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
         }
-        validateForm()
+        validatePasswords()
     })
+
+
     var password = document.querySelector('input[name="password"]')
     password.addEventListener('input', (ev) => {
         if (ev.target.value.length < 6) {
             ev.target.classList.add("is-invalid")
-            editbtn.setAttribute('disabled', "")
         }
         else {
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
         }
+        validatePasswords()
     })
     var confirmPassword = document.querySelector('input[name="confirm-password"]')
     confirmPassword.addEventListener('input', (ev) => {
         if (ev.target.value.length < 6 || ev.target.length > 20) {
             ev.target.classList.add("is-invalid")
-            editbtn.setAttribute('disabled', "")
         }
         else {
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
-            editbtn.removeAttribute('disabled')
         }
+        validatePasswords()
     })
-    var editbtn = document.querySelector('button[name="editbtn"]')
+
+    function validatePasswords() {
+        var passwordElements = [...document.querySelectorAll('button[name="confirm-password"], button[name="password"], button[name="currentpassword"]')];
+
+        if (passwordElements.filter(el => el.classList.contains('is-invalid')).length == 0)
+            btnChangePassword.removeAttribute('disabled')
+        else
+            btnChangePassword.setAttribute('disabled', "")
+
+    }
+
+
+    
     editbtn.addEventListener('click', (ev) => {
         ev.preventDefault()
 
@@ -142,7 +184,44 @@
             Cheesebox.show("nya lösenord stämmer inte överens")
             return;
         }
-        var data = { Firstname: firstname.value, Surname: surname.value, Password: password.value, ID: document.querySelector("#id").textContent.replace(' ', '') }
+        var data = {
+            Firstname: firstname.value,
+            Surname: surname.value,
+            Password: password.value,
+            ID: document.querySelector("#id").textContent.replace(' ', ''),
+            CurrentPassword: currentPassword.value
+        }
+
+        fetch(`/api/profile/${data.ID}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(json => {
+                Successbox.show(json.Message)
+            })
+            .catch(err => console.error(err))
+    })
+
+    btnChangePassword.addEventListener('click', (ev) => {
+        ev.preventDefault()
+
+
+        if (password.value !== confirmPassword.value) {
+            Cheesebox.show("nya lösenord stämmer inte överens")
+            return;
+        }
+        var data = {
+            Firstname: firstname.value,
+            Surname: surname.value,
+            Password: password.value,
+            ID: document.querySelector("#id").textContent.replace(' ', ''),
+            CurrentPassword: currentPassword.value
+        }
 
         fetch(`/api/profile/${data.ID}`, {
             method: 'PUT',

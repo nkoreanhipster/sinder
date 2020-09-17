@@ -28,7 +28,7 @@ namespace Sinder.Controllers.Api
         {
             ImageModel image = new ImageModel();
             List<ImageModel> images = new List<ImageModel>();
-            images = await Dataprovider.Instance.GetUserImagesById(id);
+            images = await Dataprovider.Instance.GetUserImagesByImageId(id);
             if (images.Count < 1)
                 return "no image by that that id";
             return images.First().Url;

@@ -137,6 +137,19 @@ span.input-group-text {
     transform: translateY(250px);
 }
 
+#success_box {
+    transition: all 1500ms;
+    margin: 0 auto;
+}
+
+#success_box.show {
+    transform: translateY(-75px);
+}
+
+#success_box.hide {
+    transform: translateY(250px);
+}
+
 .modal.open {
     display: block;
 }

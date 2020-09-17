@@ -30,7 +30,7 @@
 
             <img src="favicon.ico" class="card-img-top" alt="Ingen profilbild..">
             <div class="container">
-                <h4><b>@Model.Firstname @Model.Surname 42 år</b></h4>
+                <h4><b>@Model.Firstname @Model.Surname </b></h4>
                 <p class="profile-font-style">@Model.Email</p>
                 <p>@Model.Gender</p>
                 <p>@Model.Location</p>
@@ -38,18 +38,18 @@
             <div class="card-body profile-container border">
                 <a class="btn btn-primary" href="/profile/editprofile">Redigera Profil</a>
             </div>
-            @*<div class="card-title container">
-            <h5 class="card-title ">@Model.Firstname @Model.Surname 42 år</h5>
-        </div>
-
-        <div class="card-body container">
-            <p class="font-style">@Model.Gender</p>
-            <p class="font-style">@Model.Email</p>
-            <p class="font-style">@Model.Location</p>
-        </div>
-        <div class="card-body profile-container border">
-            <a class="btn btn-primary" href="/profile/editprofile">Redigera Profil</a>
-        </div>*@
         </div>
     </div>
+    <div class="profile-container" style="align-content:flex-start">
+        <button class="btn btn-primary" name="logout" style="margin:auto" >Logga ut</button>
+    </div>
 </div>
+<script>
+    var logoutButton = document.querySelector('button[name="logout"]')
+
+    logoutButton.addEventListener('click', (ev) => {
+        ev.preventDefault()
+        eraseCookie('token')
+        window.location.replace('/home')
+    })
+</script>

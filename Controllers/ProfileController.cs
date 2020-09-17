@@ -15,6 +15,8 @@ namespace Sinder.Controllers
                 return Redirect("/login");
             string email = SecurityHelper.GetLoggedInUser(cookies);
             UserModel user = await Dataprovider.Instance.ReadUserByEmail(email);
+            List<ImageModel> images = await Dataprovider.Instance.GetAllUserImages();
+            user.Images = images;
             return View(user);
         }
         public async Task<IActionResult> User(int id)
@@ -31,6 +33,8 @@ namespace Sinder.Controllers
                 return Redirect("/login");
             string email = SecurityHelper.GetLoggedInUser(cookies);
             UserModel user = await Dataprovider.Instance.ReadUserByEmail(email);
+            List<ImageModel> images = await Dataprovider.Instance.GetAllUserImages();
+            user.Images = images;
             return View(user);
         }
 

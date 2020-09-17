@@ -305,15 +305,6 @@ if (getCookie('token') !== null) {
 
 })()
 
-// Log out listener
-var logoutButton = document.querySelector('ul.navbar-nav > .nav-item > a.nav-link[href="/logout"]')
-
-// Remove token and reload home page
-logoutButton.addEventListener('click', (ev) => {
-    ev.preventDefault()
-    eraseCookie('token')
-    window.location.replace('/home')
-})
 
 // Listeners for menu buttons
 var currentUrl = new URL(window.location.href)

@@ -81,6 +81,9 @@
         <div class=" form-group">
             <button type="submit" name="editbtn" class="btn btn-primary btn-block" disabled>Ändra uppgifter</button>
         </div>
+        <div class=" form-group">
+            <button name="backbtn" class="btn btn-primary btn-block">Tillbaka</button>
+        </div>
     </form>
 </article>
 
@@ -134,7 +137,8 @@
     editbtn.addEventListener('click', (ev) => {
         ev.preventDefault()
 
-        if (confirmPassword !== password) {
+
+        if (password.value !== confirmPassword.value) {
             Cheesebox.show("nya lösenord stämmer inte överens")
             return;
         }
@@ -150,10 +154,15 @@
         })
             .then(response => response.json())
             .then(json => {
-                console.log(json)
-
+                Successbox.show(json.Message)
             })
             .catch(err => console.error(err))
+    })
+    var backbtn = document.querySelector('button[name="backbtn"]')
+    backbtn.addEventListener('click', (ev) => {
+        ev.preventDefault()
+        window.location.href = "/profile"
+        return;
     })
 </script>
 

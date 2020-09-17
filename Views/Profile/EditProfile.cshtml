@@ -70,7 +70,7 @@
                 <span class="input-group-text"> <i class="fas fa-lock" style=" color: #eb6864"></i> </span>
             </div>
             <input type="password" name="confirm-password" class="form-control" placeholder="Bekräfta Lösenord">
-            <div class="invalid-feedback">Lösenordet måste bestå av minst 6 tecken</div>
+            <div class="invalid-feedback">Lösenordet måste bestå av minst 6 tecken och stämma överens med tidigare fält</div>
         </div>
         <div class="form-group input-group">
             <div class="input-group-prepend">
@@ -79,7 +79,7 @@
             <input type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.tif,.tiff,.bmp">
         </div>
         <div class=" form-group">
-            <input type="submit" name="editbtn" class="btn btn-primary btn-block" value="Ändra uppgifter">
+            <button type="submit" name="editbtn" class="btn btn-primary btn-block" disabled>Ändra uppgifter</button>
         </div>
     </form>
 </article>
@@ -111,6 +111,7 @@
     password.addEventListener('input', (ev) => {
         if (ev.target.value.length < 6) {
             ev.target.classList.add("is-invalid")
+            editbtn.setAttribute('disabled', "")
         }
         else {
             ev.target.classList.remove("is-invalid")
@@ -119,17 +120,24 @@
     })
     var confirmPassword = document.querySelector('input[name="confirm-password"]')
     confirmPassword.addEventListener('input', (ev) => {
-        if (ev.target.value.length < 6 || password.value != ev.target.value || ev.target.length > 20) {
+        if (ev.target.value.length < 6 || ev.target.length > 20) {
             ev.target.classList.add("is-invalid")
+            editbtn.setAttribute('disabled', "")
         }
         else {
             ev.target.classList.remove("is-invalid")
             ev.target.classList.add("is-valid")
+            editbtn.removeAttribute('disabled')
         }
     })
-    var editbtn = document.querySelector('input[name="editbtn"]')
+    var editbtn = document.querySelector('button[name="editbtn"]')
     editbtn.addEventListener('click', (ev) => {
         ev.preventDefault()
+
+        if (confirmPassword !== password) {
+            Cheesebox.show("Lösenord stämmer inte överens")
+            return;
+        }
         var data = { Firstname: firstname.value, Surname: surname.value, Password: password.value, ID: document.querySelector("#id").textContent.replace(' ', '') }
 
         fetch(`/api/profile/${data.ID}`, {
@@ -146,8 +154,6 @@
 
             })
             .catch(err => console.error(err))
-
     })
-
 </script>
 

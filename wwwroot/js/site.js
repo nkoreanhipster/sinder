@@ -155,7 +155,7 @@ if (getCookie('token') !== null) {
     var progressCounter = document.querySelector('#progress_counter')
     var uploadedImage = document.querySelector('#uploaded_image')
     var imagePreviewList = document.querySelector('#image_preview_list')
-    
+    var uploadProgress = null;
 
     const initializeProgress = function (numFiles) {
         progressBar.value = 0
@@ -243,22 +243,20 @@ if (getCookie('token') !== null) {
         return img
     }
 
-    const handleFiles = async(event) => {
-
+    const handleFiles = async(ev) => {
+        initializeProgress(ev.target.files.length)
         var urls = []
 
-        console.log(event.target.files)
-
-        for (let i = 0; i < event.target.files.length; i++) {
-            const file = event.target.files[i]; 
+        for (let i = 0; i < ev.target.files.length; i++) {
+            const file = ev.target.files[i]; 
             await readURL(file)
                 .then(url => urls.push(url))
         }
         urls
             .map(url => createImageElement(url))
             .map(imgEle => {
-                for (let i = 0; i < event.target.files.length; i++) {
-                    const tempFile = files[i]
+                for (let i = 0; i < ev.target.files.length; i++) {
+                    const tempFile = ev.target.files[i]
                     uploadFile(tempFile, i, function (imageUrl) {
                         imgEle.src = imageUrl
                     })
@@ -268,8 +266,8 @@ if (getCookie('token') !== null) {
         document.querySelector('img.placeholder').src = urls.pop()
     }
 
-    const handleDropFiles = async (event) => {
-        files = [...event];
+    const handleDropFiles = async (ev) => {
+        var files = [...ev];
         initializeProgress(files.length)
 
         var urls = []

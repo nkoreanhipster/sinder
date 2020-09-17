@@ -43,9 +43,7 @@ namespace Sinder.Controllers
             if (Users.Count < 1)
             {
                 isSuccess = false;
-                status = "Fail";
-                message = "Incorrect email";
-                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.BadRequest, Status = status, Message = message, Token = token, IsSuccess = isSuccess }, new JsonSerializerOptions
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.BadRequest, Status = "Fail", Message = "Incorrect email", Token = token, IsSuccess = isSuccess }, new JsonSerializerOptions
                 {
                     WriteIndented = true,
                 });
@@ -53,8 +51,10 @@ namespace Sinder.Controllers
             if (!SecurityHelper.VerifyPasswordHash(userLogin.Password, Users[0].HashedPassword, Users[0].Salt))
             {
                 isSuccess = false;
-                status = "Fail";
-                message = "Incorrect password";
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Incorrect password", Token = token, IsSuccess = isSuccess }, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                });
             }
 
             // If success, generate JWT token

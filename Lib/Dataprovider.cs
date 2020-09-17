@@ -100,6 +100,62 @@ namespace Sinder
             }
         }
 
+        public async Task<List<ImageModel>> GetAllUserImages()
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<ImageModel>("SELECT * FROM sinder.Images ;")).ToList();
+            }
+        }
+
+        public async Task<List<ImageModel>> GetUserImagesById(int imageId)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<ImageModel>("SELECT * FROM sinder.Images WHERE ID = @imageId ;", new { imageId = imageId })).ToList();
+            }
+        }
+
+        public async Task<List<ImageModel>> GetUserImages(int userId)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<ImageModel>("SELECT * FROM sinder.Images WHERE Images.UserID = @userId ;", new { userId = userId })).ToList();
+            }
+        }
+
+        public async Task AddUserImage(int userId, string url)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync("INSERT INTO sinder.Images(Images.UserID, Images.Url) VALUES (@userId, @imageUrl) ;", new { userId = userId, imageUrl = url });
+            }
+        }
+
+        public async Task UpdateUserImage(int userId, string oldUrl, string newUrl)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync("UPDATE sinder.Images SET Images.Url = @newUrl WHERE UserID = @userId AND Url = @oldUrl ;", new { userId = userId, oldUrl = oldUrl, newUrl = newUrl });
+            }
+        }
+
+        public async Task DeleteUserImage(int imageId)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync("DELETE FROM sinder.Images WHERE ID = @imageId;", new { imageId = imageId});
+            }
+        }
+
+        public async Task DeleteUserImage(int userId, string url)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync("DELETE FROM sinder.Images WHERE UserID = @userId AND Url = @url ;", new { userId = userId, Url = url });
+            }
+        }
+
         #endregion
     }
 }

@@ -65,14 +65,14 @@ namespace Sinder
 
             string rootUrl = "http://api.jkb.zone/file/";
             string urlPath = jObject.Value<string>("location");
-            string queryParameter = "?display";
+            //string queryParameter = "?display";
 
             //"1600258795.27e987d9f81d552cca0ae013a2eecb7a586c80cb.dm2jSBk.png"
             // => "http://api.jkb.zone/file/27e987d9f81d552cca0ae013a2eecb7a586c80cb.png?display"
             List<string> parts = urlPath.Split('.').ToList();
             urlPath = parts[1] + "." + parts.Last();
 
-            string fullUrl = CombineUriToString(rootUrl, urlPath + queryParameter);
+            string fullUrl = CombineUriToString(rootUrl, urlPath);
 
             imageModel.Url = fullUrl;
 

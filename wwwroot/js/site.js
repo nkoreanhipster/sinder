@@ -174,14 +174,11 @@ if (getCookie('token') !== null) {
         progressBar.value = total
     }
 
-    const uploadFile = function (file, i) {
+    const uploadFile = function (file, i, callback) {
         var url = "/api/file"
         var xhr = new XMLHttpRequest()
         var formData = new FormData()
         xhr.open('POST', url, true)
-        //xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
-        //xhr.setRequestHeader('Access-Control-Allow-Origin', 'localhost')
-        //xhr.setRequestHeader('Content-Type', 'multipart/form-data')
 
         // Update progress (can be used to show progress indicator)
         xhr.upload.addEventListener("progress", function (e) {
@@ -194,7 +191,8 @@ if (getCookie('token') !== null) {
                 if (ev.target.response) {
                     var json = JSON.parse(ev.target.response)
                     console.log('UPLOADED!', { json: json })
-                    uploadedImage.src = json.Data.shift().Url;
+                    // Callback uploadedImage.src = json.Data.shift().Url;
+                    callback(json.Data.shift().Url)
                 }
                 else {
                     console.error('Files are wrong')
@@ -208,11 +206,8 @@ if (getCookie('token') !== null) {
         xhr.addEventListener('error', function (ev) {
             console.error({ error: ev.error })
         })
-        // Cover for existing file
-        //formData.append('cover', false)
-        //formData.append('upload_preset', 'ijfgiouahfbnuivboaefh')
+
         formData.append('file', file)
-        console.log({ file: file, i: i, formData: formData })
         xhr.send(formData)
     }
 
@@ -241,28 +236,58 @@ if (getCookie('token') !== null) {
     const createImageElement = (src) => {
         var img = document.createElement('img')
         img.classList.add('img')
+        img.classList.add('take-me')
+        img.classList.add('is-128x128')
         img.src = src
         imagePreviewList.appendChild(img)
+        return img
     }
 
     const handleFiles = async(event) => {
 
         var urls = []
 
+        console.log(event.target.files)
+
         for (let i = 0; i < event.target.files.length; i++) {
             const file = event.target.files[i]; 
             await readURL(file)
                 .then(url => urls.push(url))
-
         }
+        urls
+            .map(url => createImageElement(url))
+            .map(imgEle => {
+                for (let i = 0; i < event.target.files.length; i++) {
+                    const tempFile = files[i]
+                    uploadFile(tempFile, i, function (imageUrl) {
+                        imgEle.src = imageUrl
+                    })
+                }
+            })
 
-        urls.map(url => createImageElement(url))
+        document.querySelector('img.placeholder').src = urls.pop()
     }
 
     const handleDropFiles = async (event) => {
         files = [...event];
         initializeProgress(files.length)
-        files.map((file, iterator) => uploadFile(file, iterator))
+
+        var urls = []
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            await readURL(file)
+                .then(url => urls.push(url))
+        }
+        urls
+            .map(url => createImageElement(url))
+            .map(imgEle => {
+                files.map((file, iterator) => uploadFile(file, iterator, function (imageUrl) {
+                    imgEle.src = imageUrl
+                }))
+            })
+
+        document.querySelector('img.placeholder').src = urls.pop()
     }
 
     const handleDrop = (ev) => {

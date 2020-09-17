@@ -28,7 +28,7 @@ namespace Sinder.Controllers.Api
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            return "value";
+            return id.ToString();
         }
 
         // POST api/<ApiFileController>

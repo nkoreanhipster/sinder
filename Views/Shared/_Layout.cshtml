@@ -96,12 +96,14 @@
                 <div class="dotted droparea" style="text-align: center;">
                     <p class="">Dra och släpp bilder hör eller tryck på knappen</p>
                     <input type="file" id="image_file_input" multiple="" accept="image/*">
-                    <img class="img img-fluid" data-type="img-upload" id="uploaded_image" />
+                    <div class="container is-128x128">
+                        <img class="img img-fluid placeholder" data-type="img-upload" id="uploaded_image" />
+                    </div>
                 </div>
                 <div id="image_preview_list" class="d-flex justify-content-center my-1">
-                    <img class="img mx-1" data-type="img-upload" data-source="http://api.jkb.zone/image/random?w=200&h=200" src="/images/placeholder160.png"/>
-                    <img class="img mx-1" data-type="img-upload" data-source="http://api.jkb.zone/image/random?w=200&h=200" src="/images/placeholder160.png"/>
-                    <img class="img mx-1" data-type="img-upload" data-source="http://api.jkb.zone/image/random?w=200&h=200" src="/images/placeholder160.png"/>
+                    @*<img class="img mx-1 placeholder" data-type="img-upload" data-source="http://api.jkb.zone/image/random?w=200&h=200" src="http://api.jkb.zone/image/random?w=200&h=200"/>
+                    <img class="img mx-1 placeholder" data-type="img-upload" data-source="http://api.jkb.zone/image/random?w=200&h=200" src="http://api.jkb.zone/image/random?w=200&h=200"/>
+                    <img class="img mx-1 placeholder" data-type="img-upload" data-source="http://api.jkb.zone/image/random?w=200&h=200" src="http://api.jkb.zone/image/random?w=200&h=200"/>*@
                 </div>
                 <div class="progress d-flex justify-content-center align-self-center my-1">
                     <div id="progress_counter"></div>
@@ -110,7 +112,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-target="#image_modal" data-toggle="modal">Stäng</button>
-              <button type="button" class="btn btn-primary">Spara</button>
+              <button type="button" class="btn btn-primary" data-target="#image_modal" data-toggle="modal">Spara</button>
             </div>
           </div>
         </div>

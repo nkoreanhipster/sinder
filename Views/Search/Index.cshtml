@@ -38,21 +38,22 @@
 
         arr.map(item => {
             console.log(item)
-
-            var a = document.createElement('a')
             var li = document.createElement('li')
             var span = document.createElement('span')
             var img = document.createElement('img')
+      
+            var userProfileUrl = `/profile/user/${item.id}`
 
-            a.innerText = "Gå till profil"
-            a.href = `/profile/user/${item.id}`
+            li.addEventListener('click', function (ev) {
+                window.location.replace(userProfileUrl)
+            })
 
-            img.classList.add("img", 'is-24x24')
+            li.classList.add('is-clickable')
+            img.classList.add("img", 'is-24x24', 'is-clickable')
             span.innerText = `${item.firstname} ${item.surname}, ${moment().diff(item.age, 'years')} år`
             img.src = item.images.shift().url
 
             li.append(img)
-            li.append(a)
             li.append(span)
             searchResults.append(li)
         })

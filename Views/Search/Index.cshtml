@@ -2,10 +2,6 @@
     ViewData["Title"] = "Search For User";
 }
 
-
-
-
-
 <section id="page_search" class="m-1">
 
     <div class="input-group">
@@ -49,8 +45,9 @@
             })
 
             li.classList.add('is-clickable', 'list-item')
-            img.classList.add("img", 'is-48x48', 'is-clickable')
+            img.classList.add("img", 'is-48x48', 'is-clickable', 'search-image')
             span.innerText = `${item.firstname} ${item.surname}, ${moment().diff(item.age, 'years')} år`
+            span.classList.add("ml-3")
             img.src = item.images.shift().url
 
             li.append(img)

@@ -24,6 +24,7 @@ namespace Sinder.Controllers.Api
                 queryString = "";
             List<UserModel> users = await Dataprovider.Instance.SearchUsersBy(queryString);
 
+            users.ForEach(async item => item.Images = await Dataprovider.Instance.GetUserImagesByUserID(item.ID));
 
             return new JsonResult(users)
             {

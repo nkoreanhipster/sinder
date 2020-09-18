@@ -46,13 +46,14 @@
 
             a.innerText = "Gå till profil"
             a.href = `/profile/user/${item.id}`
+
+            img.classList.add("img", 'is-24x24')
             span.innerText = `${item.firstname} ${item.surname}, ${moment().diff(item.age, 'years')} år`
-            img.classList.add("img",'is-128x128')
             img.src = item.images.shift().url
 
+            li.append(img)
             li.append(a)
             li.append(span)
-            li.append(img)
             searchResults.append(li)
         })
     }

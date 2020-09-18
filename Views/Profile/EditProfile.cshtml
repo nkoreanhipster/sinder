@@ -20,8 +20,8 @@
                 <span class="input-group-text"> <i class="fas fa-map-marker-alt" style=" color: #eb6864"></i> </span>
             </div>
             <!--25 landskap nedanför-->
-            <select class="form-control"  name="location">
-                <option selected >@Model.Location</option>
+            <select class="form-control" name="location">
+                <option selected>@Model.Location</option>
                 <option value="Blekinge">Blekinge</option>
                 <option value="Bohuslän">Bohuslän</option>
                 <option value="Dalarna">Dalarna</option>
@@ -52,10 +52,27 @@
         </div>
 
         <div class="form-group input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fas fa-camera-retro" style=" color: #eb6864"></i> </span>
+            @*<div class="input-group-prepend">
+                    <span class="input-group-text"> <i class="fas fa-camera-retro" style=" color: #eb6864"></i> </span>
+                </div>
+                <input type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.tif,.tiff,.bmp">*@
+            <div>
+                <div class="is-128x128">
+                    <img class="img img-fluid" data-target="active" src="" />
+                </div>
+                <input type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.tif,.tiff,.bmp">
             </div>
-            <input type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.tif,.tiff,.bmp">
+            <ul class="list-inline">
+                @{
+                    foreach (ImageModel image in @Model.Images)
+                    {
+                        <li class="list-inline-item is-48x48">
+                            <img data-action="scale" class="img img-fluid" src="@image.Url" alt="/images/placeholder160.png" />
+                            <span class="input-group-text"> <i class="fas fa-cross" style="color:#eb6864"></i></span>
+                        </li>
+                    }
+                }
+            </ul>
         </div>
         <div class=" form-group">
             <button type="submit" name="editbtn" class="btn btn-primary btn-block" disabled>Ändra uppgifter</button>
@@ -119,7 +136,7 @@
             ev.target.classList.add("is-valid")
             editbtn.removeAttribute("disabled")
         }
-        
+
     })
     surname.addEventListener('input', (ev) => {
         if (ev.target.value.length < 2) {
@@ -131,14 +148,14 @@
             ev.target.classList.add("is-valid")
             editbtn.removeAttribute("disabled")
         }
-        
+
     })
 
     location2.addEventListener('input', (ev) => {
         editbtn.removeAttribute("disabled")
     })
 
-    
+
 
     currentPassword.addEventListener('input', (ev) => {
         if (ev.target.value.length < 6) {
@@ -152,7 +169,7 @@
     })
 
 
-    
+
     password.addEventListener('input', (ev) => {
         if (ev.target.value.length < 6) {
             ev.target.classList.add("is-invalid")
@@ -163,7 +180,7 @@
         }
         validatePasswords()
     })
-    
+
     confirmPassword.addEventListener('input', (ev) => {
         if (ev.target.value.length < 6 || ev.target.length > 20) {
             ev.target.classList.add("is-invalid")
@@ -186,7 +203,7 @@
     }
 
 
-    
+
     editbtn.addEventListener('click', (ev) => {
         ev.preventDefault()
 
@@ -244,15 +261,13 @@
         })
             .then(res => res.json())
             .then(data => {
-                if (data.Status === "Fail")
-                {
+                if (data.Status === "Fail") {
                     console.log("wrong")
                     Successbox.element.classList.add('bg-danger')
                     Successbox.setColor('white')
                     Successbox.show(data.Message, "Felaktig inmatning")
                 }
-                else
-                {
+                else {
                     console.log("It worked")
                     Successbox.element.classList.remove('bg-danger')
                     Successbox.element.classList.add('bg-success')
@@ -262,7 +277,7 @@
             })
             .catch(err => console.error(err))
     })
-    
+
     backbtn.addEventListener('click', (ev) => {
         ev.preventDefault()
         window.location.href = "/profile"

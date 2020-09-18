@@ -20,8 +20,8 @@
                 <span class="input-group-text"> <i class="fas fa-map-marker-alt" style=" color: #eb6864"></i> </span>
             </div>
             <!--25 landskap nedanför-->
-            <select class="form-control" value="@Model.Location" name="location" id="location">
-                <option selected disabled>Välj Landskap..</option>
+            <select class="form-control"  name="location" id="location">
+                <option selected >@Model.Location</option>
                 <option value="Blekinge">Blekinge</option>
                 <option value="Bohuslän">Bohuslän</option>
                 <option value="Dalarna">Dalarna</option>
@@ -181,6 +181,8 @@
 
 
         if (password.value !== confirmPassword.value) {
+            Successbox.element.classList.add('bg-danger')
+            Successbox.setColor('white')
             Successbox.show("nya lösenord stämmer inte överens")
             return;
         }
@@ -202,6 +204,8 @@
         })
             .then(response => response.json())
             .then(json => {
+                Successbox.element.classList.add('bg-success')
+                Successbox.setColor('white')
                 Successbox.show(json.Message)
             })
             .catch(err => console.error(err))
@@ -212,6 +216,8 @@
 
 
         if (password.value !== confirmPassword.value) {
+            Successbox.element.classList.add('bg-danger')
+            Successbox.setColor('white')
             Successbox.show("nya lösenord stämmer inte överens")
             return;
         }
@@ -233,6 +239,8 @@
         })
             .then(response => response.json())
             .then(json => {
+                Successbox.element.classList.add('bg-success')
+                Successbox.setColor('white')
                 Successbox.show(json.Message)
             })
             .catch(err => console.error(err))

@@ -56,7 +56,7 @@ var Successbox = (function () {
 
     self.setText = (text) => {
         var p = document.createElement('p')
-        p.classList.add('display-1')
+        //p.classList.add('display-1')
         p.textContent = text
         self.body.append(p)
     }

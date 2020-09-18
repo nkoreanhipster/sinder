@@ -127,20 +127,17 @@ span.input-group-text {
     cursor: pointer;
 }
 
-#success_box {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    transition:transform 175ms;
-}
-
 #success_box.show {
-    transform: translate(-50%, -60%);
+    transform: translateY(-25px);
 }
 
 #success_box.hide {
-    transform: translateY(-50%, -25%);
+    transform: translateY(250px);
+}
+
+#success_box {
+    transition: all 1500ms;
+    margin: 0 auto;
 }
 
 .modal.open {

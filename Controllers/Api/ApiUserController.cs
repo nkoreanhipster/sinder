@@ -30,9 +30,17 @@ namespace Sinder.Controllers.Api
         }
 
         // POST api/<ApiUserController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        
+        [HttpPost("{resetpassword}")]
+        public async Task<IActionResult> Post(string passwordreset,[FromBody] UserLoginDto user)
         {
+            var userPassword =  SecurityHelper.GetPassword(user.Password);
+            UserModel userToUpdate = new UserModel() { Email = user.Email, HashedPassword = userPassword.passwordhash, Salt = userPassword.salt };
+            await Dataprovider.Instance.UpdateUserPassword(userToUpdate);
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Accepted, Status = "Success", Message = "Ändrat Lösenord" }, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            });
         }
 
         // PUT api/<ApiUserController>/5

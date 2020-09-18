@@ -21,6 +21,9 @@ namespace Sinder.Controllers
         }
         public async Task<IActionResult> User(int id)
         {
+            var cookies = Request.Cookies["token"];
+            if (cookies == null || cookies == "null")
+                return Redirect("/login");
             UserModel user = await Dataprovider.Instance.ReadUserById(id);
             List<ImageModel> images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
             user.Images = images;
@@ -45,9 +48,18 @@ namespace Sinder.Controllers
         /// <returns></returns>
         public async Task<IActionResult> Images()
         {
+            var cookies = Request.Cookies["token"];
+            if (cookies == null || cookies == "null")
+                return Redirect("/login");
             List<ImageModel> images = await Dataprovider.Instance.GetAllUserImages();
             UserModel _ = new UserModel() { Images = images };
             return View(_);
+        }
+
+        public IActionResult Logout()
+        {
+            InfoHelper.IsLoggedIn = false;
+            return Redirect("/login");
         }
     }
 }

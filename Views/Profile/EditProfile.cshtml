@@ -20,7 +20,7 @@
                 <span class="input-group-text"> <i class="fas fa-map-marker-alt" style=" color: #eb6864"></i> </span>
             </div>
             <!--25 landskap nedanför-->
-            <select class="form-control"  name="location" id="location">
+            <select class="form-control"  name="location">
                 <option selected >@Model.Location</option>
                 <option value="Blekinge">Blekinge</option>
                 <option value="Bohuslän">Bohuslän</option>
@@ -73,7 +73,6 @@
                 </div>
                 <input type="password" name="currentpassword" class="form-control" placeholder="Ange ditt gamla Lösenord">
                 <div class=" invalid-feedback">Lösenordet stämde inte överens</div>
-
             </div>
             <div class="form-group input-group">
                 <div class="input-group-prepend">
@@ -100,8 +99,16 @@
 <script>
     var btnChangePassword = document.querySelector('button[name="btnChangePassword"]')
     var editbtn = document.querySelector('button[name="editbtn"]')
-
+    var location2 = document.querySelector('select[name="location"]')
     var firstname = document.querySelector('input[name="firstname"]')
+    var surname = document.querySelector('input[name="surname"]')
+    var currentPassword = document.querySelector('input[name="currentpassword"]')
+    var password = document.querySelector('input[name="password"]')
+    var confirmPassword = document.querySelector('input[name="confirm-password"]')
+    var backbtn = document.querySelector('button[name="backbtn"]')
+
+
+
     firstname.addEventListener('input', (ev) => {
         if (ev.target.value.length < 2) {
             ev.target.classList.add("is-invalid")
@@ -114,7 +121,6 @@
         }
         
     })
-    var surname = document.querySelector('input[name="surname"]')
     surname.addEventListener('input', (ev) => {
         if (ev.target.value.length < 2) {
             ev.target.classList.add("is-invalid")
@@ -128,7 +134,12 @@
         
     })
 
-    var currentPassword = document.querySelector('input[name="currentpassword"]')
+    location2.addEventListener('input', (ev) => {
+        editbtn.removeAttribute("disabled")
+    })
+
+    
+
     currentPassword.addEventListener('input', (ev) => {
         if (ev.target.value.length < 6) {
             ev.target.classList.add("is-invalid")
@@ -141,7 +152,7 @@
     })
 
 
-    var password = document.querySelector('input[name="password"]')
+    
     password.addEventListener('input', (ev) => {
         if (ev.target.value.length < 6) {
             ev.target.classList.add("is-invalid")
@@ -152,7 +163,7 @@
         }
         validatePasswords()
     })
-    var confirmPassword = document.querySelector('input[name="confirm-password"]')
+    
     confirmPassword.addEventListener('input', (ev) => {
         if (ev.target.value.length < 6 || ev.target.length > 20) {
             ev.target.classList.add("is-invalid")
@@ -165,7 +176,7 @@
     })
 
     function validatePasswords() {
-        var passwordElements = [...document.querySelectorAll('button[name="confirm-password"], button[name="password"], button[name="currentpassword"]')];
+        var passwordElements = [...document.querySelectorAll('input[name="confirm-password"], input[name="password"], input[name="currentpassword"]')];
 
         if (passwordElements.filter(el => el.classList.contains('is-invalid')).length == 0)
             btnChangePassword.removeAttribute('disabled')
@@ -179,16 +190,10 @@
     editbtn.addEventListener('click', (ev) => {
         ev.preventDefault()
 
-
-        if (password.value !== confirmPassword.value) {
-            Successbox.element.classList.add('bg-danger')
-            Successbox.setColor('white')
-            Successbox.show("nya lösenord stämmer inte överens")
-            return;
-        }
         var data = {
             Firstname: firstname.value,
             Surname: surname.value,
+            Location: location2.value,
             Password: password.value,
             ID: document.querySelector("#id").textContent.replace(' ', ''),
             CurrentPassword: currentPassword.value
@@ -237,15 +242,27 @@
             },
             body: JSON.stringify(data)
         })
-            .then(response => response.json())
-            .then(json => {
-                Successbox.element.classList.add('bg-success')
-                Successbox.setColor('white')
-                Successbox.show(json.Message)
+            .then(res => res.json())
+            .then(data => {
+                if (data.Status === "Fail")
+                {
+                    console.log("wrong")
+                    Successbox.element.classList.add('bg-danger')
+                    Successbox.setColor('white')
+                    Successbox.show(data.Message, "Felaktig inmatning")
+                }
+                else
+                {
+                    console.log("It worked")
+                    Successbox.element.classList.remove('bg-danger')
+                    Successbox.element.classList.add('bg-success')
+                    Successbox.setColor('white')
+                    Successbox.show(data.Message)
+                }
             })
             .catch(err => console.error(err))
     })
-    var backbtn = document.querySelector('button[name="backbtn"]')
+    
     backbtn.addEventListener('click', (ev) => {
         ev.preventDefault()
         window.location.href = "/profile"

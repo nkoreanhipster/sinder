@@ -26,3 +26,17 @@ dotnet watch run
 
 // Else just run normally from Visual Studio or whatever 
 ```
+
+## Succes box
+```
+Successbox.element.classList.add('bg-success')
+Successbox.setColor('white')
+Successbox.show("nya lösenord stämmer inte överens, "Titeln")
+```
+
+## Danger box
+```
+Successbox.element.classList.add('bg-danger')
+Successbox.setColor('white')
+Successbox.show("nya lösenord stämmer inte överens, "Titeln")
+```

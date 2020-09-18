@@ -132,6 +132,22 @@ namespace Sinder
             }
         }
 
+        public async Task AddUserRelationship(int loggedInUser, int targetUser)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync("INSERT INTO sinder.Relationship(Relationship.UserID1, Relationship.UserID2, Relationship.Status1, Relationship.Status2) VALUES (@userId1, @userid2, 1, 0) ;", new { userId1 = loggedInUser, userid2 = targetUser });
+            }
+        }
+
+        public async Task<bool> CheckRelationshipStatus(int loggedInUser, int targetUser)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync("INSERT INTO sinder.Relationship(Relationship.UserID1, Relationship.UserID2, Relationship.Status1, Relationship.Status2) VALUES (@userId1, @userid2, 1, 0) ;", new { userId1 = loggedInUser, userid2 = targetUser });
+            }
+        }
+
         public async Task UpdateUserImage(int userId, string oldUrl, string newUrl)
         {
             using (var connection = CreateDBConnection())

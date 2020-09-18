@@ -65,7 +65,7 @@ namespace Sinder
         {
             using (var connection = CreateDBConnection())
             {
-                return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Id = Users.Id", new { Id = id })).First();
+                return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE Users.ID = @Id", new { Id = id })).First();
             }
         }
         public async Task<UserModel> ReadUserByEmail(string email) => (await ReadUsersByEmail(email)).First();
@@ -129,6 +129,22 @@ namespace Sinder
             using (var connection = CreateDBConnection())
             {
                 await connection.QueryAsync("INSERT INTO sinder.Images(Images.UserID, Images.Url) VALUES (@userId, @imageUrl) ;", new { userId = userId, imageUrl = url });
+            }
+        }
+
+        public async Task AddUserRelationship(int loggedInUser, int targetUser)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync("INSERT INTO sinder.Relationship(Relationship.UserID1, Relationship.UserID2, Relationship.Status1, Relationship.Status2) VALUES (@userId1, @userid2, 1, 0) ;", new { userId1 = loggedInUser, userid2 = targetUser });
+            }
+        }
+
+        public async Task<bool> CheckIfRelationshipExists(int loggedInUser, int targetUser)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<bool>("SELECT EXISTS(SELECT * FROM sinder.Relationship WHERE Relationship.UserID1 = @userId1 AND Relationship.UserID2 = @userid2)", new { userId1 = loggedInUser, userid2 = targetUser })).First();
             }
         }
 

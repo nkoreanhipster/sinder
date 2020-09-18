@@ -165,7 +165,7 @@
     })
 
     function validatePasswords() {
-        var passwordElements = [...document.querySelectorAll('button[name="confirm-password"], button[name="password"], button[name="currentpassword"]')];
+        var passwordElements = [...document.querySelectorAll('input[name="confirm-password"], input[name="password"], input[name="currentpassword"]')];
 
         if (passwordElements.filter(el => el.classList.contains('is-invalid')).length == 0)
             btnChangePassword.removeAttribute('disabled')
@@ -237,11 +237,23 @@
             },
             body: JSON.stringify(data)
         })
-            .then(response => response.json())
-            .then(json => {
-                Successbox.element.classList.add('bg-success')
-                Successbox.setColor('white')
-                Successbox.show(json.Message)
+            .then(res => res.json())
+            .then(data => {
+                if (data.Status === "Fail")
+                {
+                    console.log("wrong")
+                    Successbox.element.classList.add('bg-danger')
+                    Successbox.setColor('white')
+                    Successbox.show(data.Message, "Felaktig inmatning")
+                }
+                else
+                {
+                    console.log("It worked")
+                    Successbox.element.classList.remove('bg-danger')
+                    Successbox.element.classList.add('bg-success')
+                    Successbox.setColor('white')
+                    Successbox.show(data.Message)
+                }
             })
             .catch(err => console.error(err))
     })

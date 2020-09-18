@@ -46,7 +46,7 @@ namespace Sinder.Controllers.Api
             {
                 if (SecurityHelper.VerifyPasswordHash(user.CurrentPassword, updateUser.HashedPassword, updateUser.Salt) == false)
                 {
-                    return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Gamla lösenordet stämde inte överrens" }, new JsonSerializerOptions
+                    return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Gamla lösenordet stämde inte överens" }, new JsonSerializerOptions
                     {
                         WriteIndented = true,
                     });

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Sinder.Helpers;
 using Sinder.Models;
 
 namespace Sinder.Controllers
@@ -24,6 +25,7 @@ namespace Sinder.Controllers
             var cookies = Request.Cookies["token"];
             if(cookies == null)
                 return Redirect("/login");
+            InfoHelper.IsLoggedIn = true;
             return View();
         }
 

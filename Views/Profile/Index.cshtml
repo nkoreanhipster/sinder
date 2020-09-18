@@ -66,10 +66,10 @@
 </div>
 <script>
     var logoutButton = document.querySelector('button[name="logout"]')
-
+    
     logoutButton.addEventListener('click', (ev) => {
         ev.preventDefault()
         eraseCookie('token')
-        window.location.replace('/home')
+        window.location.replace('/profile/logout')
     })
 </script>

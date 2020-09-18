@@ -100,6 +100,14 @@ namespace Sinder
             }
         }
 
+        public async Task UpdateUserPassword(UserModel user)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync("UPDATE Users SET Users.HashedPassword = @HashedPassword, Users.Salt = @Salt WHERE Users.Email = @Email", user);
+            }
+        }
+
         public async Task<List<ImageModel>> GetAllUserImages()
         {
             using (var connection = CreateDBConnection())

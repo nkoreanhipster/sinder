@@ -152,8 +152,6 @@ var toggableElements = [...document.querySelectorAll('*[data-toggle]')]
             var targetName = el.getAttribute('data-target')
             var targetEle = document.querySelector(targetName) || null
 
-            console.log(toggleType, targetName, targetEle)
-
             if (toggleType === 'collapse') {
                 targetEle.classList.toggle('collapse')
             }
@@ -161,7 +159,6 @@ var toggableElements = [...document.querySelectorAll('*[data-toggle]')]
                 targetEle.classList.toggle('show')
             }
             if (toggleType == 'modal') {
-                console.log('closed')
                 targetEle.classList.toggle('show')
                 targetEle.classList.toggle('open')
             }
@@ -205,7 +202,6 @@ if (getCookie('token') !== null) {
     const updateProgress = function (fileNumber, percent) {
         uploadProgress[fileNumber] = percent
         let total = uploadProgress.reduce((tot, curr) => tot + curr, 0) / uploadProgress.length
-        console.debug('update', fileNumber, percent, total)
         progressCounter.textContent = `${percent}%`
         progressBar.value = total
     }
@@ -219,7 +215,6 @@ if (getCookie('token') !== null) {
         // Update progress (can be used to show progress indicator)
         xhr.upload.addEventListener("progress", function (e) {
             updateProgress(i, (e.loaded * 100.0 / e.total) || 100)
-            console.log(i, (e.loaded * 100.0 / e.total) || 100)
         })
 
         xhr.addEventListener('readystatechange', function (ev) {
@@ -271,16 +266,38 @@ if (getCookie('token') !== null) {
     };
 
     const createImageElement = (src) => {
+        var parent = document.createElement('div')
         var img = document.createElement('img')
-        img.classList.add('img')
-        img.classList.add('take-me')
-        img.classList.add('is-128x128')
+        var deleteBtn = document.createElement('a')
+        var icon = document.createElement('i')
+
+        icon.classList.add('fas', 'fa-times', 'fa-3x')
+        deleteBtn.classList.add('text-danger')
+        deleteBtn.href = "#"
+        // Delete button clears image
+        deleteBtn.addEventListener('click', (ev) => {
+            ev.preventDefault()
+            var c = ev.target.parentElement
+            if (c.tagName === 'A')
+                c = c.parentElement
+            var d = c.parentElement
+            d.removeChild(c)
+            // Remove top image as well
+            document.querySelector('#uploaded_image').src = ""
+        })
+        img.classList.add('is-128x128', 'take-me', 'img')
         img.src = src
-        imagePreviewList.appendChild(img)
+
+        deleteBtn.append(icon)
+        parent.append(img)
+        parent.append(deleteBtn)
+        imagePreviewList.append(parent)
+
         return img
     }
 
     const handleFiles = async (ev) => {
+        const targetFiles = Array.from(ev.target.files);
         initializeProgress(ev.target.files.length)
         var urls = []
 
@@ -289,15 +306,15 @@ if (getCookie('token') !== null) {
             await readURL(file)
                 .then(url => urls.push(url))
         }
+
+        window.setTimeout(() => { }, 900)
+
         urls
             .map(url => createImageElement(url))
-            .map(imgEle => {
-                for (let i = 0; i < ev.target.files.length; i++) {
-                    const tempFile = ev.target.files[i]
-                    uploadFile(tempFile, i, function (imageUrl) {
-                        imgEle.src = imageUrl
-                    })
-                }
+            .map((imgEle, index) => {
+                uploadFile(targetFiles[index], index, function (imageUrl) {
+                    imgEle.src = imageUrl
+                })
             })
 
         document.querySelector('img.placeholder').src = urls.pop()
@@ -316,10 +333,10 @@ if (getCookie('token') !== null) {
         }
         urls
             .map(url => createImageElement(url))
-            .map(imgEle => {
-                files.map((file, iterator) => uploadFile(file, iterator, function (imageUrl) {
+            .map((imgEle, index) => {
+                uploadFile(files[index], index, function (imageUrl) {
                     imgEle.src = imageUrl
-                }))
+                })
             })
 
         document.querySelector('img.placeholder').src = urls.pop()
@@ -401,8 +418,6 @@ NamedspacedQueue.enqueue('onKeyDown', (ev) => {
             }
 
         }
-
-        console.log('asd', submitBtnWasFound, elHandle)
 
         // Click on element if the button was found
         try {

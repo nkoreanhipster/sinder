@@ -42,11 +42,11 @@ namespace Sinder.Controllers.Api
         {
             UserModel updateUser = new UserModel();
             updateUser = await Dataprovider.Instance.ReadUserById(id);
-            if (user.CurrentPassword != null)
+            if (!String.IsNullOrEmpty(user.CurrentPassword))
             {
                 if (SecurityHelper.VerifyPasswordHash(user.CurrentPassword, updateUser.HashedPassword, updateUser.Salt) == false)
                 {
-                    return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Gamla lösenordet stämde inte överrens" }, new JsonSerializerOptions
+                    return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Gamla lösenordet stämde inte överens" }, new JsonSerializerOptions
                     {
                         WriteIndented = true,
                     });
@@ -65,6 +65,7 @@ namespace Sinder.Controllers.Api
             {
                 updateUser.Surname = user.Surname;
             }
+            updateUser.Location = user.Location;
             await Dataprovider.Instance.UpdateUser(updateUser);
 
             return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Användaren är nu uppdaterad" }, new JsonSerializerOptions

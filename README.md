@@ -29,6 +29,7 @@ dotnet watch run
 
 ## Succes box
 ```
+ Successbox.element.classList.remove('bg-danger')
 Successbox.element.classList.add('bg-success')
 Successbox.setColor('white')
 Successbox.show("nya lösenord stämmer inte överens, "Titeln")

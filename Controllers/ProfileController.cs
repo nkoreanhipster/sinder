@@ -22,6 +22,8 @@ namespace Sinder.Controllers
         public async Task<IActionResult> User(int id)
         {
             UserModel user = await Dataprovider.Instance.ReadUserById(id);
+            List<ImageModel> images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
+            user.Images = images;
             return View(user);
         }
 

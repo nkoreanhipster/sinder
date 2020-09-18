@@ -43,10 +43,18 @@ namespace Sinder.Controllers.Api
             var cookies = Request.Cookies["token"];
             string email = SecurityHelper.GetLoggedInUser(cookies);
             UserModel loggedinUser = await Dataprovider.Instance.ReadUserByEmail(email);
+            if (loggedinUser.ID == id)
+            {
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Du kan inte skicka en vänförfrågan till dig själv!" }, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                });
+            }
+
             bool hasRelationship = await Dataprovider.Instance.CheckIfRelationshipExists(loggedinUser.ID, id);
             if (hasRelationship == true)
             {
-                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "En vänförfrågan har redan skickats. Kolla dina vänförfrågningar" }, new JsonSerializerOptions
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "En vänförfrågan har redan skickats. Kolla dina vänförfrågningar!" }, new JsonSerializerOptions
                 {
                     WriteIndented = true,
                 });
@@ -54,7 +62,7 @@ namespace Sinder.Controllers.Api
 
             await Dataprovider.Instance.AddUserRelationship(loggedinUser.ID, id);
 
-            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Success", Message = "Vänförfrågan skickad" }, new JsonSerializerOptions
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Success", Message = "Vänförfrågan skickad!" }, new JsonSerializerOptions
             {
                 WriteIndented = true,
             });

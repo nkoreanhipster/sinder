@@ -1,6 +1,12 @@
 
 @{
     ViewData["Title"] = "Registrera dig";
+
+    // At least 18 years old
+    DateTime minBirthDate = DateTime.Now.AddYears(-18);
+    // At most 99 years old
+    DateTime maxBirthDate = DateTime.Now.AddYears(-99);
+
 }
 
 @* Register boxes *@
@@ -228,8 +234,8 @@
 
 
     var ageCalender = document.querySelector('input[type="date"]')
-    ageCalender.setAttribute("max", "2002-12-31")
-    ageCalender.setAttribute("min", "1900-01-01")
+    ageCalender.setAttribute("max", "@minBirthDate.ToString("yyyy-MM-dd")")
+    ageCalender.setAttribute("min", "@maxBirthDate.ToString("yyyy-MM-dd")")
 
 
     var goBackToLoginButton = document.querySelector('button[name="goback"]')
@@ -302,11 +308,11 @@
         }
 
         if (gender == "Välj Kön...") {
-            Cheesebox.show("Välj ett kön!")
+            Successbox.show("Välj ett kön!")
             return;
         }
         if (confirmPassword !== password) {
-            Cheesebox.show("Lösenord stämmer inte överens")
+            Successbox.show("Lösenord stämmer inte överens")
             return;
         }
 
@@ -320,7 +326,7 @@
         })
             .then(res => res.json())
             .then(data => {
-                Cheesebox.show(data.Message)
+                Successbox.show(data.Message)
                 if (data.Status === "Success") {
                     console.log('It worked')
                     window.location.href = "/login";

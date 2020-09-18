@@ -43,11 +43,18 @@ namespace Sinder.Controllers.Api
             var cookies = Request.Cookies["token"];
             string email = SecurityHelper.GetLoggedInUser(cookies);
             UserModel loggedinUser = await Dataprovider.Instance.ReadUserByEmail(email);
+            bool hasRelationship = await Dataprovider.Instance.CheckIfRelationshipExists(loggedinUser.ID, id);
+            if (hasRelationship == true)
+            {
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "En vänförfrågan har redan skickats. Kolla dina vänförfrågningar" }, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                });
+            }
 
             await Dataprovider.Instance.AddUserRelationship(loggedinUser.ID, id);
 
-            //var val = value;
-            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Gamla lösenordet stämde inte överens" }, new JsonSerializerOptions
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Success", Message = "Vänförfrågan skickad" }, new JsonSerializerOptions
             {
                 WriteIndented = true,
             });

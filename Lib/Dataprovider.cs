@@ -140,11 +140,11 @@ namespace Sinder
             }
         }
 
-        public async Task<bool> CheckRelationshipStatus(int loggedInUser, int targetUser)
+        public async Task<bool> CheckIfRelationshipExists(int loggedInUser, int targetUser)
         {
             using (var connection = CreateDBConnection())
             {
-                await connection.QueryAsync("INSERT INTO sinder.Relationship(Relationship.UserID1, Relationship.UserID2, Relationship.Status1, Relationship.Status2) VALUES (@userId1, @userid2, 1, 0) ;", new { userId1 = loggedInUser, userid2 = targetUser });
+                return (await connection.QueryAsync<bool>("SELECT EXISTS(SELECT * FROM sinder.Relationship WHERE Relationship.UserID1 = @userId1 AND Relationship.UserID2 = @userid2)", new { userId1 = loggedInUser, userid2 = targetUser })).First();
             }
         }
 

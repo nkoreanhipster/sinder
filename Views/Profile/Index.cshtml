@@ -50,7 +50,7 @@
             </div>
             
             <div class="container">
-                <h4><b>@Model.Firstname @Model.Surname </b></h4>
+                <h4><b>@Model.Firstname @Model.Surname @{var age = DateTime.Today.Year - Model.Age.Year; } @age År</b></h4>
                 <p class="profile-font-style">@Model.Email</p>
                 <p>@Model.Gender</p>
                 <p>@Model.Location</p>

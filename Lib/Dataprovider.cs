@@ -65,7 +65,7 @@ namespace Sinder
         {
             using (var connection = CreateDBConnection())
             {
-                return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE @Id = Users.Id", new { Id = id })).First();
+                return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE Users.ID = @Id", new { Id = id })).First();
             }
         }
         public async Task<UserModel> ReadUserByEmail(string email) => (await ReadUsersByEmail(email)).First();

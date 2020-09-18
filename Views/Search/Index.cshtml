@@ -48,8 +48,8 @@
                 window.location.replace(userProfileUrl)
             })
 
-            li.classList.add('is-clickable')
-            img.classList.add("img", 'is-24x24', 'is-clickable')
+            li.classList.add('is-clickable', 'list-item')
+            img.classList.add("img", 'is-48x48', 'is-clickable')
             span.innerText = `${item.firstname} ${item.surname}, ${moment().diff(item.age, 'years')} år`
             img.src = item.images.shift().url
 

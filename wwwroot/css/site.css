@@ -107,10 +107,6 @@ input.form-control[name] {
     border-radius: 5px;
 }
 
-img {
-    border-radius: 5px 5px 0 0;
-}
-
 .card:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
@@ -190,8 +186,13 @@ span.input-group-text {
 }
 
 .is-clickable:hover {
-    background-color:var(--light);
- }
+    background-color: #f6bebd;
+}
+
+.list-item {
+    list-style: none;
+    margin: 20px;
+}
 
 .is-1by1,
 .is-square {

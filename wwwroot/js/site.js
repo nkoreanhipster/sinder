@@ -219,6 +219,7 @@ if (getCookie('token') !== null) {
         // Update progress (can be used to show progress indicator)
         xhr.upload.addEventListener("progress", function (e) {
             updateProgress(i, (e.loaded * 100.0 / e.total) || 100)
+            console.log(i, (e.loaded * 100.0 / e.total) || 100)
         })
 
         xhr.addEventListener('readystatechange', function (ev) {
@@ -379,9 +380,49 @@ NamedspacedQueue.enqueue('onWindowClick', (ev) => {
     targetElements.map(el => el.classList.remove('show'))
 })
 
+// Events that triggers by keyboard presses
+NamedspacedQueue.enqueue('onKeyDown', (ev) => {
+    // Auto submit form on pressing enter
+    // Search siblings via parents for a submit button
+    var elHandle = document.activeElement
+
+    if (ev.key === 'Enter' && elHandle.tagName.includes("INPUT") && elHandle.classList.contains('form-control')) {
+
+        var submitBtnWasFound = false
+
+        // Do max three iterations
+        for (var i = 0; i < 3; i++) {
+            elHandle = elHandle.parentElement
+            var tempVar = elHandle.querySelector('*[type="submit"], #search_button')
+            submitBtnWasFound = tempVar !== null ? true : false
+            if (submitBtnWasFound) {
+                elHandle = tempVar
+                break;
+            }
+
+        }
+
+        console.log('asd', submitBtnWasFound, elHandle)
+
+        // Click on element if the button was found
+        try {
+            if (submitBtnWasFound)
+                elHandle.click()
+        }
+        catch (err) { console.error(err) }
+    }
+})
+
 window.addEventListener('resize', (ev) => {
     NamedspacedQueue.getByNs('onWindowResize').map(func => {
         if (func.item && typeof func.item === 'function')
-            func.item()
+            func.item(ev)
+    })
+})
+
+window.addEventListener('keydown', (ev) => {
+    NamedspacedQueue.getByNs('onKeyDown').map(func => {
+        if (func.item && typeof func.item === 'function')
+            func.item(ev)
     })
 })

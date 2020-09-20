@@ -334,3 +334,9 @@ span.input-group-text {
     height: 1028px;
     width: 1028px
 }
+
+.img[data-action="scale"]:hover {
+    border: 1px solid var(--yellow);
+    transform: scale(104%);
+    cursor: pointer;
+}

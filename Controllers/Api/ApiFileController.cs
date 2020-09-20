@@ -17,20 +17,6 @@ namespace Sinder.Controllers.Api
     [ApiController]
     public class ApiFileController : ControllerBase
     {
-        // GET: api/<ApiFileController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<ApiFileController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return id.ToString();
-        }
-
         // POST api/<ApiFileController>
         [HttpPost]
         public async Task<IActionResult> Post(IFormFile file)
@@ -73,16 +59,71 @@ namespace Sinder.Controllers.Api
             });
         }
 
-        // PUT api/<ApiFileController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+
+        // Adding a new image to existing user
+        [HttpPost("{userId}")]
+        public async Task<IActionResult> PostAndLinkToImageId(IFormFile file, int userId)
         {
+            if (file == null)
+            {
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.NotAcceptable, Message = "Fil[erna] kunde ej laddas upp", Token = null, IsSuccess = true }, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                });
+            }
+
+            // Save locally first
+            string uploadedFilePath = FileHelper.Upload(file);
+
+            // Validation files were uploaded
+            if (uploadedFilePath == null)
+            {
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.InternalServerError, Message = "Fil[erna] gick ej att ladda upp", Token = null, IsSuccess = true }, new JsonSerializerOptions
+                {   
+                    WriteIndented = true,
+                });
+            }
+
+            // Upload to image API-server
+            ImageModel imageModel = await WebHelper.UploadProfileImage(uploadedFilePath);
+
+            // Upload image URL to sinder database
+            await Dataprovider.Instance.AddUserImage(userId, imageModel.Url);
+          
+
+            ResponseModel responseModel = new ResponseModel()
+            {
+                StatusCode = (int)HttpStatusCode.OK,
+                Message = "Fil[erna] har laddats upp",
+                Token = null,
+                IsSuccess = true
+            };
+
+            responseModel.Data.Add(imageModel);
+
+            return new JsonResult(responseModel, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            });
         }
 
-        // DELETE api/<ApiFileController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        /// Delete existing image by ID
+        [HttpDelete("{imageId}")]
+        public async Task<IActionResult> Delete(int imageId)
         {
+            await Dataprovider.Instance.DeleteImageById(imageId);
+
+            ResponseModel responseModel = new ResponseModel()
+            {
+                StatusCode = (int)HttpStatusCode.OK,
+                Message = "Din bild har tagits bort",
+                Token = null,
+                IsSuccess = true
+            };
+            return new JsonResult(responseModel, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            });
         }
     }
 }

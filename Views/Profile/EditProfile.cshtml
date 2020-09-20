@@ -5,7 +5,7 @@
 
 <article id="page_profile" class="card-body mx-auto" style="max-width: 400px">
     <p class="h4 m-md-4 text-center">Dina profiluppgifter</p>
-    <div class="invisible" id="id"> @Model.ID</div>
+    <div class="invisible" id="id">@Model.ID</div>
     <form>
         <div class="form-group input-group">
             <div class="input-group-prepend">
@@ -20,8 +20,8 @@
                 <span class="input-group-text"> <i class="fas fa-map-marker-alt" style=" color: #eb6864"></i> </span>
             </div>
             <!--25 landskap nedanför-->
-            <select class="form-control"  name="location">
-                <option selected >@Model.Location</option>
+            <select class="form-control" name="location">
+                <option selected>@Model.Location</option>
                 <option value="Blekinge">Blekinge</option>
                 <option value="Bohuslän">Bohuslän</option>
                 <option value="Dalarna">Dalarna</option>
@@ -52,12 +52,35 @@
         </div>
 
         <div class="form-group input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text"> <i class="fas fa-camera-retro" style=" color: #eb6864"></i> </span>
+            <div>
+                <div class="">
+                    <img class="img img-fluid" data-target="active" src="" />
+                </div>
+                @*<input type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.tif,.tiff,.bmp">*@
             </div>
-            <input type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.tif,.tiff,.bmp">
         </div>
-        <div class=" form-group">
+
+        <div class="form-group input-group">
+            <ul class="list-inline">
+                @{
+                    foreach (ImageModel image in @Model.Images)
+                    {
+                        <li class="list-inline-item" style="max-width: 50px;">
+                            <img data-action="scale" data-id="@image.ID" data-uid="@image.UserID" class="img img-fluid" src="@image.Url" alt="bild saknas" />
+                            <div class="btn btn-danger" data-id="@image.ID" data-uid="@image.UserID">X</div>
+                            @*<span class="input-group-text"> <i class="fas fa-times fa-3x" style="color:#eb6864"></i></span>*@
+                        </li>
+                    }
+                }
+
+                <li class="list-inline-item is-48x48" style="max-width: 50px;">
+                    <img data-action="scale" class="img img-fluid" src="/images/placeholder160.png" alt="..." />
+                    <input id="add_image" type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.tif,.tiff,.bmp" placeholder="Ny bild">
+                </li>
+
+            </ul>
+        </div>
+        <div class="form-group">
             <button type="submit" name="editbtn" class="btn btn-primary btn-block" disabled>Ändra uppgifter</button>
         </div>
         <div class="form-group">
@@ -97,6 +120,10 @@
 </article>
 
 <script>
+    // Get user id from html
+    const parseToInt = (str) => parseInt(str) || NaN
+    const getUserId = () => parseToInt(document.querySelector('#id').textContent)
+
     var btnChangePassword = document.querySelector('button[name="btnChangePassword"]')
     var editbtn = document.querySelector('button[name="editbtn"]')
     var location2 = document.querySelector('select[name="location"]')
@@ -119,7 +146,7 @@
             ev.target.classList.add("is-valid")
             editbtn.removeAttribute("disabled")
         }
-        
+
     })
     surname.addEventListener('input', (ev) => {
         if (ev.target.value.length < 2) {
@@ -131,14 +158,14 @@
             ev.target.classList.add("is-valid")
             editbtn.removeAttribute("disabled")
         }
-        
+
     })
 
     location2.addEventListener('input', (ev) => {
         editbtn.removeAttribute("disabled")
     })
 
-    
+
 
     currentPassword.addEventListener('input', (ev) => {
         if (ev.target.value.length < 6) {
@@ -152,7 +179,7 @@
     })
 
 
-    
+
     password.addEventListener('input', (ev) => {
         if (ev.target.value.length < 6) {
             ev.target.classList.add("is-invalid")
@@ -163,7 +190,7 @@
         }
         validatePasswords()
     })
-    
+
     confirmPassword.addEventListener('input', (ev) => {
         if (ev.target.value.length < 6 || ev.target.length > 20) {
             ev.target.classList.add("is-invalid")
@@ -186,7 +213,7 @@
     }
 
 
-    
+
     editbtn.addEventListener('click', (ev) => {
         ev.preventDefault()
 
@@ -244,15 +271,13 @@
         })
             .then(res => res.json())
             .then(data => {
-                if (data.Status === "Fail")
-                {
+                if (data.Status === "Fail") {
                     console.log("wrong")
                     Successbox.element.classList.add('bg-danger')
                     Successbox.setColor('white')
                     Successbox.show(data.Message, "Felaktig inmatning")
                 }
-                else
-                {
+                else {
                     console.log("It worked")
                     Successbox.element.classList.remove('bg-danger')
                     Successbox.element.classList.add('bg-success')
@@ -262,11 +287,125 @@
             })
             .catch(err => console.error(err))
     })
-    
+
     backbtn.addEventListener('click', (ev) => {
         ev.preventDefault()
         window.location.href = "/profile"
         return;
     })
+
+    // Editing image stuff
+    const deleteFile = (imageId = -1) => {
+        fetch(`/api/file/${imageId}`, {
+            method: "DELETE"
+        })
+            .then(res => res.json())
+            .then(json => Successbox.show(json.Message))
+            .catch(err => Successbox.show(err.Message))
+    }
+
+
+    const refreshImageListeners = function () {
+        // Img click
+        var userImages = [...document.querySelectorAll('img[data-id]')];
+        // Delete buttons
+        var deleteButtons = [...document.querySelectorAll('div.btn[data-id], div.btn[data-uid]')]
+        // Large picture
+        var activeImage = document.querySelector('img[data-target="active"]')
+        userImages
+            .map(el => el.addEventListener('click', (ev) => {
+
+                // Clear active statuses on all imgs
+                userImages.map(x => x.classList.remove('active'))
+
+                // Set current to active
+                if (!el.classList.contains('active'))
+                    el.classList.add('active')
+
+                activeImage.src = el.src;
+
+            }))
+
+        // Set Delete button
+        deleteButtons
+            .map(el => {
+                el.addEventListener('click', (ev) => {
+
+                    var imageId = parseToInt(el.getAttribute('data-id'))
+
+                    console.log('clicked', imageId)
+
+                    if (Number.isNaN(imageId)) {
+                        Successbox.show('Kunde ej radera bild', 'Error_1')
+                        return;
+                    }
+
+                    var t = userImages
+                        .filter(imgEl => imgEl.getAttribute('data-id') === el.getAttribute('data-id')).shift()
+
+                    if (typeof t === 'undefined' || t === null) {
+                        Successbox.show('Kunde ej radera bild', 'Error_2')
+                        return;
+                    }
+                        
+
+                    activeImage.src = ""
+                    // Make api call to delete
+
+                    // Remove graphics
+
+                    var grandParent = t.parentElement.parentElement
+                    var parent = t.parentElement
+                    grandParent.removeChild(parent)
+                    console.log('Deleting image with ID =>', imageId)
+                    deleteFile(imageId)
+                })
+            })
+    }
+
+    refreshImageListeners()
+
+    // Add image functionality
+    const editProfileAddImageInput = document.querySelector('#add_image')
+
+    const uploadNewFile = (file) => {
+        const currentUserId = getUserId()
+
+        // Validate number
+        if (Number.isNaN(currentUserId)) {
+            Successbox.show('Invalid user id')
+            return;
+        }
+
+        // Create form with images
+        var formData = new FormData()
+        formData.append('file', file)
+
+        fetch(`/api/file/${currentUserId}`, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "Accept": '/'
+            }
+        })
+            .then(res => res.json())    
+            .then(json => Successbox.show(json.Message))
+            .catch(err => Successbox.show(err.Message))
+    }
+
+    const handleNewFile = async (ev) => {
+        try {
+            var newFiles = [...ev.target.files];
+            newFiles.map((f, iterator) => uploadNewFile(f, iterator))
+        }
+        catch (e) {
+            console.error(e)
+        }
+    }
+
+    editProfileAddImageInput.value = ''
+    editProfileAddImageInput
+        .addEventListener('change', (ev) => handleNewFile(ev))
+
 </script>
 

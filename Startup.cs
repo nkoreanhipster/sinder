@@ -37,17 +37,16 @@ namespace Sinder
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            // Validate connections string and App.config is set
+            // Checka att App.config är uppsatta
             try
             {
                 string connstring = Helper.GetConnectionString();
+                string secretkey = Helper.GetSecretApiKey();
             }
-            catch (NullReferenceException e)
+            catch
             {
-                System.Diagnostics.Debug.Write("Set the upp the App.config plox. See README");
+                System.Diagnostics.Debug.Write("Set the up the App.config plox. See README");
             }
-
-            Dataprovider.Instance.TestConnection();
 
             if (env.IsDevelopment())
             {

@@ -152,13 +152,13 @@ var toggableElements = [...document.querySelectorAll('*[data-toggle]')]
             var targetName = el.getAttribute('data-target')
             var targetEle = document.querySelector(targetName) || null
 
-            if (toggleType === 'collapse') {
+            if (toggleType === 'collapse' && targetEle !== null) {
                 targetEle.classList.toggle('collapse')
             }
-            if (toggleType === 'dropdown') {
+            if (toggleType === 'dropdown' && targetEle !== null) {
                 targetEle.classList.toggle('show')
             }
-            if (toggleType == 'modal') {
+            if (toggleType == 'modal' && targetEle !== null) {
                 targetEle.classList.toggle('show')
                 targetEle.classList.toggle('open')
             }

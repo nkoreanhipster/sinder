@@ -291,6 +291,16 @@
     })
 
     // Editing image stuff
+    const deleteFile = (imageId = -1) => {
+        fetch(`/api/file/${imageId}`, {
+            method: "DELETE"
+        })
+            .then(res => res.json())
+            .then(json => console.log(json))
+            .catch(err => console.error(err))
+    }
+
+
     const refreshImageListeners = function () {
         // Img click
         var userImages = [...document.querySelectorAll('img[data-id]')];
@@ -332,7 +342,6 @@
                     console.log({ grandParent: grandParent, parent: parent })
                     grandParent.removeChild(parent)
                 })
-
             })
     }
 
@@ -341,10 +350,26 @@
     // Add image functionality
     const editProfileAddImageInput = document.querySelector('#add_image')
 
-    const handleNewFile(ev) => {
-        console.log(ev)
+    const uploadNewFile = () => {
+        fetch('/api/file', {
+            method: "POST"
+        })
+            .then(res => res.json())
+            .then(json => console.log(json))
+            .catch(err => console.error(err))
     }
 
+    const handleNewFile = async (ev) => {
+        try {
+            var newFiles = [...ev.target.files];
+            newFiles.map((f, iterator) => uploadNewFile(f, iterator))
+        }
+        catch (e) {
+            console.error(e)
+        }
+    }
+
+    editProfileAddImageInput.value = ''
     editProfileAddImageInput
         .addEventListener('change', (ev) => handleNewFile(ev))
 

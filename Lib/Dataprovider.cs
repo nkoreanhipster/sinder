@@ -164,7 +164,7 @@ namespace Sinder
             }
         }
 
-        public async Task DeleteUserImage(int imageId)
+        public async Task DeleteImageById(int imageId)
         {
             using (var connection = CreateDBConnection())
             {

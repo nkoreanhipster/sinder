@@ -51,7 +51,7 @@ namespace Sinder.Controllers.Api
         [HttpDelete("{id}")]
         public async Task Delete(int id)
         {
-            await Dataprovider.Instance.DeleteUserImage(id);
+            await Dataprovider.Instance.DeleteImageById(id);
         }
     }
 }

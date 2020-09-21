@@ -61,6 +61,13 @@ namespace Sinder
             }
         }
 
+        public async Task<List<UserModel>> ReadAllUsers()
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<UserModel>("SELECT * FROM Users")).ToList();
+            }
+        }
         public async Task<UserModel> ReadUserById(int id)
         {
             using (var connection = CreateDBConnection())

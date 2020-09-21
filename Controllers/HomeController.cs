@@ -19,14 +19,22 @@ namespace Sinder.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             // Validate, else redirect to /login
             var cookies = Request.Cookies["token"];
             if(cookies == null)
                 return Redirect("/login");
             InfoHelper.IsLoggedIn = true;
-            return View();
+
+            List<UserModel> users = new List<UserModel>();
+            users = await Dataprovider.Instance.ReadAllUsers();
+            foreach (var user in users)
+            {
+                List<ImageModel> images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
+                user.Images = images;
+            }
+            return View(users);
         }
 
         public IActionResult Privacy()

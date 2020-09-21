@@ -57,7 +57,7 @@
     }
 
     searchButton.addEventListener('click', (ev) => {
-
+        clearList()
         fetch('/api/search?q=' + inputUserSearch.value, {
             headers: {
                 'Accept': 'application/json',

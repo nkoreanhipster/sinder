@@ -22,7 +22,9 @@ namespace Sinder.Controllers.Api
             string queryString = HttpContext.Request.Query["q"];
             if (queryString == null)
                 queryString = "";
-            List<UserModel> users = await Dataprovider.Instance.SearchUsersBy(queryString);
+            List<UserModel> users = new List<UserModel>();
+            users.Clear();
+            users = await Dataprovider.Instance.SearchUsersBy(queryString);
 
             users.ForEach(async item => item.Images = await Dataprovider.Instance.GetUserImagesByUserID(item.ID));
 

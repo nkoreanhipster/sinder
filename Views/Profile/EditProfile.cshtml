@@ -419,7 +419,10 @@
             }
         })
             .then(res => res.json())
-            .then(json => Successbox.show(json.Message))
+            .then(json => {
+                Successbox.show(json.Message)
+                location.reload()
+            })
             .catch(err => Successbox.show(err.Message))
     }
 

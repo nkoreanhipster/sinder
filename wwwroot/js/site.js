@@ -1,7 +1,9 @@
 // site.js
 const killAllChildren = (parent) => [...parent.childNodes].forEach(el => el.remove())
-﻿var slideIndex = 1;
-showSlides(slideIndex);
+var slideIndex = 1;
+
+// Moved to '/Home/Index'
+//showSlides(slideIndex);
 
 // Next/previous controls
 function plusSlides(n) {

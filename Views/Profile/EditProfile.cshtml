@@ -61,7 +61,12 @@
 
                         <div id="interest_list">
                             @*new elements go here*@
-
+                            @{ 
+                                foreach(InterestModel item in Model.Interests)
+                                {
+                                    <span class="badge badge-primary">@item.Value</span>
+                                }
+                            }
                         </div>
                     </div>
                 </div>
@@ -432,6 +437,34 @@
     // Reset value
     interestInput.value = ''
 
+    var uploadInterest = (interest, callback = console.log, errorCallback = console.error) => {
+
+        const currentUserId = getUserId()
+
+        // Validate number
+        if (Number.isNaN(currentUserId)) {
+            Successbox.show('Invalid user id')
+            return;
+        }
+
+        fetch(`/api/profile/${currentUserId}/interest/${interest}`, {
+            method: "PUT",
+            headers: {
+                "Accept": '/',
+            }
+        })
+            .then(res => res.json())
+            .then(json => {
+                callback(interest)
+                Successbox.show(json.Message)
+            })
+            .catch(err => {
+                errorCallback(interest)
+                Successbox.show(err.Message)
+            })
+
+    }
+
     var addNewInterest = (str) => {
         var badge = document.createElement('span')
         badge.classList.add('badge', 'badge-primary')
@@ -447,7 +480,8 @@
         if (value === null || value === '')
             return
         value = value.replace(/[^a-zA-ZåäöÅÄÖ0-9 -]+/, '')
-        addNewInterest(value)
+        
+        uploadInterest(value, addNewInterest, console.error)
         value = ''
     })
 

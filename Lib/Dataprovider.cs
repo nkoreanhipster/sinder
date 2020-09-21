@@ -123,6 +123,18 @@ namespace Sinder
             }
         }
 
+        /// <summary>
+        /// Get all users which occurs in supplied int[] array, might be extra vulnerable to SQL-injection ¯\_(ツ)_/¯
+        /// </summary>
+        public async Task<List<ImageModel>> GetUserImagesWhichIsInList(List<UserModel> users)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                string idList = Helper.GenerateStringFromIds<UserModel>(users);
+                return (await connection.QueryAsync<ImageModel>("SELECT * FROM sinder.Images WHERE @idArray ;", new { idArray = idList })).ToList();
+            }
+        }
+
         public async Task<List<ImageModel>> GetUserImagesByImageId(int imageId)
         {
             using (var connection = CreateDBConnection())
@@ -175,7 +187,7 @@ namespace Sinder
         {
             using (var connection = CreateDBConnection())
             {
-                await connection.QueryAsync("DELETE FROM sinder.Images WHERE ID = @imageId;", new { imageId = imageId});
+                await connection.QueryAsync("DELETE FROM sinder.Images WHERE ID = @imageId;", new { imageId = imageId });
             }
         }
 
@@ -184,6 +196,64 @@ namespace Sinder
             using (var connection = CreateDBConnection())
             {
                 await connection.QueryAsync("DELETE FROM sinder.Images WHERE UserID = @userId AND Url = @url ;", new { userId = userId, Url = url });
+            }
+        }
+
+        public async Task AddUserInterest(int userID, string value, string category = "unknown")
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync("INSERT INTO sinder.Interests(UserID, Value, Category) VALUES(@userId, @value, @category)", new { userId = userID, value = value, category = category }); ;
+            }
+        }
+
+        public async Task<List<InterestModel>> GetUserInterests(int userID)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<InterestModel>("SELECT * FROM sinder.Interests WHERE `UserID` = @userId;", new { userId = userID })).ToList();
+            }
+            
+        }
+        public async Task DeleteUserInterest(int userId, string nameOfInterest) 
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync<InterestModel>("DELETE FROM Interests WHERE `UserID` = @userId AND `Value` = @nameOfInterest ;", new { userId = userId, nameOfInterest= nameOfInterest });
+            }
+        }
+
+        public async Task<List<InterestModel>> GetAllInterests(int limit)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<InterestModel>("SELECT * FROM sinder.InterestsStatic LIMIT @limit", new { limit = limit})).ToList();
+            }
+        }
+        public async Task<List<InterestModel>> GetAllInterests() => await GetAllInterests(9999999);
+        public async Task<List<InterestModel>> GetMatchingInterest(string searchValue, int limit = 5)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                string query = @"SELECT * FROM sinder.InterestsStatic 
+WHERE (Value LIKE CONCAT('%', @searchValue, '%')) 
+LIMIT @limit";
+                return (await connection.QueryAsync<InterestModel>(query, new { searchValue = searchValue, limit = limit })).ToList();
+            }
+        }
+
+        public async Task<List<string>> AddStaticInterest(string value)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                // Check if value already exists, else insert
+                // Also return bool
+                string query =
+                    $"INSERT INTO sinder.InterestsStatic(Value)" +
+                    $"SELECT * FROM(SELECT @value) AS tmp " +
+                    $"WHERE NOT EXISTS( " +
+                    $"SELECT InterestsStatic.Value FROM sinder.InterestsStatic WHERE InterestsStatic.Value = @value) LIMIT 1 ";
+                return (await connection.QueryAsync<string>(query, new { value = value })).ToList();
             }
         }
 

@@ -51,7 +51,7 @@ namespace Sinder.Controllers.Api
                         WriteIndented = true,
                     });
                 }
-               
+
             }
 
             var parts = SecurityHelper.GetPassword(user.Password);
@@ -69,6 +69,29 @@ namespace Sinder.Controllers.Api
             await Dataprovider.Instance.UpdateUser(updateUser);
 
             return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Användaren är nu uppdaterad" }, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            });
+        }
+
+        // Add user interet
+        [HttpPut("{id}/interest/{item}")]
+        public async Task<IActionResult> PutInterest(int id, string item)
+        {
+            if(string.IsNullOrEmpty(item) || string.IsNullOrWhiteSpace(item))
+            {
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.BadRequest, Status = "Fail", Message = "Nej" }, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                });
+            }
+
+            // New interest was added if length > 0
+            List<string> addedInterests = await Dataprovider.Instance.AddStaticInterest(item);
+            await Dataprovider.Instance.AddUserInterest(id,item);
+               
+
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "HELLO", Message = ";)" }, new JsonSerializerOptions
             {
                 WriteIndented = true,
             });

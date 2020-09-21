@@ -17,6 +17,7 @@ namespace Sinder.Controllers
             UserModel user = await Dataprovider.Instance.ReadUserByEmail(email);
             List<ImageModel> images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
             user.Images = images;
+            user.Interests = await Dataprovider.Instance.GetUserInterests(user.ID);
             return View(user);
         }
         public async Task<IActionResult> User(int id)
@@ -27,6 +28,7 @@ namespace Sinder.Controllers
             UserModel user = await Dataprovider.Instance.ReadUserById(id);
             List<ImageModel> images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
             user.Images = images;
+            user.Interests = await Dataprovider.Instance.GetUserInterests(user.ID);
             return View(user);
         }
 
@@ -39,6 +41,7 @@ namespace Sinder.Controllers
             UserModel user = await Dataprovider.Instance.ReadUserByEmail(email);
             List<ImageModel> images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
             user.Images = images;
+            user.Interests = await Dataprovider.Instance.GetUserInterests(user.ID);
             return View(user);
         }
 

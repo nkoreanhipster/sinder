@@ -53,6 +53,34 @@
 
         <div class="form-group input-group">
             <div>
+                <h4>Intressen</h4>
+                <input id="new_interest_input" autocomplete="off" type="text" placeholder="...">
+                <button id="add_interest" class="btn btn-primary">Lägg till</button>
+                <div class="dropdown-menu">
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="form-group input-group">
+
+            <div id="interest_list" class="">
+                @*new elements go here*@
+                @{
+                    foreach (InterestModel item in Model.Interests)
+                    {
+                        <span data-id="@item.ID" class="">
+                            <span class="badge badge-primary">@item.Value</span>
+                            <span class="kill-me">X</span>
+                        </span>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="form-group input-group">
+            <div>
                 <div class="">
                     <img class="img img-fluid" data-target="active" src="" />
                 </div>
@@ -120,6 +148,8 @@
 </article>
 
 <script>
+
+
     // Get user id from html
     const parseToInt = (str) => parseInt(str) || NaN
     const getUserId = () => parseToInt(document.querySelector('#id').textContent)
@@ -133,7 +163,7 @@
     var password = document.querySelector('input[name="password"]')
     var confirmPassword = document.querySelector('input[name="confirm-password"]')
     var backbtn = document.querySelector('button[name="backbtn"]')
-
+    var dropDownMenu = document.querySelector('.dropdown-menu')
 
 
     firstname.addEventListener('input', (ev) => {
@@ -347,7 +377,7 @@
                         Successbox.show('Kunde ej radera bild', 'Error_2')
                         return;
                     }
-                        
+
 
                     activeImage.src = ""
                     // Make api call to delete
@@ -388,7 +418,7 @@
                 "Accept": '/'
             }
         })
-            .then(res => res.json())    
+            .then(res => res.json())
             .then(json => Successbox.show(json.Message))
             .catch(err => Successbox.show(err.Message))
     }
@@ -406,6 +436,147 @@
     editProfileAddImageInput.value = ''
     editProfileAddImageInput
         .addEventListener('change', (ev) => handleNewFile(ev))
+
+    // Interest listeners
+    var addInterestButton = document.querySelector('#add_interest')
+    var interestList = document.querySelector('#interest_list')
+    var interestInput = document.querySelector('#new_interest_input') || null
+
+    // Reset value
+    interestInput.value = ''
+
+    var uploadInterest = (interest, callback = console.log, errorCallback = console.error) => {
+
+        const currentUserId = getUserId()
+
+        // Validate number
+        if (Number.isNaN(currentUserId)) {
+            Successbox.show('Invalid user id')
+            return;
+        }
+
+        fetch(`/api/profile/${currentUserId}/interest/${interest}`, {
+            method: "PUT",
+            headers: {
+                "Accept": '/',
+            }
+        })
+            .then(res => res.json())
+            .then(json => {
+                callback(interest)
+                Successbox.show(json.Message)
+            })
+            .catch(err => {
+                errorCallback(interest)
+                Successbox.show(err.Message)
+            })
+
+    }
+
+    const queryUserInterests = (query, callback = console.log, limit = 5) => {
+        fetch(`/api/interest/${query}?limit=${limit}`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "GET"
+        })
+            .then(res => res.json())
+            .then(json => callback(json))
+            .catch(err => console.error(err))
+    }
+
+    const deleteInterest = (query, callback = console.log) => {
+        fetch(`/api/interest/${getUserId()}/${query}`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "DELETE"
+        })
+            .then(res => res.json())
+            .then(json => callback(json))
+            .catch(err => console.error(err))
+    }
+
+    const addDropDownChild = (str) => {
+        var a = document.createElement('a')
+        a.classList.add('dropdown-item')
+        a.textContent = str
+        a.addEventListener('click', (ev) => {
+            ev.preventDefault()
+            interestInput.value = str
+            killAllChildren(dropDownMenu)
+        })
+        dropDownMenu.append(a)
+    }
+
+    interestInput.addEventListener('input', (ev) => {
+        ev.preventDefault()
+        console.log(interestInput.value)
+        if (interestInput.value.length < 1 || interestInput.value === "" || interestInput.value === null)
+            return;
+
+        queryUserInterests(interestInput.value, (arr) => {
+            killAllChildren(dropDownMenu)
+
+            if (arr.length > 0)
+                dropDownMenu.classList.add('show')
+            else
+                dropDownMenu.classList.remove('show')
+
+            arr.map((item, index) => {
+                addDropDownChild(item.value)
+            })
+        })
+    })
+
+    const interestKillFunc = (el) => {
+        el.addEventListener('click', (ev) => {
+            ev.preventDefault()
+            // Get interest ID
+            var interestId = el.parentElement.getAttribute('data-id')
+            interestId = Math.trunc(interestId)
+            console.log({ interestId: interestId })
+            // Kill myself
+            el.parentElement.parentElement.removeChild(el.parentElement)
+            
+            deleteInterest(interestId)
+        })
+    }
+        // Add to existing elements
+        ;[...document.querySelectorAll('#interest_list > span > span.kill-me')]
+            .map(el => interestKillFunc(el))
+
+    var addNewInterest = (str) => {
+        var parent = document.createElement('div')
+        var badge = document.createElement('span')
+        var x = document.createElement('div')
+
+        badge.classList.add('badge', 'badge-primary')
+        badge.textContent = str
+        parent.classList.add('d-flex')
+        x.textContent = "X"
+        interestKillFunc(x)
+        parent.append(badge)
+        parent.append(x)
+        interestList.append(parent)
+    }
+
+    addInterestButton.addEventListener('click', (ev) => {
+        ev.preventDefault()
+        var { value } = interestInput
+
+        if (value === null || value === '')
+            return
+        value = value.replace(/[^a-zA-ZåäöÅÄÖ0-9 -]+/, '')
+
+        uploadInterest(value, addNewInterest, console.error)
+        interestInput.value = ''
+        value = ''
+        dropDownMenu.classList.remove('show')
+    })
+
 
 </script>
 

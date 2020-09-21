@@ -26,7 +26,9 @@ namespace Sinder.Controllers.Api
             users.Clear();
             users = await Dataprovider.Instance.SearchUsersBy(queryString);
 
+            //var images = await Dataprovider.Instance.GetUserImagesWhichIsInList(users);
             users.ForEach(async item => item.Images = await Dataprovider.Instance.GetUserImagesByUserID(item.ID));
+            users.ForEach(async item => item.Interests = await Dataprovider.Instance.GetUserInterests(item.ID));
 
             return new JsonResult(users)
             {
@@ -38,28 +40,10 @@ namespace Sinder.Controllers.Api
 
 
         // GET api/<ApiSearchController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{value}")]
+        public async Task<List<InterestModel>> Get(string value)
         {
-            return "value";
-        }
-
-        // POST api/<ApiSearchController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<ApiSearchController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<ApiSearchController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return await Dataprovider.Instance.GetMatchingInterest(value);
         }
     }
 }

@@ -1,3 +1,5 @@
+// site.js
+const killAllChildren = (parent) => [...parent.childNodes].forEach(el => el.remove())
 ﻿var slideIndex = 1;
 showSlides(slideIndex);
 
@@ -26,10 +28,6 @@ function showSlides(n) {
     slides[slideIndex - 1].style.display = "block";
     dots[slideIndex - 1].className += " active";
 }
-
-
-
-
 
 const Eggplant = (function () {
     this.element = document.querySelector('#eggplant')

@@ -11,6 +11,9 @@
                 <i class="fas fa-search"></i>
             </button>
         </div>
+        @*<div class="dropdown-menu active">
+            <a class="dropdown-item" href="#">Another link</a>
+        </div>*@
     </div>
 
     <ul id="search_results">
@@ -22,6 +25,7 @@
     var searchButton = document.querySelector('#search_button')
     var inputUserSearch = document.querySelector('#input_usersearch')
     var searchResults = document.querySelector('#search_results')
+    //var dropDownMenu = document.querySelector('.dropdown-menu') 
 
     var clearList = function () {
         while (searchResults.firstChild) {
@@ -55,6 +59,33 @@
             searchResults.append(li)
         })
     }
+
+    const getAllUserInterests = (query, callback = console.log, limit = 5) => {
+        fetch(`/api/interest/${query}?limit=${limit}`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "GET"
+        })
+            .then(res => res.json())
+            .then(json => callback(json))
+            .catch(err => console.error(err))
+    }
+
+    //const addDropDownChild = (str) => {
+    //    var a = document.createElement('a')
+    //    a.classList.add('dropdown-item')
+    //    a.textContent = str
+    //    dropDownMenu.append(a)
+    //}
+
+    //inputUserSearch.addEventListener('focus', (ev) => {
+    //    dropDownMenu.classList.add('show')
+    //    getAllUserInterests(inputUserSearch.value, (arr) => {
+    //        arr.map(item => addDropDownChild)
+    //    })
+    //})
 
     searchButton.addEventListener('click', (ev) => {
         clearList()

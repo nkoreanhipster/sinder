@@ -340,3 +340,12 @@ span.input-group-text {
     transform: scale(104%);
     cursor: pointer;
 }
+
+.kill-me {
+    cursor:pointer;
+    padding:2px;
+}
+
+.kill-me:hover {
+    background-color:rgba(255, 0, 0, 0.5);
+}

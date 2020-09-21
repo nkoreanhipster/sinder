@@ -11,17 +11,22 @@ namespace Sinder.Controllers.Api
     [ApiController]
     public class ApiInterestController : ControllerBase
     {
-        // GET: api/ApiInterest
-        [HttpGet]
-        public async Task<IEnumerable<InterestModel>> Get()
+        // GET: api/ApiInterest/QUERY
+        [HttpGet("{query}")]
+        public async Task<IEnumerable<InterestModel>> Get(string query)
         {
             string limit = HttpContext.Request.Query["limit"];
             if(!string.IsNullOrEmpty(limit) && !string.IsNullOrWhiteSpace(limit) && Helper.IsNumber(limit))
             {
                 int l = Int32.Parse(limit);
-                return await Dataprovider.Instance.GetAllInterests(l);
+                return await Dataprovider.Instance.GetMatchingInterest(query, l);
             }
-            return await Dataprovider.Instance.GetAllInterests();
+            return await Dataprovider.Instance.GetMatchingInterest(query);
+        }
+
+        public async Task Delete(string name)
+        {
+            //return new List<string>() { "" };
         }
     }
 }

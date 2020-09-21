@@ -53,26 +53,29 @@
 
         <div class="form-group input-group">
             <div>
-                <div class="">
-                    <div>
-                        <h4>Intressen</h4>
-                        <input id="new_interest_input" type="text" placeholder="...">
-                        <button id="add_interest" class="btn btn-primary">Lägg till</button>
+                <h4>Intressen</h4>
+                <input id="new_interest_input" autocomplete="off" type="text" placeholder="...">
+                <button id="add_interest" class="btn btn-primary">Lägg till</button>
+                <div class="dropdown-menu">
 
-                        <div id="interest_list" class="d-flex">
-                            @*new elements go here*@
-                            @{ 
-                                foreach(InterestModel item in Model.Interests)
-                                {
-                                    <div class="d-flex">
-                                        <span class="badge badge-primary">@item.Value</span>
-                                        <div>X</div>
-                                    </div>
-                                }
-                            }
-                        </div>
-                    </div>
                 </div>
+
+            </div>
+        </div>
+
+        <div class="form-group input-group">
+
+            <div id="interest_list" class="">
+                @*new elements go here*@
+                @{
+                    foreach (InterestModel item in Model.Interests)
+                    {
+                        <span class="">
+                            <span class="badge badge-primary">@item.Value</span>
+                            <span class="kill-me">X</span>
+                        </span>
+                    }
+                }
             </div>
         </div>
 
@@ -158,7 +161,7 @@
     var password = document.querySelector('input[name="password"]')
     var confirmPassword = document.querySelector('input[name="confirm-password"]')
     var backbtn = document.querySelector('button[name="backbtn"]')
-
+    var dropDownMenu = document.querySelector('.dropdown-menu')
 
 
     firstname.addEventListener('input', (ev) => {
@@ -467,6 +470,54 @@
             })
 
     }
+    const queryUserInterests = (query, callback = console.log, limit = 5) => {
+        fetch(`/api/interest/${query}?limit=${limit}`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "GET"
+        })
+            .then(res => res.json())
+            .then(json => callback(json))
+            .catch(err => console.error(err))
+    }
+
+    const addDropDownChild = (str) => {
+        var a = document.createElement('a')
+        a.classList.add('dropdown-item')
+        a.textContent = str
+        a.addEventListener('click', (ev) => {
+            ev.preventDefault()
+            interestInput.value = str
+            killAllChildren(dropDownMenu)
+        })
+        dropDownMenu.append(a)
+    }
+
+    interestInput.addEventListener('input', (ev) => {
+        ev.preventDefault()
+        console.log(interestInput.value)
+        if (interestInput.value.length < 1 || interestInput.value === "" || interestInput.value === null)
+            return;
+        dropDownMenu.classList.add('show')
+        queryUserInterests(interestInput.value, (arr) => {
+            killAllChildren(dropDownMenu)
+            arr.map(item => addDropDownChild(item.value))
+        })
+    })
+
+    const interestKillFunc = (el) => {
+        el.addEventListener('click', (ev) => {
+            ev.preventDefault()
+            // Kill myself
+            el.parentElement.parentElement.removeChild(el.parentElement)
+            console.log("Hallå bibblan hur e lääget")
+        })
+    }
+        // Add to existing elements
+        ;[...document.querySelectorAll('#interest_list > span > span.kill-me')]
+            .map(el => interestKillFunc(el))
 
     var addNewInterest = (str) => {
         var parent = document.createElement('div')
@@ -477,12 +528,7 @@
         badge.textContent = str
         parent.classList.add('d-flex')
         x.textContent = "X"
-
-        x.addEventListener('click', (ev) => {
-            ev.preventDefault()
-            console.log("Hallå bibblan hur e lääget")
-        })
-
+        interestKillFunc(x)
         parent.append(badge)
         parent.append(x)
         interestList.append(parent)
@@ -495,7 +541,7 @@
         if (value === null || value === '')
             return
         value = value.replace(/[^a-zA-ZåäöÅÄÖ0-9 -]+/, '')
-        
+
         uploadInterest(value, addNewInterest, console.error)
         value = ''
     })

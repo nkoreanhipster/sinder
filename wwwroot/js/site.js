@@ -1,4 +1,6 @@
-﻿const Eggplant = (function () {
+﻿const killAllChildren = (parent) => [...parent.childNodes].forEach(el => el.remove())
+
+const Eggplant = (function () {
     this.element = document.querySelector('#eggplant')
     return this
 })()

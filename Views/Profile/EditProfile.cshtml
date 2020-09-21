@@ -59,12 +59,15 @@
                         <input id="new_interest_input" type="text" placeholder="...">
                         <button id="add_interest" class="btn btn-primary">Lägg till</button>
 
-                        <div id="interest_list">
+                        <div id="interest_list" class="d-flex">
                             @*new elements go here*@
                             @{ 
                                 foreach(InterestModel item in Model.Interests)
                                 {
-                                    <span class="badge badge-primary">@item.Value</span>
+                                    <div class="d-flex">
+                                        <span class="badge badge-primary">@item.Value</span>
+                                        <div>X</div>
+                                    </div>
                                 }
                             }
                         </div>
@@ -466,11 +469,23 @@
     }
 
     var addNewInterest = (str) => {
+        var parent = document.createElement('div')
         var badge = document.createElement('span')
+        var x = document.createElement('div')
+
         badge.classList.add('badge', 'badge-primary')
         badge.textContent = str
+        parent.classList.add('d-flex')
+        x.textContent = "X"
 
-        interestList.append(badge)
+        x.addEventListener('click', (ev) => {
+            ev.preventDefault()
+            console.log("Hallå bibblan hur e lääget")
+        })
+
+        parent.append(badge)
+        parent.append(x)
+        interestList.append(parent)
     }
 
     addInterestButton.addEventListener('click', (ev) => {

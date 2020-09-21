@@ -70,7 +70,7 @@
                 @{
                     foreach (InterestModel item in Model.Interests)
                     {
-                        <span class="">
+                        <span data-id="@item.ID" class="">
                             <span class="badge badge-primary">@item.Value</span>
                             <span class="kill-me">X</span>
                         </span>
@@ -148,6 +148,8 @@
 </article>
 
 <script>
+
+
     // Get user id from html
     const parseToInt = (str) => parseInt(str) || NaN
     const getUserId = () => parseToInt(document.querySelector('#id').textContent)
@@ -470,6 +472,7 @@
             })
 
     }
+
     const queryUserInterests = (query, callback = console.log, limit = 5) => {
         fetch(`/api/interest/${query}?limit=${limit}`, {
             headers: {
@@ -477,6 +480,19 @@
                 'Content-Type': 'application/json'
             },
             method: "GET"
+        })
+            .then(res => res.json())
+            .then(json => callback(json))
+            .catch(err => console.error(err))
+    }
+
+    const deleteInterest = (query, callback = console.log) => {
+        fetch(`/api/interest/${getUserId()}/${query}`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "DELETE"
         })
             .then(res => res.json())
             .then(json => callback(json))
@@ -500,19 +516,32 @@
         console.log(interestInput.value)
         if (interestInput.value.length < 1 || interestInput.value === "" || interestInput.value === null)
             return;
-        dropDownMenu.classList.add('show')
+
         queryUserInterests(interestInput.value, (arr) => {
             killAllChildren(dropDownMenu)
-            arr.map(item => addDropDownChild(item.value))
+
+            if (arr.length > 0)
+                dropDownMenu.classList.add('show')
+            else
+                dropDownMenu.classList.remove('show')
+
+            arr.map((item, index) => {
+                addDropDownChild(item.value)
+            })
         })
     })
 
     const interestKillFunc = (el) => {
         el.addEventListener('click', (ev) => {
             ev.preventDefault()
+            // Get interest ID
+            var interestId = el.parentElement.getAttribute('data-id')
+            interestId = Math.trunc(interestId)
+            console.log({ interestId: interestId })
             // Kill myself
             el.parentElement.parentElement.removeChild(el.parentElement)
-            console.log("Hallå bibblan hur e lääget")
+            
+            deleteInterest(interestId)
         })
     }
         // Add to existing elements
@@ -543,7 +572,9 @@
         value = value.replace(/[^a-zA-ZåäöÅÄÖ0-9 -]+/, '')
 
         uploadInterest(value, addNewInterest, console.error)
+        interestInput.value = ''
         value = ''
+        dropDownMenu.classList.remove('show')
     })
 
 

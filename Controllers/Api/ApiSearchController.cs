@@ -26,7 +26,9 @@ namespace Sinder.Controllers.Api
             users.Clear();
             users = await Dataprovider.Instance.SearchUsersBy(queryString);
 
+            //var images = await Dataprovider.Instance.GetUserImagesWhichIsInList(users);
             users.ForEach(async item => item.Images = await Dataprovider.Instance.GetUserImagesByUserID(item.ID));
+            users.ForEach(async item => item.Interests = await Dataprovider.Instance.GetUserInterests(item.ID));
 
             return new JsonResult(users)
             {

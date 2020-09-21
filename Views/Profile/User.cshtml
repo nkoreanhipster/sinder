@@ -55,6 +55,16 @@
                 <p name="gender">@Model.Gender</p>
                 <p>@Model.Location</p>
             </div>
+
+            <div>
+                @{
+                    foreach (InterestModel item in Model.Interests)
+                    {
+                        <span class="badge badge-primary">@item.Value</span>
+                    }
+                }
+            </div>
+
             <div class="card-body profile-container border">
                 <button class="btn btn-primary btn-block" type="submit" name="friendrequest">Vänförfrågan</button>
             </div>

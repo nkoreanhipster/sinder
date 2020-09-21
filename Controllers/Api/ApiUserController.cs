@@ -81,5 +81,28 @@ namespace Sinder.Controllers.Api
         public void Delete(int id)
         {
         }
+
+        /// <summary>
+        /// Test check matching
+        /// </summary>
+        /// <param name="id1"></param>
+        /// <param name="id2"></param>
+        [HttpGet("{id1}/{id2}")]
+        public async Task<IEnumerable<double>> GetMatchPercentage(int id1, int id2)
+        {
+            var userA = await Dataprovider.Instance.ReadUserById(id1);
+            var userB = await Dataprovider.Instance.ReadUserById(id2);
+            if(userA == null || userB == null)
+                return new List<double>() { 9999.0 };
+
+            userA.Interests = await Dataprovider.Instance.GetUserInterests(id1);
+            userB.Interests = await Dataprovider.Instance.GetUserInterests(id2);
+
+            MatchAlgorithm m = new MatchAlgorithm();
+            m.SetSubject(userA);
+            m.AddTarget(userB);
+
+            return m.GetInterestMatchPercentages();
+        }
     }
 }

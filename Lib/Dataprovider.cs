@@ -116,6 +116,18 @@ namespace Sinder
             }
         }
 
+        /// <summary>
+        /// Get all users which occurs in supplied int[] array, might be extra vulnerable to SQL-injection ¯\_(ツ)_/¯
+        /// </summary>
+        public async Task<List<ImageModel>> GetUserImagesWhichIsInList(List<UserModel> users)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                string idList = Helper.GenerateStringFromIds<UserModel>(users);
+                return (await connection.QueryAsync<ImageModel>("SELECT * FROM sinder.Images WHERE @idArray ;", new { idArray = idList })).ToList();
+            }
+        }
+
         public async Task<List<ImageModel>> GetUserImagesByImageId(int imageId)
         {
             using (var connection = CreateDBConnection())
@@ -192,11 +204,17 @@ namespace Sinder
         {
             using (var connection = CreateDBConnection())
             {
-                return (await connection.QueryAsync<InterestModel>("SELECT* FROM sinder.Interests WHERE `UserID` = @userId;", new { userId = userID })).ToList();
+                return (await connection.QueryAsync<InterestModel>("SELECT * FROM sinder.Interests WHERE `UserID` = @userId;", new { userId = userID })).ToList();
             }
             
         }
-        public async Task DeleteUserInterest() { }
+        public async Task DeleteUserInterest(int userId, string nameOfInterest) 
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync<InterestModel>("DELETE FROM Interests WHERE `UserID` = @userId AND `Value` = @nameOfInterest ;", new { userId = userId, nameOfInterest= nameOfInterest });
+            }
+        }
 
         public async Task<List<InterestModel>> GetAllInterests(int limit)
         {

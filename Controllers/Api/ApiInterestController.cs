@@ -24,9 +24,14 @@ namespace Sinder.Controllers.Api
             return await Dataprovider.Instance.GetMatchingInterest(query);
         }
 
-        public async Task Delete(string name)
+        /// <summary>
+        /// UserID and name of interest
+        /// </summary>
+        [HttpDelete("{userId}/{name}")]
+        public async Task<IEnumerable<string>> Delete(int userId, string name)
         {
-            //return new List<string>() { "" };
+            await Dataprovider.Instance.DeleteUserInterest(userId, name);
+            return new List<string>() { @"Probably deleted ¯\\\_(ツ)_/¯" };
         }
     }
 }

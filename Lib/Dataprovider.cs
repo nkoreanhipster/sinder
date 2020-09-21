@@ -206,6 +206,16 @@ namespace Sinder
             }
         }
         public async Task<List<InterestModel>> GetAllInterests() => await GetAllInterests(9999999);
+        public async Task<List<InterestModel>> GetMatchingInterest(string searchValue, int limit = 5)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                string query = @"SELECT * FROM sinder.InterestsStatic 
+WHERE (Value LIKE CONCAT('%', @searchValue, '%')) 
+LIMIT @limit";
+                return (await connection.QueryAsync<InterestModel>(query, new { searchValue = searchValue, limit = limit })).ToList();
+            }
+        }
 
         public async Task<List<string>> AddStaticInterest(string value)
         {

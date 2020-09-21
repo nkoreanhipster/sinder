@@ -11,7 +11,7 @@
                 <i class="fas fa-search"></i>
             </button>
         </div>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu active">
             <a class="dropdown-item" href="#">Regular link</a>
             <a class="dropdown-item active" href="#">Active link</a>
             <a class="dropdown-item" href="#">Another link</a>
@@ -27,6 +27,7 @@
     var searchButton = document.querySelector('#search_button')
     var inputUserSearch = document.querySelector('#input_usersearch')
     var searchResults = document.querySelector('#search_results')
+    var dropDownMenu = document.querySelector('.dropdown-menu') 
 
     var clearList = function () {
         while (searchResults.firstChild) {
@@ -60,6 +61,23 @@
             searchResults.append(li)
         })
     }
+
+    const getAllUserInterests = (limit = 5) => {
+        fetch(`/api/interest?limit=`, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "GET"
+        })
+            .then(res => res.json())
+            .then(json => displayArray(json))
+            .catch(err => console.error(err))
+    }
+
+    inputUserSearch.addEventListener('focus', (ev) => {
+        dropDownMenu.classList.add('show')
+    })
 
     searchButton.addEventListener('click', (ev) => {
         clearList()

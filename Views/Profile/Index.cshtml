@@ -17,7 +17,7 @@
                         }
                         else
                         {
-                        <li data-target="#profileimages" data-slide-to="@i"></li>
+                            <li data-target="#profileimages" data-slide-to="@i"></li>
                         }
                     }
                 </ol>
@@ -48,13 +48,25 @@
                 </a>
 
             </div>
-            
+
             <div class="container">
                 <h4><b>@Model.Firstname @Model.Surname @{var age = DateTime.Today.Year - Model.Age.Year; } @age År</b></h4>
                 <p class="profile-font-style"><i class="fas fa-envelope mr-2" style=" color: #eb6864"></i>@Model.Email</p>
                 <p><i class="fas fa-venus-mars mr-2" style=" color: #eb6864"></i>@Model.Gender</p>
                 <p><i class="fas fa-map-marker-alt mr-2" style=" color: #eb6864"></i>@Model.Location</p>
             </div>
+
+
+            <div class="container">
+                <h6>Intressen</h6>
+                @{
+                    foreach (InterestModel item in Model.Interests)
+                    {
+                        <span class="badge badge-primary">@item.Value</span>
+                    }
+                }
+            </div>
+
             <div class="card-body profile-container border">
                 <a class="btn btn-primary" href="/profile/editprofile">Redigera Profil</a>
             </div>

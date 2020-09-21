@@ -74,6 +74,17 @@ namespace Sinder.Controllers.Api
             });
         }
 
+        // Add user interet
+        [HttpPut("{id}/interest")]
+        public async Task<IActionResult> PutInterest(int id, string temp, [FromBody] UpdateUserInterestDto user)
+        {
+           
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "HELLO", Message = ";)" }, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            });
+        }
+
         // DELETE api/<ApiUserController>/5
         [HttpDelete("{id}")]
         public void Delete(int id)

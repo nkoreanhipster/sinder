@@ -54,6 +54,23 @@
         <div class="form-group input-group">
             <div>
                 <div class="">
+                    <div>
+                        <h4>Intressen</h4>
+                        <input id="new_interest_input" type="text" placeholder="...">
+                        <button id="add_interest" class="btn btn-primary">Lägg till</button>
+
+                        <div id="interest_list">
+                            @*new elements go here*@
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group input-group">
+            <div>
+                <div class="">
                     <img class="img img-fluid" data-target="active" src="" />
                 </div>
                 @*<input type="file" name="image" accept=".png,.jpg,.jpeg,.gif,.tif,.tiff,.bmp">*@
@@ -347,7 +364,7 @@
                         Successbox.show('Kunde ej radera bild', 'Error_2')
                         return;
                     }
-                        
+
 
                     activeImage.src = ""
                     // Make api call to delete
@@ -388,7 +405,7 @@
                 "Accept": '/'
             }
         })
-            .then(res => res.json())    
+            .then(res => res.json())
             .then(json => Successbox.show(json.Message))
             .catch(err => Successbox.show(err.Message))
     }
@@ -406,6 +423,34 @@
     editProfileAddImageInput.value = ''
     editProfileAddImageInput
         .addEventListener('change', (ev) => handleNewFile(ev))
+
+    // Interest listeners
+    var addInterestButton = document.querySelector('#add_interest')
+    var interestList = document.querySelector('#interest_list')
+    var interestInput = document.querySelector('#new_interest_input') || null
+
+    // Reset value
+    interestInput.value = ''
+
+    var addNewInterest = (str) => {
+        var badge = document.createElement('span')
+        badge.classList.add('badge', 'badge-primary')
+        badge.textContent = str
+
+        interestList.append(badge)
+    }
+
+    addInterestButton.addEventListener('click', (ev) => {
+        ev.preventDefault()
+        var { value } = interestInput
+
+        if (value === null || value === '')
+            return
+        value = value.replace(/[^a-zA-ZåäöÅÄÖ0-9 -]+/, '')
+        addNewInterest(value)
+        value = ''
+    })
+
 
 </script>
 

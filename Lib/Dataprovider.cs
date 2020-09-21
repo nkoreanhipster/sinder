@@ -168,7 +168,7 @@ namespace Sinder
         {
             using (var connection = CreateDBConnection())
             {
-                await connection.QueryAsync("DELETE FROM sinder.Images WHERE ID = @imageId;", new { imageId = imageId});
+                await connection.QueryAsync("DELETE FROM sinder.Images WHERE ID = @imageId;", new { imageId = imageId });
             }
         }
 
@@ -177,6 +177,22 @@ namespace Sinder
             using (var connection = CreateDBConnection())
             {
                 await connection.QueryAsync("DELETE FROM sinder.Images WHERE UserID = @userId AND Url = @url ;", new { userId = userId, Url = url });
+            }
+        }
+
+        public async Task AddStaticInterest(string value)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                // Check if value already exists, else insert
+                // Also return bool
+                string query =
+                    $"INSERT INTO sinder.InterestsStatic(Value)" +
+                    $"SELECT * FROM(SELECT @value) AS tmp" +
+                    $"WHERE NOT EXISTS(" +
+                    $"SELECT Value FROM sinder.InterestsStatic WHERE Value = @value" +
+                    $") LIMIT 1;";
+                await connection.QueryAsync(query, new { value = value });
             }
         }
 

@@ -154,15 +154,16 @@ input.form-control[name] {
     padding: 2px 16px;
 }
 
-.trashcan{
+.trashcan.kill-me{
     cursor:pointer;
     opacity:0.8;
 }
 
-.trashcan:hover{
+.trashcan.kill-me:hover{
     cursor:pointer;
-    color:palevioletred;
+    color:indianred;
     opacity:1;
+    background-color:transparent;
 }
 .profile-border-color {
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);

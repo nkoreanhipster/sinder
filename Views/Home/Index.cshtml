@@ -97,18 +97,26 @@
                     Successbox.element.classList.add('bg-danger')
                     Successbox.setColor('white')
                     Successbox.show(data.Message, "Fel")
+
+                    window.setTimeout(() => {
+                        Successbox.hide()
+                        plusSlides(1);
+                    }, 2000)
+ 
                 }
                 else {
                     Successbox.element.classList.remove('bg-danger')
                     Successbox.element.classList.add('bg-success')
                     Successbox.setColor('white')
                     Successbox.show(data.Message)
+                    window.setTimeout(() => {
+                        Successbox.hide()
+                        plusSlides(1);
+                    }, 2000)
                 }
             })
             .catch(err => console.error(err))
         
-        window.setTimeout(2000);
-        plusSlides(1);
     }
     
     function DeclineFriend() {

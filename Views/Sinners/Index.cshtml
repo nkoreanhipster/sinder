@@ -1,15 +1,72 @@
-﻿@model List<UserModel>
+﻿@model List<RelationshipDto>
 @{
     ViewData["Title"] = "Sinners";
 }
-@foreach (var user in @Model)
-{
-    <ul class="card">
-        <li class="card-body card-columns">
-             @user.Firstname @user.Surname , @{var age = DateTime.Today.Year - user.Age.Year; } @age År 
-            <button name="acceptbtn"class="btn btn-success btn-block mt-2 ml-2"> Accept</button>
-            <button name="denybtn" class="btn bg-primary text-white btn-block mt-2 mr-2">Deny</button>
-        </li>
-    </ul>
-}   
+
+<div id="page_sinners">
+
+    <p class="bg-secondary text-white mt-3">Mottagna förfrågningar</p>
+    @foreach (var r in @Model)
+    {
+        if (r.CurrentUserID == (int)r.AntagonistID)
+        {
+            <div class="">
+                <span>@r.Status1.ToString() - @r.Status2.ToString() - ID:@r.ProtagonistID </span>
+                <a href="/profile/user/@r.ProtagonistID">@r.ProtagonistFirstName</a>
+                <button name="acceptbtn" class="btn btn-success"> Accept</button>
+                <button name="denybtn" class="btn bg-primary text-white">Deny</button>
+                <p>@r.CreatedAt</p>
+            </div>
+        }
+
+    }
+
+    <p class="bg-secondary text-white mt-3">Skickade</p>
+    @foreach (var r in @Model)
+    {
+        if (r.CurrentUserID == (int)r.ProtagonistID)
+        {
+            <div class="">
+                <span>@r.Status1.ToString() - @r.Status2.ToString()</span>
+                <a href="/profile/user/@r.AntagonistID">@r.AntagonistFirstName</a>
+                <p>@r.CreatedAt</p>
+            </div>
+        }
+
+    }
+
+    <p class="bg-secondary text-white mt-3">Vänner & Sinners</p>
+    <h5>Du har @{ @Model.FindAll(z => z.Status1 == z.Status2).Count.ToString();} vänner!</h5>
+    @foreach (var r in @Model)
+    {
+        if ((int)r.Status1 == (int)r.Status2)
+        {
+            <div class="card">
+                <span>@r.Status1.ToString()</span>
+                <button>Skicka meddelande</button>
+                <p>@r.CreatedAt</p>
+            </div>
+        }
+
+    }
+</div>
+
+
+
+
+@*@foreach (var user in @Model)
+    // Kommenterade ut ditt, sårry Pontus.
+    // Jag tänkte att det var mer relevant att visa tre andra saker istället
+    // - Skickade vänförfrågningat
+    // - mottagna vänförfrågninar
+    // - Vänner (med link till chatt)
+    {
+        <ul class="card">
+            <li class="card-body card-columns">
+                 @user.Firstname @user.Surname , @{var age = DateTime.Today.Year - user.Age.Year; } @age År
+                <button name="acceptbtn"class="btn btn-success btn-block mt-2 ml-2"> Accept</button>
+                <button name="denybtn" class="btn bg-primary text-white btn-block mt-2 mr-2">Deny</button>
+            </li>
+        </ul>
+    }*@
 

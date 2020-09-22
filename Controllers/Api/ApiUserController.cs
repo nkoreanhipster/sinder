@@ -15,36 +15,83 @@ namespace Sinder.Controllers.Api
     [ApiController]
     public class ApiUserController : ControllerBase
     {
-        // GET: api/<ApiUserController>
+        // GET: api/user
         [HttpGet]
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<ApiUserController>/5
+        // GET api/user/[id]
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<ApiUserController>
-        
+        // POST api/user/resetpassword
         [HttpPost("{resetpassword}")]
-        public async Task<IActionResult> Post(string passwordreset,[FromBody] UserLoginDto user)
+        public async Task<IActionResult> Post(string passwordreset, [FromBody] UserLoginDto user)
         {
-            var userPassword =  SecurityHelper.GetPassword(user.Password);
+            var userPassword = SecurityHelper.GetPassword(user.Password);
             UserModel userToUpdate = new UserModel() { Email = user.Email, HashedPassword = userPassword.passwordhash, Salt = userPassword.salt };
             await Dataprovider.Instance.UpdateUserPassword(userToUpdate);
-            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Accepted, Status = "Success", Message = "Ändrat Lösenord" }, new JsonSerializerOptions
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Ändrat Lösenord" }, new JsonSerializerOptions
             {
                 WriteIndented = true,
             });
         }
 
-        // PUT api/<ApiUserController>/5
-        //id in parameter is the target users Id
+
+        // PUT api/user/[id]/relationsship
+        // Love request throug the match function
+        [HttpGet("{subjectID}/relationship")]
+        public async Task<IActionResult> ListRelations(int subjectID)
+        {
+            var x = Dataprovider.Instance.ReadUserRelationships(subjectID);
+            return new JsonResult(x);
+            
+        }
+
+        // GET api/user/[id]/message/[id]/list
+        // Get converstion between User[id] and User[id]
+        [HttpGet("{subjectID}/message/{targetID}/list")]
+        public async Task<IActionResult> GetMessageHistory(int subjectID, int targetID)
+        {
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.NotImplemented, Status = "Meh", Message = "Not yet implemented" }, new JsonSerializerOptions { WriteIndented = true });
+        }
+
+        // PUT api/user/[id]/message/[id]
+        // Love request throug the match function
+        [HttpPut("{subjectID}/message/{targetID}")]
+        public async Task<IActionResult> SendMessage(int subjectID, int targetID)
+        {
+            if (await Dataprovider.Instance.CheckIfRelationshipExists(subjectID, targetID))
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Ni behöver vara vänner först" }, new JsonSerializerOptions { WriteIndented = true });
+
+
+
+            // Not yet implemented
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.NotImplemented, Status = "Meh", Message = "Not yet implemented" }, new JsonSerializerOptions { WriteIndented = true });
+
+            //return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Meddelande skickat" }, new JsonSerializerOptions { WriteIndented = true });
+        }
+
+        // PUT api/user/[id]/loves/[id]
+        // Love request throug the match function
+        [HttpGet("{subjectID}/loves/{targetID}")]
+        public async Task<IActionResult> LoveShip(int subjectID, int targetID)
+        {
+            if (await Dataprovider.Instance.CheckIfRelationshipExists(subjectID, targetID))
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Du har redan skickat förfrågan" }, new JsonSerializerOptions { WriteIndented = true });
+            await Dataprovider.Instance.AddUserRelationship(subjectID, targetID, Relationship.Friend);
+
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Vänförfrågan skickad!" }, new JsonSerializerOptions { WriteIndented = true });
+        }
+
+        // PUT api/user/[id]
+        // Friend request
+        // id in parameter is the target users Id
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id)
         {
@@ -68,15 +115,15 @@ namespace Sinder.Controllers.Api
                 });
             }
 
-            await Dataprovider.Instance.AddUserRelationship(loggedinUser.ID, id);
+            await Dataprovider.Instance.AddUserRelationship(loggedinUser.ID, id, Relationship.Friend);
 
-            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Success", Message = "Vänförfrågan skickad!" }, new JsonSerializerOptions
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Vänförfrågan skickad!" }, new JsonSerializerOptions
             {
                 WriteIndented = true,
             });
         }
 
-        // DELETE api/<ApiUserController>/5
+        // DELETE api/user/[id]
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

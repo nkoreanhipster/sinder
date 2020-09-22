@@ -28,7 +28,6 @@ namespace Sinder
         /// <summary>
         /// Test if connection works
         /// </summary>
-        /// <returns></returns>
         public bool TestConnection()
         {
             bool isSuccess = true;
@@ -69,6 +68,7 @@ namespace Sinder
                 return (await connection.QueryAsync<UserModel>("SELECT * FROM Users")).ToList();
             }
         }
+
         public async Task<UserModel> ReadUserById(int id)
         {
             using (var connection = CreateDBConnection())
@@ -76,6 +76,10 @@ namespace Sinder
                 return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE Users.ID = @Id", new { Id = id })).First();
             }
         }
+
+        /// <summary>
+        /// Single return
+        /// </summary>
         public async Task<UserModel> ReadUserByEmail(string email) => (await ReadUsersByEmail(email)).First();
 
         public async Task<List<UserModel>> ReadUsersByEmail(string email)
@@ -100,6 +104,9 @@ namespace Sinder
             }
         }
 
+        /// <summary>
+        /// Careful, since it updates a bunch of values
+        /// </summary>
         public async Task UpdateUser(UserModel user)
         {
             using (var connection = CreateDBConnection())
@@ -116,6 +123,9 @@ namespace Sinder
             }
         }
 
+        /// <summary>
+        /// Please don't use this one too much
+        /// </summary>
         public async Task<List<ImageModel>> GetAllUserImages()
         {
             using (var connection = CreateDBConnection())
@@ -168,38 +178,32 @@ namespace Sinder
             }
         }
 
+        /// <summary>
+        /// Set two user's realtionship to the same value
+        /// </summary>
+        public async Task MatchRelationship(int usedId1, int usedId2, Relationship relationshipType)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync("UPDATE Relationship SET `Status1` = @relType, `Status2` = @relType WHERE `UserID1` = @userId1 AND `UserID2` = @userId2 OR `UserID1` = @userId2 AND `UserID2` = @userId1;", new { userId1 = usedId1, userid2 = usedId2, relType = (int)relationshipType });
+            }
+        }
+
+        /// <summary>
+        /// ? if relationship exists
+        /// </summary>
+        /// <returns></returns>
         public async Task<bool> CheckIfRelationshipExists(int loggedInUser, int targetUser)
         {
             using (var connection = CreateDBConnection())
             {
-                return (await connection.QueryAsync<bool>("SELECT EXISTS(SELECT * FROM sinder.Relationship WHERE Relationship.UserID1 = @userId1 AND Relationship.UserID2 = @userid2)", new { userId1 = loggedInUser, userid2 = targetUser })).First();
+                return (await connection.QueryAsync<bool>("SELECT EXISTS(SELECT * FROM sinder.Relationship WHERE Relationship.UserID1 = @userId1 AND Relationship.UserID2 = @userid2 OR Relationship.UserID1 = @userId2 AND Relationship.UserID2 = @userId1 )", new { userId1 = loggedInUser, userid2 = targetUser })).First();
             }
         }
-//        public async Task<List<RelationshipDto>> ReadRelationshipRequestAwaitingReponse(int userID)
-//        {
-//            using (var connection = CreateDBConnection())
-//            {
-//                string query = @"SELECT 
-//r.ID as RelationShipID, 
-//r.UserID1 as ProtagonistID, 
-//r.UserID2 as AntagonistID, 
-//r.Status1 as Status1, 
-//r.Status2 as Status2, 
-//u.firstName as ProtagonistName 
-//FROM Relationship r 
-//RIGHT JOIN Users u ON u.ID = r.UserID2 
-//WHERE r.UserID1 = @userID 
-//OR OR r.UserID2 = @userID ;";
 
-//                List<RelationshipDto> relationshipDtos = (await connection.QueryAsync<RelationshipDto>(query, new { userID = userID })).ToList();
-//                foreach (RelationshipDto r in relationshipDtos)
-//                {
-//                    r.Images = (await GetUserImagesByUserID(r.AntagonistID)).ToList();
-//                }
-//                return relationshipDtos;
-//            }
-//        }
-
+        /// <summary>
+        /// Query an users active realtionship from the db. Both pending and active
+        /// </summary>
         public async Task<List<RelationshipDto>> ReadUserRelationships(int userID)
         {
             using (var connection = CreateDBConnection())
@@ -211,8 +215,8 @@ r.UserID2 as AntagonistID,
 r.Status1 as Status1, 
 r.Status2 as Status2, 
 r.CreatedAt as CreatedAt, 
-u.firstName as AntagonistFirstName,
-r.CreatedAt as CreatedAt
+u.firstName as AntagonistFirstName, 
+r.CreatedAt as CreatedAt 
 FROM Relationship r 
 RIGHT JOIN Users u ON u.ID = r.UserID2 
 WHERE r.UserID1 = @userID OR r.UserID2 = @userID ;";
@@ -223,15 +227,6 @@ WHERE r.UserID1 = @userID OR r.UserID2 = @userID ;";
                     r.Images = (await GetUserImagesByUserID(r.AntagonistID)).ToList();
                 }
                 return relationshipDtos;
-            }
-        }
-
-
-        public async Task UpdateUserImage(int userId, string oldUrl, string newUrl)
-        {
-            using (var connection = CreateDBConnection())
-            {
-                await connection.QueryAsync("UPDATE sinder.Images SET Images.Url = @newUrl WHERE UserID = @userId AND Url = @oldUrl ;", new { userId = userId, oldUrl = oldUrl, newUrl = newUrl });
             }
         }
 
@@ -267,6 +262,7 @@ WHERE r.UserID1 = @userID OR r.UserID2 = @userID ;";
             }
 
         }
+
         public async Task DeleteUserInterest(int userId, string nameOfInterest)
         {
             using (var connection = CreateDBConnection())
@@ -282,7 +278,9 @@ WHERE r.UserID1 = @userID OR r.UserID2 = @userID ;";
                 return (await connection.QueryAsync<InterestModel>("SELECT * FROM sinder.InterestsStatic LIMIT @limit", new { limit = limit })).ToList();
             }
         }
+
         public async Task<List<InterestModel>> GetAllInterests() => await GetAllInterests(9999999);
+
         public async Task<List<InterestModel>> GetMatchingInterest(string searchValue, int limit = 5)
         {
             using (var connection = CreateDBConnection())

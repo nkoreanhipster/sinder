@@ -420,7 +420,10 @@
             }
         })
             .then(res => res.json())
-            .then(json => Successbox.show(json.Message))
+            .then(json => {
+                Successbox.show(json.Message)
+                location.reload()
+            })
             .catch(err => Successbox.show(err.Message))
     }
 
@@ -515,8 +518,11 @@
     interestInput.addEventListener('input', (ev) => {
         ev.preventDefault()
         console.log(interestInput.value)
-        if (interestInput.value.length < 1 || interestInput.value === "" || interestInput.value === null)
+        if (interestInput.value.length < 1 || interestInput.value === "" || interestInput.value === null) {
+            dropDownMenu.classList.remove('show')
             return;
+        }
+            
 
         queryUserInterests(interestInput.value, (arr) => {
             killAllChildren(dropDownMenu)

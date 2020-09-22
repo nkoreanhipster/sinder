@@ -189,6 +189,15 @@ namespace Sinder
             }
         }
 
+
+
+        public async Task<bool> CheckIfRelationshipExists(int relationID)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<bool>("SELECT EXISTS(SELECT * FROM Relationship WHERE Relationship.ID = @relId ) ;", new { relId = relationID })).First();
+            }
+        }
         /// <summary>
         /// ? if relationship exists
         /// </summary>
@@ -198,6 +207,31 @@ namespace Sinder
             using (var connection = CreateDBConnection())
             {
                 return (await connection.QueryAsync<bool>("SELECT EXISTS(SELECT * FROM sinder.Relationship WHERE Relationship.UserID1 = @userId1 AND Relationship.UserID2 = @userid2 OR Relationship.UserID1 = @userId2 AND Relationship.UserID2 = @userId1 )", new { userId1 = loggedInUser, userid2 = targetUser })).First();
+            }
+        }
+
+        public async Task<int> ReadRealtionShipId(int userA, int userB)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<int>("SELECT r.ID FROM Relationship r WHERE  r.UserID1 = @userA AND r.UserID2 = @userB OR r.UserID1 = @userB AND r.UserID2 = @userA", new { userA = userA, userB = userB })).First();
+            }
+        }
+
+
+        public async Task<bool> CheckIfSameRelationShip(int userA, int userB)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<bool>("SELECT EXISTS(SELECT * FROM sinder.Relationship WHERE Relationship.UserID1 = @userId1 AND Relationship.UserID2 = @userid2 OR Relationship.UserID1 = @userId2 AND Relationship.UserID2 = @userId1 )", new { userId1 = userA, userid2 = userB })).First();
+            }
+        }
+
+        public async Task<RelationShipModel> ReadRelationShipById(int relationID)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<RelationShipModel>("SELECT * FROM Relationship r WHERE r.ID = @relId; ;", new { relId = relationID })).First();
             }
         }
 
@@ -221,8 +255,8 @@ FROM Relationship r
 RIGHT JOIN Users u ON u.ID = r.UserID2 
 WHERE r.UserID1 = @userID OR r.UserID2 = @userID ;";
 
-                List<RelationshipDto> relationshipDtos = (await connection.QueryAsync<RelationshipDto>(query, new { userID = userID})).ToList();
-                foreach(RelationshipDto r in relationshipDtos)
+                List<RelationshipDto> relationshipDtos = (await connection.QueryAsync<RelationshipDto>(query, new { userID = userID })).ToList();
+                foreach (RelationshipDto r in relationshipDtos)
                 {
                     r.Images = (await GetUserImagesByUserID(r.AntagonistID)).ToList();
                 }
@@ -302,6 +336,62 @@ WHERE r.UserID1 = @userID OR r.UserID2 = @userID ;";
                     $"WHERE NOT EXISTS( " +
                     $"SELECT InterestsStatic.Value FROM sinder.InterestsStatic WHERE InterestsStatic.Value = @value) LIMIT 1 ";
                 return (await connection.QueryAsync<string>(query, new { value = value })).ToList();
+            }
+        }
+
+        public async Task<List<string>> ReadAllMessagesWithUserID(int userid)
+        {
+            using (var connection = CreateDBConnection())
+            {
+
+                return new List<string>() { };
+            }
+        }
+
+        /// <summary>
+        /// Read whole chat log between two users
+        /// </summary>
+        /// <param name="relationshipID"></param>
+        public async Task<List<MessageModel>> ReadAllMessagesBetweenTwoUsers(int relationshipID)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<MessageModel>("SELECT * FROM Messages WHERE Messages.RelationshipID = @relId", new { relId = relationshipID })).ToList();
+            }
+        }
+
+
+        /// <summary>
+        /// Send a message to a relation
+        /// </summary>
+        /// <param name="realtionShipId"></param>
+        /// <param name="senderId"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public async Task SendMessageFromTo(int relationshipId, int senderId, string text)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                await connection.QueryAsync("INSERT INTO Messages(Messages.RelationshipID, `Sender`, `Text`) VALUES(@relID, @sender, @txt)", new { relId = relationshipId, sender = senderId, txt = text });
+            }
+        }
+
+        public async Task DeleteMessageByMessageId(int messageId)
+        {
+            using (var connection = CreateDBConnection())
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// Join two tables together with foreign keys. MessageHistory.ID <--fk-- Messages --fk--> Relationship.ID
+        /// </summary>
+        public async Task CreateMessageTable(int messageId)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                //await connection.QueryAsync("INSERT INTO Messages(Messages.RelationshipID) VALUES(@value) ;", new { value = value });
             }
         }
 

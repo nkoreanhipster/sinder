@@ -113,7 +113,7 @@
                 }
                 <span>@r.Status1.ToString()</span>
                 <a href="/profile/user/@r.AntagonistID">@r.AntagonistFirstName</a>
-                <button>Skicka meddelande</button>
+                <button href="/message/@r.RelationShipID" name="message-page">Skicka meddelande</button>
                 <p>@r.CreatedAt</p>
             </div>
         }
@@ -127,11 +127,16 @@
             ev.preventDefault()
             window.location.replace(ev.target.getAttribute('href'))
         }))
-    // todo; deny request
+        // todo; deny request
         ;[...document.querySelectorAll('button[name="denybtn"]')]
             .map(el => el.addEventListener('click', (ev) => {
-            ev.preventDefault(); alert('This button does nothing yet;')
-        }))
+                ev.preventDefault(); alert('This button does nothing yet;')
+            }))
+        ;[...document.querySelectorAll('button[name="message-page"]')]
+            .map(el => el.addEventListener('click', (ev) => {
+                ev.preventDefault()
+                window.location.replace(ev.target.getAttribute('href'))
+            }))
 </script>
 
 

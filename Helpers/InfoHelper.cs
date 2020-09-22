@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Sinder.Helpers
+namespace Sinder
 {
     public static class InfoHelper
     {

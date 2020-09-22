@@ -8,7 +8,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Sinder.Helpers
+namespace Sinder
 {
     public class SecurityHelper
     {

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Sinder.Controllers.Api;
-using Sinder.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

@@ -31,9 +31,11 @@ function showSlides(n) {
     //}
 
     //Break if not element declared
-    if (slides.length < 1)
+    if (slides.length < 1) {
+        Console.error('Den här mobbades och var elak mot resten av projektet. Så gjorde en valideringscheck')
         return
-
+    }
+       
     slides[slideIndex - 1].style.display = "block";
     //dots[slideIndex - 1].className += " active";
 }

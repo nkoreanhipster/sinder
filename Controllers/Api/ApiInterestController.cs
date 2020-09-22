@@ -15,13 +15,20 @@ namespace Sinder.Controllers.Api
         [HttpGet("{query}")]
         public async Task<IEnumerable<InterestModel>> Get(string query)
         {
-            string limit = HttpContext.Request.Query["limit"];
-            if(!string.IsNullOrEmpty(limit) && !string.IsNullOrWhiteSpace(limit) && Helper.IsNumber(limit))
+            try
             {
-                int l = Int32.Parse(limit);
-                return await Dataprovider.Instance.GetMatchingInterest(query, l);
+                string limit = HttpContext.Request.Query["limit"];
+                if (!string.IsNullOrEmpty(limit) && !string.IsNullOrWhiteSpace(limit) && Helper.IsNumber(limit))
+                {
+                    int l = Int32.Parse(limit);
+                    return await Dataprovider.Instance.GetMatchingInterest(query, l);
+                }
+                return await Dataprovider.Instance.GetMatchingInterest(query);
             }
-            return await Dataprovider.Instance.GetMatchingInterest(query);
+            catch
+            {
+                return new List<InterestModel>();
+            }
         }
 
         /// <summary>

@@ -73,7 +73,7 @@
                         <span data-id="@item.ID" class="">
                             <span class="badge badge-primary">@item.Value</span>
                             <span class="far fa-trash-alt mr-2 trashcan kill-me" 
-                                  style=" cursor: pointer; opacity: 0.8; "/>
+                                  style=" cursor: pointer; opacity: 0.8; "></span>
                         </span>
                     }
                 }
@@ -541,14 +541,13 @@
     const interestKillFunc = (el) => {
         el.addEventListener('click', (ev) => {
             ev.preventDefault()
-            // Get interest ID
-            var interestId = el.parentElement.getAttribute('data-id')
-            interestId = Math.trunc(interestId)
-            console.log({ interestId: interestId })
+            // Grab name of interest
+            var text = el.parentElement.querySelector('.badge').textContent 
             // Kill myself
             el.parentElement.parentElement.removeChild(el.parentElement)
-            
-            deleteInterest(interestId)
+            // Send kil request
+            deleteInterest(text)
+
         })
     }
         // Add to existing elements
@@ -563,7 +562,7 @@
         badge.classList.add('badge', 'badge-primary')
         badge.textContent = str
         parent.classList.add('d-flex')
-        x.textContent = "X"
+        x.classList.add("far", "fa-trash-alt", "trashcan")
         interestKillFunc(x)
         parent.append(badge)
         parent.append(x)

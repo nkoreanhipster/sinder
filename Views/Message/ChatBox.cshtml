@@ -1,0 +1,16 @@
+﻿@model (UserModel, UserModel)
+@{
+    UserModel me =  @Model.Item1;
+    UserModel notMe = @Model.Item2;
+    ViewData["Title"] = $"Du chattar med {notMe.Firstname}";
+}
+<div id="page_message">
+    <p>
+        You are chatting with @notMe.Firstname
+        <img class="img is-32x32" src="@notMe.Images[0].Url"/>
+    </p>
+
+    <input type="text" />
+</div>
+
+ 

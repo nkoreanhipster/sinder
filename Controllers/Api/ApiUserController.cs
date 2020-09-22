@@ -5,7 +5,6 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Sinder.Helpers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -50,7 +49,7 @@ namespace Sinder.Controllers.Api
         {
             var x = Dataprovider.Instance.ReadUserRelationships(subjectID);
             return new JsonResult(x);
-            
+
         }
 
         // GET api/user/[id]/message/[id]/list
@@ -69,12 +68,44 @@ namespace Sinder.Controllers.Api
             if (await Dataprovider.Instance.CheckIfRelationshipExists(subjectID, targetID))
                 return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Ni behöver vara vänner först" }, new JsonSerializerOptions { WriteIndented = true });
 
-
-
             // Not yet implemented
+
+
             return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.NotImplemented, Status = "Meh", Message = "Not yet implemented" }, new JsonSerializerOptions { WriteIndented = true });
 
             //return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Meddelande skickat" }, new JsonSerializerOptions { WriteIndented = true });
+        }
+
+        /// <summary>
+        /// Accepting someone's friend or love request, matching the type
+        /// ROUTE => PUT api/user/[id]/accept/[id]/[relationshiptype]
+        /// </summary>
+        [HttpGet("{subjectID}/accept/{targetID}/{relationShipType}")]
+        public async Task<IActionResult> Accept(int subjectID, int targetID, int relationShipType)
+        {
+            // Break if there is no current relationship
+            if (await Dataprovider.Instance.CheckIfRelationshipExists(subjectID, targetID) == false)
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Ni har inga stående förfrågningar mellan varandra" }, new JsonSerializerOptions { WriteIndented = true });
+
+            Relationship r = Relationship.Declined;
+
+            switch (relationShipType)
+            {
+                case 1:
+                    r = Relationship.Friend;
+                    break;
+                case 2:
+                    r = Relationship.Love;
+                    break;
+            }
+
+            // Break, we are only accepting type 1 and 2
+            if (r != Relationship.Friend && r != Relationship.Love)
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Felaktiga värden" }, new JsonSerializerOptions { WriteIndented = true });
+
+            await Dataprovider.Instance.MatchRelationship(subjectID, targetID, r);
+
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Ni är nu vänner och/eller sinners" }, new JsonSerializerOptions { WriteIndented = true });
         }
 
         // PUT api/user/[id]/loves/[id]

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Sinder.Helpers;
 using Sinder.Models;
+using System.Linq;
 
 namespace Sinder.Controllers
 {
@@ -27,15 +28,73 @@ namespace Sinder.Controllers
                 return Redirect("/login");
             InfoHelper.IsLoggedIn = true;
 
+            // Get current active user
+            string email = SecurityHelper.GetLoggedInUser(cookies);
+            UserModel currentUser = await Dataprovider.Instance.ReadUserByEmail(email);
+            currentUser.Images = await Dataprovider.Instance.GetUserImagesByUserID(currentUser.ID);
+            currentUser.Interests = await Dataprovider.Instance.GetUserInterests(currentUser.ID);
+
+            // Get all active users (todo; limit this somehow, will be ass-slow if database gets larger)
             List<UserModel> users = new List<UserModel>();
             users = await Dataprovider.Instance.ReadAllUsers();
             foreach (var user in users)
             {
-                List<ImageModel> images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
-                user.Images = images;
+                user.Images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID); ;
+                user.Interests = await Dataprovider.Instance.GetUserInterests(user.ID);
             }
-            return View(users);
+
+            // Make match thingy
+            // Convert usermodels => MatchUserDtocs model
+            List<MatchUserDtocs> usersToBeMatched = new List<MatchUserDtocs>();
+            usersToBeMatched = Converters.ConvertUserModelToMatchUserDto(users);
+            // Match percentage gets added to MatchUserDtocs.ProtagonistMatchPercentage property
+            MatchAlgorithm.CalculateMatchPercentage(currentUser, ref usersToBeMatched);
+
+            // Sort by best matches first..?
+            usersToBeMatched = usersToBeMatched.OrderBy(x => x.ProtagonistMatchPercentage).ToList();
+
+            // ... Order sorted the wrong way apparently
+            usersToBeMatched.Reverse();
+
+            return View(usersToBeMatched);
         }
+
+        //[HttpGet("/test")]
+        //public async Task<IActionResult> IndexTest()
+        //{
+        //    // Validate, else redirect to /login
+        //    var cookies = Request.Cookies["token"];
+        //    if (cookies == null)
+        //        return Redirect("/login");
+        //    InfoHelper.IsLoggedIn = true;
+
+
+        //    // Get current active user
+        //    string email = SecurityHelper.GetLoggedInUser(cookies);
+        //    UserModel currentUser = await Dataprovider.Instance.ReadUserByEmail(email);
+        //    currentUser.Images = await Dataprovider.Instance.GetUserImagesByUserID(currentUser.ID);
+        //    currentUser.Interests = await Dataprovider.Instance.GetUserInterests(currentUser.ID);
+
+        //    // Antoganists
+        //    List<MatchUserDtocs> usersToBeMatched = new List<MatchUserDtocs>();
+        //    List<UserModel> users = new List<UserModel>();
+        //    users = await Dataprovider.Instance.ReadAllUsers();
+        //    foreach (var user in users)
+        //    {
+        //        List<ImageModel> images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
+        //        user.Images = images;
+        //        user.Interests = await Dataprovider.Instance.GetUserInterests(user.ID);
+        //    }
+            
+        //    // Make match thingy
+        //    usersToBeMatched = Converters.ConvertUserModelToMatchUserDto(users);
+        //    MatchAlgorithm.CalculateMatchPercentage(currentUser, ref usersToBeMatched);
+            
+
+
+        //    return View(usersToBeMatched);
+        //}
+
 
         public IActionResult Privacy()
         {

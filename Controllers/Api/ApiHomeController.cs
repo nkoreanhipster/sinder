@@ -62,7 +62,7 @@ namespace Sinder.Controllers.Api
                 });
             }
 
-            await Dataprovider.Instance.AddUserRelationship(loggedinUser.ID, id);
+            await Dataprovider.Instance.AddUserRelationship(loggedinUser.ID, id, Relationship.Friend);
 
             return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Success", Message = "Vänförfrågan skickad!" }, new JsonSerializerOptions
             {

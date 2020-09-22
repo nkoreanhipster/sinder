@@ -175,6 +175,57 @@ namespace Sinder
                 return (await connection.QueryAsync<bool>("SELECT EXISTS(SELECT * FROM sinder.Relationship WHERE Relationship.UserID1 = @userId1 AND Relationship.UserID2 = @userid2)", new { userId1 = loggedInUser, userid2 = targetUser })).First();
             }
         }
+//        public async Task<List<RelationshipDto>> ReadRelationshipRequestAwaitingReponse(int userID)
+//        {
+//            using (var connection = CreateDBConnection())
+//            {
+//                string query = @"SELECT 
+//r.ID as RelationShipID, 
+//r.UserID1 as ProtagonistID, 
+//r.UserID2 as AntagonistID, 
+//r.Status1 as Status1, 
+//r.Status2 as Status2, 
+//u.firstName as ProtagonistName 
+//FROM Relationship r 
+//RIGHT JOIN Users u ON u.ID = r.UserID2 
+//WHERE r.UserID1 = @userID 
+//OR OR r.UserID2 = @userID ;";
+
+//                List<RelationshipDto> relationshipDtos = (await connection.QueryAsync<RelationshipDto>(query, new { userID = userID })).ToList();
+//                foreach (RelationshipDto r in relationshipDtos)
+//                {
+//                    r.Images = (await GetUserImagesByUserID(r.AntagonistID)).ToList();
+//                }
+//                return relationshipDtos;
+//            }
+//        }
+
+        public async Task<List<RelationshipDto>> ReadUserRelationships(int userID)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                string query = @"SELECT 
+r.ID as RelationShipID, 
+r.UserID1 as ProtagonistID, 
+r.UserID2 as AntagonistID, 
+r.Status1 as Status1, 
+r.Status2 as Status2, 
+r.CreatedAt as CreatedAt, 
+u.firstName as AntagonistFirstName,
+r.CreatedAt as CreatedAt
+FROM Relationship r 
+RIGHT JOIN Users u ON u.ID = r.UserID2 
+WHERE r.UserID1 = @userID OR r.UserID2 = @userID ;";
+
+                List<RelationshipDto> relationshipDtos = (await connection.QueryAsync<RelationshipDto>(query, new { userID = userID})).ToList();
+                foreach(RelationshipDto r in relationshipDtos)
+                {
+                    r.Images = (await GetUserImagesByUserID(r.AntagonistID)).ToList();
+                }
+                return relationshipDtos;
+            }
+        }
+
 
         public async Task UpdateUserImage(int userId, string oldUrl, string newUrl)
         {

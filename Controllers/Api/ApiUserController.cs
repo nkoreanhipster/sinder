@@ -42,15 +42,26 @@ namespace Sinder.Controllers.Api
             });
         }
 
-        // GET api/[id]/message/[id]
+
+        // PUT api/user/[id]/relationsship
+        // Love request throug the match function
+        [HttpGet("{subjectID}/relationship")]
+        public async Task<IActionResult> ListRelations(int subjectID)
+        {
+            var x = Dataprovider.Instance.ReadUserRelationships(subjectID);
+            return new JsonResult(x);
+            
+        }
+
+        // GET api/user/[id]/message/[id]/list
         // Get converstion between User[id] and User[id]
-        [HttpGet("{subjectID}/message/{targetID}")]
+        [HttpGet("{subjectID}/message/{targetID}/list")]
         public async Task<IActionResult> GetMessageHistory(int subjectID, int targetID)
         {
             return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.NotImplemented, Status = "Meh", Message = "Not yet implemented" }, new JsonSerializerOptions { WriteIndented = true });
         }
 
-        // PUT api/[id]/message/[id]
+        // PUT api/user/[id]/message/[id]
         // Love request throug the match function
         [HttpPut("{subjectID}/message/{targetID}")]
         public async Task<IActionResult> SendMessage(int subjectID, int targetID)
@@ -66,7 +77,7 @@ namespace Sinder.Controllers.Api
             //return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Meddelande skickat" }, new JsonSerializerOptions { WriteIndented = true });
         }
 
-        // PUT api/[id]/loves/[id]
+        // PUT api/user/[id]/loves/[id]
         // Love request throug the match function
         [HttpGet("{subjectID}/loves/{targetID}")]
         public async Task<IActionResult> LoveShip(int subjectID, int targetID)

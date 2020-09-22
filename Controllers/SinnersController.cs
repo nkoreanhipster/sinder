@@ -17,7 +17,16 @@ namespace Sinder.Controllers
                 return Redirect("/login");
             string email = SecurityHelper.GetLoggedInUser(cookies);
             UserModel user = await Dataprovider.Instance.ReadUserByEmail(email);
-            return View(user);
+
+            List<UserModel> matches = new List<UserModel>();
+            matches = await Dataprovider.Instance.ReadAllUsers();
+            foreach (var match in matches)
+            {
+                List<ImageModel> images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
+
+                user.Images.Add(images.First());
+            }
+            return View(matches);
         }
 
         // GET: SinnersController/Details/5

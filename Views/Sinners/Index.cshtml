@@ -1,5 +1,15 @@
-﻿@model UserModel
+﻿@model List<UserModel>
 @{
     ViewData["Title"] = "Sinners";
 }
-<div class="invisible" id="id"> @Model.ID</div>
+@foreach (var user in @Model)
+{
+    <ul class="card">
+        <li class="card-body card-columns">
+             @user.Firstname @user.Surname , @{var age = DateTime.Today.Year - user.Age.Year; } @age År 
+            <button name="acceptbtn"class="btn btn-success btn-block mt-2 ml-2"> Accept</button> 
+            <button name="denybtn" class="btn bg-primary text-white btn-block mt-2 mr-2">Deny</button>
+        </li>
+    </ul>
+}   
+

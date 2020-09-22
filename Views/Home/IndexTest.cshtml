@@ -1,0 +1,11 @@
+﻿@model List<MatchUserDtocs>
+@{
+    ViewData["Title"] = "Hem";
+}
+
+<section>
+@foreach (var user in Model)
+{
+    <div>@user.ProtagonistMatchPercentage</div>
+}
+</section>

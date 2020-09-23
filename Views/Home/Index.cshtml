@@ -2,12 +2,12 @@
 @{
     ViewData["Title"] = "Hem";
 }
-
+<div class="home-page-headline-text">Matcha/Neka</div>
 <div class="slideshow-container">
     @foreach (var user in Model)
     {
         <div class="mySlides">
-            <div class="invisible" id="id"> @user.ID</div>
+            <div class="invisible" id="id"> @user.ID </div>
 
             <div id="page_UserProfile">
                 <div class="profile-container p-5 container">
@@ -46,7 +46,7 @@
                         </div>
 
                         <div class="container">
-                            <h4><b>@user.Firstname @user.Surname @{var age = DateTime.Today.Year - user.Age.Year; } @age År</b></h4>
+                            <h4><b>@user.Firstname @user.Surname @{var age = DateTime.Today.Year - user.Age.Year; } @age år</b></h4>
                             <p><i class="fas fa-venus-mars mr-2" style=" color: #eb6864"></i>@user.Gender</p>
                             <p><i class="fas fa-map-marker-alt mr-2" style=" color: #eb6864"></i>@user.Location</p>
 

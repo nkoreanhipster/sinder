@@ -88,7 +88,15 @@ namespace Sinder.Controllers.Api
             }
 
             UserModel ProtagonistUser = await Dataprovider.Instance.ReadUserById(id);
-            await Dataprovider.Instance.MatchRelationship(loggedinUser.ID, id, Relationship.Declined);
+            if (await Dataprovider.Instance.CheckIfRelationshipExists(loggedinUser.ID, id))
+            {
+                await Dataprovider.Instance.MatchRelationship(loggedinUser.ID, id, Relationship.Declined);
+            }
+            else
+            {
+                await Dataprovider.Instance.AddUserRelationship(loggedinUser.ID, id, Relationship.Declined);
+            }
+            
             return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Success", Message = $"Du har nu nekat {ProtagonistUser.Firstname}" }, new JsonSerializerOptions
             {
                 WriteIndented = true,

@@ -52,10 +52,12 @@ namespace Sinder.Controllers.Api
                 }
 
             }
-
-            var parts = SecurityHelper.GetPassword(user.Password);
-            updateUser.HashedPassword = parts.passwordhash;
-            updateUser.Salt = parts.salt;
+            if (!String.IsNullOrEmpty(user.Password))
+            {
+                var parts = SecurityHelper.GetPassword(user.Password);
+                updateUser.HashedPassword = parts.passwordhash;
+                updateUser.Salt = parts.salt;
+            }
             if (!String.IsNullOrEmpty(user.FirstName))
             {
                 updateUser.Firstname = user.FirstName;
@@ -90,7 +92,7 @@ namespace Sinder.Controllers.Api
             await Dataprovider.Instance.AddUserInterest(id,item);
                
 
-            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "HELLO", Message = ";)" }, new JsonSerializerOptions
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Intresse tillagd" }, new JsonSerializerOptions
             {
                 WriteIndented = true,
             });

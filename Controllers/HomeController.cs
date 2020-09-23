@@ -44,7 +44,8 @@ namespace Sinder.Controllers
             {
                 users = await Dataprovider.Instance.ReadAllMale();
             }
-            
+
+
             foreach (var user in users)
             {
                 user.Images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
@@ -54,6 +55,7 @@ namespace Sinder.Controllers
             var relationships = await Dataprovider.Instance.ReadUserByRelationships(currentUser.ID);
             foreach (var relationship in relationships)
             {
+
                 if (relationship.UserID1 == currentUser.ID)
                 {
                     users.RemoveAll(User => User.ID == relationship.UserID2);
@@ -81,6 +83,7 @@ namespace Sinder.Controllers
 
             return View(usersToBeMatched);
         }
+
 
         public IActionResult Privacy()
         {

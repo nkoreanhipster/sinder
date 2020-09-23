@@ -55,7 +55,7 @@
             <div>
                 <h4>Intressen</h4>
                 <input id="new_interest_input" autocomplete="off" type="text" placeholder="...">
-                <button id="add_interest" class="btn btn-primary">Lägg till</button>
+                <button id="add_interest" class="btn bg-primary text-white">Lägg till</button>
                 <div class="dropdown-menu">
 
                 </div>
@@ -110,10 +110,10 @@
             </ul>
         </div>
         <div class="form-group">
-            <button type="submit" name="editbtn" class="btn btn-primary btn-block" disabled>Ändra uppgifter</button>
+            <button type="submit" name="editbtn" class="btn bg-primary text-white btn-block" disabled>Ändra uppgifter</button>
         </div>
         <div class="form-group">
-            <button class="btn btn-primary btn-block" data-toggle="collapse" href="#changePassword" role="button">Ändra lösenord</button>
+            <button class="btn bg-primary text-white btn-block" data-toggle="collapse" href="#changePassword" role="button">Ändra lösenord</button>
         </div>
 
     </form>
@@ -140,11 +140,11 @@
                 <input type="password" name="confirm-password" class="form-control" placeholder="Bekräfta Lösenord">
                 <div class="invalid-feedback">Lösenordet måste bestå av minst 6 tecken och stämma överens med tidigare fält</div>
             </div>
-            <button name="btnChangePassword" class="btn btn-primary btn-block" type="submit" disabled>Ändra Lösenord</button>
+            <button name="btnChangePassword" class="btn bg-primary text-white btn-block" type="submit" disabled>Ändra Lösenord</button>
         </form>
     </div>
     <div class="mt-4">
-        <button name="backbtn" class="btn btn-primary btn-block">Tillbaka</button>
+        <button name="backbtn" class="btn bg-primary text-white btn-block">Tillbaka</button>
     </div>
 </article>
 
@@ -257,7 +257,6 @@
             CurrentPassword: currentPassword.value
         }
 
-        console.log(data)
 
         fetch(`/api/profile/${data.ID}`, {
             method: 'PUT',
@@ -470,8 +469,7 @@
         })
             .then(res => res.json())
             .then(json => {
-                callback(interest)
-                Successbox.show(json.Message)
+                callback(interest)  
             })
             .catch(err => {
                 errorCallback(interest)

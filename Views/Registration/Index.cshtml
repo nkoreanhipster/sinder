@@ -104,10 +104,10 @@
         </div>
         @* Button submit *@
         <div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block" disabled> Registrera  </button>
+            <button type="submit" class="btn bg-primary text-white btn-block" disabled> Registrera  </button>
         </div>
         <div class="form-group">
-            <button name="goback" class="btn btn-primary btn-block"> Tillbaka  </button>
+            <button name="goback" class="btn bg-primary text-white btn-block"> Tillbaka  </button>
         </div>
     </form>
 </article>
@@ -289,7 +289,6 @@
                 images.push({ Url: imgEle.src})
             })
 
-        console.log({images:images})
 
         var e = document.getElementById("gender")
         var gender = e.options[e.selectedIndex].value
@@ -328,7 +327,6 @@
             .then(data => {
                 Successbox.show(data.Message)
                 if (data.Status === "Success") {
-                    console.log('It worked')
                     window.location.href = "/login";
                     return;
                 }

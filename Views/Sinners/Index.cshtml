@@ -78,6 +78,8 @@
             })
                 .then(res => res.json())
                 .then(json => {
+                    Successbox.element.classList.add('bg-success')
+                    Successbox.setColor('white')
                     Successbox.show(json.Message)
                     window.setTimeout(function () {
                     location.reload()

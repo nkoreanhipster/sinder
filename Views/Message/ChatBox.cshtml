@@ -12,65 +12,89 @@
                 <img class="img img-fluid" src="@notMe.Images[0].Url" />
             </div>
             <span>Du chattar med @notMe.Firstname</span>
+            <span class="invisible" id="notme_image_href" data-src="@notMe.Images[0].Url"></span>
+            <span class="invisible" id="me_image_href" data-src="@me.Images[0].Url"></span>
         </div>
 
         <ul id="message_list" class="list-group">
 
             @* Empty list item, dont remove! Used for duplicating *@
-            <li class="list-group-item invisible" style="display:flex;">
+            <li class="container_chat darker invisible">
+                <img src="@me.Images[0].Url" alt="Avatar" class="fa-pull-right">
+                <p class="text"></p>
+                <span class="time-right timestamp"></span>
+            </li>
+            @*<li class="list-group-item invisible" style="display:flex;">
                 <div style="max-width: 92px; display: flex; align-items: center; justify-content: center;">
                     <img class="img img-fluid" src="@notMe.Images[0].Url" />
                 </div>
                 <div class="display-4 m-4 text"></div>
                 <span class="timestamp"></span>
-            </li>
+            </li>*@
 
             @*List loop of messages*@
             @{foreach (MessageModel message in @Model.Messages)
                 {
                     if (message.Sender != me.ID)
                     {
-                        <li class="list-group-item" style="display:flex;">
-                            <div style="max-width: 92px; display: flex; align-items: center; justify-content: center;">
-                                <img class="img img-fluid" src="@notMe.Images[0].Url" />
-                            </div>
-                            <div class="display-4" m-4>@message.Text</div>
-                            <span>@message.Timestamp</span>
+                        <li class="container_chat darker">
+                            <img src="@notMe.Images[0].Url" alt="Avatar" class="right">
+                            <p>@message.Text</p>
+                            <span class="time-right">@message.Timestamp</span>
                         </li>
+                        @*<li class="list-group-item" style="display:flex;">
+                        <div style="max-width: 92px; display: flex; align-items: center; justify-content: center;">
+                            <img class="img img-fluid" src="@notMe.Images[0].Url" />
+                        </div>
+                        <div class="display-4" m-4>@message.Text</div>
+                        <span>@message.Timestamp</span>>
+                            </li>*@
                     }
                     else
                     {
-                        <li class="list-group-item" style="display:flex;">
+                        <li class="container_chat">
+                            <img src="@me.Images[0].Url" alt="Avatar">
+                            <p>@message.Text</p>
+                            <span class="time-right">@message.Timestamp</span>
+                        </li>
+                        @*<li class="list-group-item" style="display:flex;">
                             <div style="max-width: 92px; display: flex; align-items: center; justify-content: center;">
                                 <img class="img img-fluid" src="@me.Images[0].Url" />
                             </div>
                             <div class="display-4" m-4>@message.Text</div>
                             <span>@message.Timestamp</span>
-                        </li>
+                        </li>*@
                     }
 
                 }
             }
         </ul>
-
-        <div>
+        <div class="panel-footer">
+            <div class="input-group">
+                <input id="message_content" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />
+                <span class="input-group-btn">
+                    <button class="btn bg-primary text-white btn-block" name="send-message">Send</button>
+                </span>
+            </div>
+        </div>
+        @*<div>
             <div>
                 <textarea id="message_content"></textarea>
             </div>
             <div>
                 <button name="send-message">Send</button>
             </div>
-        </div>
+        </div>*@
     </div>
 </div>
 <script>
 
-    const createNewChatRow = (text, timestamp = null) => {
-        var c = document.querySelector('.list-group-item.invisible').cloneNode(true) || null
+    const createNewChatRow = (text, href, timestamp = null) => {
+        var c = document.querySelector('.container_chat.invisible').cloneNode(true) || null
         c.querySelector('.text').textContent = text || ''
-        //c.querySelector('.img').href = c.querySelector('.img').href
+        c.querySelector('img').href = href
         c.classList.remove('invisible')
-        c.querySelector('.timestamp').textContent = moment(timestamp).format('DD MM YYYY hh:mm:ss')
+        c.querySelector('.timestamp').textContent = moment(new Date()).format('YYYY MM DD HH:mm:ss')
         document.querySelector('#message_list').append(c)
     }
 
@@ -82,14 +106,14 @@
 
         if (contentToSend === null || contentToSend == "")
             return
-
+        
 
         console.log({ contentToSend: contentToSend })
         // To be matched against backend model
         var messageDataBody = {
             Message: contentToSend
         }
-
+        document.querySelector('#message_content').value = ""
         // Send message
         fetch(`/api/user/@me.ID/message/@notMe.ID`, {
             method: 'PUT',

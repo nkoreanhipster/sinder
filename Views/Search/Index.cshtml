@@ -7,7 +7,7 @@
     <div class="input-group">
         <input type="text" id="input_usersearch" class="form-control" placeholder="Söka användare">
         <div class="input-group-append">
-            <button id="search_button" class="btn btn-secondary" type="button">
+            <button id="search_button" class="btn bg-primary text-white" type="button">
                 <i class="fas fa-search"></i>
             </button>
         </div>
@@ -37,7 +37,6 @@
     var displayArray = function (arr) {
 
         arr.map(item => {
-            console.log(item)
             var li = document.createElement('li')
             var span = document.createElement('span')
             var img = document.createElement('img')

@@ -31,9 +31,12 @@ const unReadMessagesCheckAndFollowUp = (id, callback = console.log) => {
     fetch(`/api/message/new/${id}`)
         .then(res => res.json())
         .then(json => {
-
-            if (json.length > 0 && window.localStorage.getItem('__messages') < json.length)
-                runMessageNotification(json.length, json.relationShipID)
+            console.log({ json: json, mm: window.localStorage.getItem('__messages'), rel: json.shift().relationShipID})
+            if (json.length > 0 && window.localStorage.getItem('__messages') < json.length) {
+                window.localStorage.setItem('__messages', json.length)
+                runMessageNotification(json.length, json.shift().relationShipID)
+            }
+                
 
         })
         .catch(err => console.error(err))

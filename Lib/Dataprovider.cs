@@ -328,10 +328,10 @@ namespace Sinder
                 string query = @"SELECT * 
                 FROM Relationship r
                 RIGHT JOIN Users u on u.ID = r.UserID1 OR u.ID = r.UserID2 
-                WHERE r.Status1 = r.Status2
+                WHERE r.Status1 = 1 and r.Status2 = 1
                 AND r.UserID1 = @userID AND @userID != r.UserID2 
                 OR r.UserID2 = @userID AND r.UserID1 != r.UserID2 
-                AND r.Status1 = r.Status2;";
+                AND r.Status1 = 1 and r.Status2 = 1;";
 
                 List<UserMatchDto> matches = (await connection.QueryAsync<UserMatchDto>(query, new { userID = userID })).ToList();
                 foreach (UserMatchDto m in matches)

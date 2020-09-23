@@ -68,43 +68,23 @@
                         </li>
                     </ul>
                 </div>
-
                 <div>
                     <div class="alert alert-primary hide d-none" role="alert" style="transition: display 1000ms;" id="unreadmessage_notification">
                         <a></a>
                     </div>     
                 </div>
             </nav>
+            
         }
         else
         {
             <nav class="navbar navbar-dark bg-primary" style="justify-content: left;">
-                @*<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_collapse" aria-controls="navbar_collapse" aria-expanded="false" aria-label="Toggle navigation" aria-orientation="horizontal">
-                    <span class="navbar-toggler-icon"></span>
-                </button>*@
-
                 <h1 class="justify-center-conter">
                     <a href="/" class="navbar-brand ml-3 mr-0">Sinder</a>
                     <span id="eggplant">🍆</span>
                 </h1>
-
-
-                @*<div class="collapse navbar-collapse" id="navbar_collapse">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="/">Home<span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/search">Search</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/profile">Profile</a>
-                        </li>
-                    </ul>
-                </div>*@
             </nav>
         }
-
 
         <div class="container">
             @RenderBody()
@@ -178,6 +158,14 @@
             &copy; 2020 - Sinder - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    
+
+    <script>
+        document.onreadystatechange = function () {
+            if (document.readyState === 'complete') {
+                console.log("complete")
+            }
+        }
+    </script>
 </body>
+
 </html>

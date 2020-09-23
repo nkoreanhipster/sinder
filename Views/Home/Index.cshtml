@@ -78,6 +78,9 @@
         }
 
 
+
+
+
         fetch(`/api/home/${data.ID}`, {
             method: 'PUT',
             headers: {
@@ -92,6 +95,7 @@
                     Successbox.element.classList.add('bg-danger')
                     Successbox.setColor('white')
                     Successbox.show(data.Message, "Fel")
+
 
                     window.setTimeout(() => {
                         Successbox.hide()

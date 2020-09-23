@@ -15,50 +15,50 @@
 
 
 }
-<div id="page_sinners">
-
-    <p class="bg-secondary text-white mt-3">Mottagna förfrågningar</p>
-    @foreach (var r in recieved)
-    {
-        <div class="">
-            @{
-                if (r.Images.Count > 0)
-                {
-                    <img class="img img-fluid rounded is-32x32" src="@r.Images[0].Url" />
+<div id="page_sinners" class="profile-font-style">
+    
+        <p class="bg-primary text-white text-center mt-3">Mottagna förfrågningar</p>
+        @foreach (var r in recieved)
+        {
+            <div class="card-body profile-border-color">
+                @{
+                    if (r.Images.Count > 0)
+                    {
+                        <img class="img img-fluid rounded is-48x48" src="@r.Images[0].Url" />
+                    }
                 }
-            }
+                <a class="profile-font-style text-dark" href="/profile/user/@r.ID">@r.Firstname @r.Surname</a>
+                <button href="/api/user/@userID/accept/@r.ID/@RelationshipToInt(@r.Status1)" name="acceptbtn" class="btn btn-success fa-pull-right mr-4"> Accept</button>
+                <button onclick="decline_request(@r.ID)" name="denybtn" class="btn bg-primary text-white mr-4 fa-pull-right">Deny</button>
+            </div>
+        }
+    
 
-            <a href="/profile/user/@r.ID">@r.Firstname</a>
-            <button href="/api/user/@userID/accept/@r.ID/@RelationshipToInt(@r.Status1)" name="acceptbtn" class="btn btn-success"> Accept</button>
-            <button href="" name="denybtn" class="btn bg-primary text-white">Deny</button>
-        </div>
-    }
-
-    <p class="bg-secondary text-white mt-3">Skickade</p>
+    <p class="bg-primary text-white text-center mt-3">Skickade</p>
     @foreach (var r in requested)
     {
-        <div class="">
+        <div class="card-body profile-border-color">
             @{
                 if (r.Images.Count > 0)
                 {
-                    <img class="img img-fluid rounded is-32x32" src="@r.Images[0].Url" />
+                    <img class="img img-fluid rounded is-48x48" src="@r.Images[0].Url" />
                 }
             }
-            <a href="/profile/user/@r.ID">@r.Firstname</a>
+            <a class="profile-font-style text-dark" href="/profile/user/@r.ID">@r.Firstname @r.Surname</a>
         </div>
     }
-    <p class="bg-secondary text-white mt-3">Matchningar</p>
+    <p class="bg-primary text-white text-center mt-3">Dina Matchningar</p>
     @foreach (var m in matched)
     {
-        <div class="">
+        <div class="card-body profile-border-color">
             @{
                 if (m.Images.Count > 0)
                 {
-                    <img class="img img-fluid rounded is-32x32" src="@m.Images[0].Url" />
+                    <img class="img img-fluid rounded is-48x48" src="@m.Images[0].Url" />
                 }
             }
-            <a href="/profile/user/@m.ID">@m.Firstname</a>
-            <button href="/message/@m.ID/@userID" name="message-page">Skicka meddelande</button>
+            <a class="profile-font-style text-dark" href="/profile/user/@m.ID">@m.Firstname @m.Surname</a>
+            <button class="btn btn-success fa-pull-right mr-4" href="/message/@m.ID/@userID" name="message-page">Skicka meddelande</button>
         </div>
     }
 
@@ -70,13 +70,67 @@
     ;[...document.querySelectorAll('button[name="acceptbtn"]')]
         .map(el => el.addEventListener('click', (ev) => {
             ev.preventDefault()
-            window.location.replace(ev.target.getAttribute('href'))
+            fetch(ev.target.getAttribute('href'), {
+                method: "GET",
+                headers: {
+                    "Accept": '/'
+                }
+            })
+                .then(res => res.json())
+                .then(json => {
+                    Successbox.show(json.Message)
+                    window.setTimeout(function () {
+                    location.reload()
+                    },2000)
+                    
+                })
+                .catch(err => Successbox.show(err.Message))
         }))
         // todo; deny request
-        ;[...document.querySelectorAll('button[name="denybtn"]')]
-            .map(el => el.addEventListener('click', (ev) => {
-                ev.preventDefault(); alert('This button does nothing yet;')
-            }))
+    
+    function decline_request(id) {
+        var data = {
+            ID: id
+        }
+
+        fetch(`/api/home/${data.ID}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify("Decline")
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.Status === "Fail") {
+                    Successbox.element.classList.add('bg-danger')
+                    Successbox.setColor('white')
+                    Successbox.show(data.Message, "Fel")
+
+                    window.setTimeout(() => {
+                        
+                        location.reload();
+                    }, 2000)
+                }
+                else {
+                    Successbox.element.classList.remove('bg-danger')
+                    Successbox.element.classList.add('bg-success')
+                    Successbox.setColor('white')
+                    Successbox.show(data.Message)
+                    window.setTimeout(() => {
+                        location.reload();
+                    }, 2000)
+                }
+            })
+            .catch(err => console.error(err))
+    }
+        //;[...document.querySelectorAll('button[name="denybtn"]')]
+        //    .map(el => el.addEventListener('click', (ev) => {
+        //        ev.preventDefault();
+        //        }     
+        //    }))
+    
         ;[...document.querySelectorAll('button[name="message-page"]')]
             .map(el => el.addEventListener('click', (ev) => {
                 ev.preventDefault()

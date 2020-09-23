@@ -29,8 +29,8 @@
             }
 
             <a href="/profile/user/@r.ID">@r.Firstname</a>
-            <button href="/api/user/@userID/accept/@r.ID/@RelationshipToInt(@r.Status1)" name="acceptbtn" class="btn btn-success"> Accept</button>
-            <button href="" name="denybtn" class="btn bg-primary text-white">Deny</button>
+            <button href="/api/user/@userID/accept/@r.ID/@RelationshipToInt(@r.Status1)" name="acceptbtn" class="btn btn-success btn-primary"> Accept</button>
+            <button href="" name="denybtn" class="btn bg-primary text-white btn-primary">Deny</button>
         </div>
     }
 
@@ -58,7 +58,7 @@
                 }
             }
             <a href="/profile/user/@m.ID">@m.Firstname</a>
-            <button href="/message/@m.ID/@userID" name="message-page">Skicka meddelande</button>
+            <button class="btn-primary" href="/message/@m.ID/@userID" name="message-page">Skicka meddelande</button>
         </div>
     }
 

@@ -8,13 +8,13 @@ namespace Sinder
 {
     public static class Converters
     {
-        public static List<MatchUserDtocs> ConvertUserModelToMatchUserDto(List<UserModel> users)
+        public static List<MatchUserDto> ConvertUserModelToMatchUserDto(List<UserModel> users)
         {
-            List<MatchUserDtocs> l = new List<MatchUserDtocs>();
+            List<MatchUserDto> l = new List<MatchUserDto>();
 
             foreach (UserModel u in users)
             {
-                MatchUserDtocs m = new MatchUserDtocs()
+                MatchUserDto m = new MatchUserDto()
                 {
                     ID = u.ID,
                     Email = u.Email,

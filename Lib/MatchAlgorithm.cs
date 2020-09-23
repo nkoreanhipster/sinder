@@ -25,7 +25,7 @@ namespace Sinder
 
         public void AddTargets(List<UserModel> targets) => targets.ForEach(t => this.targets.Add(t));
 
-        public static void CalculateMatchPercentage(UserModel _subject, ref List<MatchUserDtocs> _targets)
+        public static void CalculateMatchPercentage(UserModel _subject, ref List<MatchUserDto> _targets)
         {    
             // List of subject interests
             List<string> A = new List<string>();
@@ -33,7 +33,7 @@ namespace Sinder
             _subject.Interests
                 .ForEach(item => A.Add(item.Value));
 
-            foreach(MatchUserDtocs t in _targets)
+            foreach(MatchUserDto t in _targets)
             {
                 // Percentage match per person
                 double percentage = 0.0;

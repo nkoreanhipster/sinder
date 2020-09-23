@@ -13,9 +13,9 @@ namespace Sinder
         public int CurrentUserID { get; set; } = -1;
         public int RelationShipID { get; set; }
         public int ProtagonistID { get; set; }
+        public int AntagonistID { get; set; }
         public string ProtagonistFirstName { get; set; }
         public string AntagonistFirstName { get; set; }
-        public int AntagonistID { get; set; }
         public Relationship Status1 { get; set; }
         public Relationship Status2 { get; set; }
         public DateTime CreatedAt { get; set; }

@@ -1,5 +1,8 @@
-﻿@model List<RelationshipDto>
+﻿@model (UserModel,List<UserMatchDto>, List<UserMatchDto>)
 @{
+    int userID = Model.Item1.ID;
+    List<UserMatchDto> recieved = new List<UserMatchDto>(@Model.Item2);
+    List<UserMatchDto> requested = new List<UserMatchDto>(@Model.Item3);
     ViewData["Title"] = "Sinners";
 }
 
@@ -8,117 +11,44 @@
     /// Convert <see cref="Relationship"/> enum so it can be used as a string in href
     /// </summary>
     public int RelationshipToInt(Relationship r) => (int)r;
-    public static Relationship TakeTheHigher(Relationship a, Relationship b)
-    {
-        if ((int)a > (int)b)
-        {
-            return a;
-        }
-        else if ((int)a < (int)b)
-        {
-            return b;
-        }
-        else
-        {
-            return b;
-        }
-    }
 
-    public int TakeTheHigherInt(Relationship a, Relationship b)
-    {
-        if ((int)a > (int)b)
-        {
-            return (int)a;
-        }
-        else if ((int)a < (int)b)
-        {
-            return (int)b;
-        }
-        else
-        {
-            return (int)b;
-        }
-    }
 
 }
 <div id="page_sinners">
 
     <p class="bg-secondary text-white mt-3">Mottagna förfrågningar</p>
-    @foreach (var r in @Model)
+    @foreach (var r in recieved)
     {
-        if (r.Status1 < r.Status2)
-        {
-            <div class="">
-                @{
-                    if (r.Images.Count > 0)
-                    {
-                        <img class="img img-fluid rounded is-32x32" src="@r.Images[0].Url" />
-                    }
+        <div class="">
+            @{
+                if (r.Images.Count > 0)
+                {
+                    <img class="img img-fluid rounded is-32x32" src="@r.Images[0].Url" />
                 }
-                <span>@r.Status1.ToString() - @r.Status2.ToString()</span>
-                <a href="/profile/user/@r.AntagonistID">@r.AntagonistFirstName</a>
-                <button href="/api/user/@r.CurrentUserID/accept/@r.AntagonistID/@TakeTheHigherInt(@r.Status1, @r.Status2)" name="acceptbtn" class="btn btn-success"> Accept</button>
-                <button herf="" name="denybtn" class="btn bg-primary text-white">Deny</button>
-                <p>@r.CreatedAt</p>
-            </div>
-            @*<div class="">
-                    @{
-                        if (r.Images.Count > 0)
-                        {
-                            <img class="img img-fluid rounded is-32x32" src="/images/placeholder160.png" />
-                        }
-                    }
-                    <span>@r.Status1.ToString() - @r.Status2.ToString() - ID:@r.ProtagonistID </span>
-                    <a href="/profile/user/@r.ProtagonistID"><s>r.ProtagonistFirstName</s> Gå till profil</a>
-                    <button href="/api/user/@r.CurrentUserID/accept/@r.ProtagonistID/@RelationshipToInt(@r.Status1)" name="acceptbtn" class="btn btn-success"> Accept</button>
-                    <button herf="" name="denybtn" class="btn bg-primary text-white">Deny</button>
-                    <p>@r.CreatedAt</p>
-                </div>*@
-        }
-
+            }
+            
+            <a href="/profile/user/@r.ID">@r.Firstname</a>
+            <button href="/api/user/@userID/accept/@r.ID/@r.Status1" name="acceptbtn" class="btn btn-success"> Accept</button>
+            <button herf="" name="denybtn" class="btn bg-primary text-white">Deny</button>
+        </div>
     }
 
     <p class="bg-secondary text-white mt-3">Skickade</p>
-    @foreach (var r in @Model)
+    @foreach (var r in requested)
     {
-        if (r.Status1 > r.Status2)
-        {
-            <div class="">
-                @{
-                    if (r.Images.Count > 0)
-                    {
-                        <img class="img img-fluid rounded is-32x32" src="@r.Images[0].Url" />
-                    }
+        <div class="">
+            @{
+                if (r.Images.Count > 0)
+                {
+                    <img class="img img-fluid rounded is-32x32" src="@r.Images[0].Url" />
                 }
-                <span>@r.Status1.ToString() - @r.Status2.ToString()</span>
-                <a href="/profile/user/@r.AntagonistID">@r.AntagonistFirstName</a>
-                <p>@r.CreatedAt</p>
-            </div>
-        }
-
+            }
+            <a href="/profile/user/@r.ID">@r.Firstname</a>
+        </div>
     }
 
-    <p class="bg-secondary text-white mt-3">Vänner & Sinners</p>
-    <h5>Du har @{ @Model.FindAll(z => z.Status1 == z.Status2).Count.ToString();} vänner!</h5>
-    @foreach (var r in @Model)
-    {
-        if ((int)r.Status1 == (int)r.Status2)
-        {
-            <div class="card">
-                @{
-                    if (r.Images.Count > 0)
-                    {
-                        <img class="img img-fluid rounded is-32x32" src="@r.Images[0].Url" />
-                    }
-                }
-                <span>@r.Status1.ToString()</span>
-                <a href="/profile/user/@r.AntagonistID">@r.AntagonistFirstName</a>
-                <button href="/message/@r.RelationShipID" name="message-page">Skicka meddelande</button>
-                <p>@r.CreatedAt</p>
-            </div>
-        }
 
-    }
+    
 </div>
 <script>
     // Accept request
@@ -139,22 +69,4 @@
             }))
 </script>
 
-
-
-
-@*@foreach (var user in @Model)
-    // Kommenterade ut ditt, sårry Pontus.
-    // Jag tänkte att det var mer relevant att visa tre andra saker istället
-    // - Skickade vänförfrågningat
-    // - mottagna vänförfrågninar
-    // - Vänner (med link till chatt)
-    {
-        <ul class="card">
-            <li class="card-body card-columns">
-                 @user.Firstname @user.Surname , @{var age = DateTime.Today.Year - user.Age.Year; } @age År
-                <button name="acceptbtn"class="btn btn-success btn-block mt-2 ml-2"> Accept</button>
-                <button name="denybtn" class="btn bg-primary text-white btn-block mt-2 mr-2">Deny</button>
-            </li>
-        </ul>
-    }*@
 

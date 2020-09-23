@@ -1,10 +1,43 @@
 // site.js
 const killAllChildren = (parent) => [...parent.childNodes].forEach(el => el.remove())
 
-// Get list of messages for user
-const GetMessagesList = () => {
-    // todo; skip this
+// Ticker interval
+window.localStorage.setItem('__tick', new Date().getTime())
+// Last ping notification
+window.localStorage.setItem('__ping', new Date().getTime())
+
+// 
+const runMessageNotification = (count = 0) => {
+    var xxx = document.querySelector('#unreadmessage_notification')
+    xxx.classList.remove('hide', 'd-none')
+    xxx.innerHTML = `Du har ${count} nya olästa meddelanden`
 }
+
+// Get id for current user
+const getIdFromTokenString = (str, callback = console.log) => {
+    fetch(`/api/user/getid/${str}`)
+        .then(res => res.text())
+        .then(body => callback(body))
+        .catch(err => console.error(err))
+}
+
+// Get list of unread messages for user
+const unReadMessagesCheckAndFollowUp = (id, callback = console.log) => {
+    //http://127.0.0.1:5000/api/message/new/30
+    fetch(`/api/message/new/${id}`)
+        .then(res => res.json())
+        .then(json => {
+
+            if (json.length > 0)
+                runMessageNotification(json.length)
+
+        })
+        .catch(err => console.error(err))
+}
+
+const mgCheckIntervalHandle = window.setInterval(function () {
+    //console.log({ GetMessagesList: GetMessagesList() });
+}, 4450)
 
 const Eggplant = (function () {
     return {
@@ -186,6 +219,19 @@ if (getCookie('token') !== null) {
     span.style.fontSize = "0.8rem"
     span.innerHTML = `token=${getCookie('token')}`;
     footerContainer.append(span)
+
+    // Initi autocheck for messages
+    getIdFromTokenString(getCookie('token'), (v) => {
+
+        // Check if valid integer
+        if (!/^[0-9]*[1-9][0-9]*$/.test(v)) {
+            console.log(`%cbad result ==> clogin id-check failed%c`, 'color:darkred;background-color:aliceblue;padding:14px;display:block;')
+            return;
+        }
+
+        unReadMessagesCheckAndFollowUp(parseInt(v))
+    })
+
 }
 
 // File upload listener

@@ -192,6 +192,22 @@ namespace Sinder.Controllers.Api
         {
         }
 
+        // api/user/getid/[token]
+        [HttpGet("getid/{token}")]
+        public async Task<IActionResult> GetIdFromTokenString(string token)
+        {
+            var cookies = Request.Cookies["token"];
+            if (cookies == null)
+                return BadRequest("");
+            InfoHelper.IsLoggedIn = true;
+
+            // Get current active user
+            string email = SecurityHelper.GetLoggedInUser(cookies);
+            UserModel currentUser = await Dataprovider.Instance.ReadUserByEmail(email);
+
+            return Ok(currentUser.ID);
+        }
+
         /// <summary>
         /// Test check matching
         /// </summary>

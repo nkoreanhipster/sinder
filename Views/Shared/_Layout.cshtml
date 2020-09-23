@@ -16,6 +16,11 @@
     {
         return InfoHelper.IsLoggedIn;
     }
+
+    public int GetLoggedInUserId()
+    {
+        return 0;
+    }
 }
 
 <!DOCTYPE html>
@@ -62,6 +67,12 @@
                             <a class="nav-link" href="/profile">Profile</a>
                         </li>
                     </ul>
+                </div>
+
+                <div>
+                    <div class="alert alert-primary hide d-none" role="alert" style="transition: display 1000ms;" id="unreadmessage_notification">
+
+                    </div>     
                 </div>
             </nav>
         }

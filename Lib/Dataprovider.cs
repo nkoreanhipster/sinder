@@ -452,7 +452,7 @@ SELECT
 	m.HasBeenRead 
 FROM Messages m, Users u, Relationship r 
 WHERE u.ID = @userId AND m.HasBeenRead = @status
-GROUP BY u.ID ;";
+GROUP BY m.ID ;";
 
                 return (await connection.QueryAsync<MessageModel>(query, new { userId = userId, status = status })).ToList();
             }

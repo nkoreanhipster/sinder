@@ -5,12 +5,16 @@ const killAllChildren = (parent) => [...parent.childNodes].forEach(el => el.remo
 window.localStorage.setItem('__tick', new Date().getTime())
 // Last ping notification
 window.localStorage.setItem('__ping', new Date().getTime())
+//
+window.localStorage.setItem('__messages', 0)
 
 // 
-const runMessageNotification = (count = 0) => {
+const runMessageNotification = (count = 0, roomid = 0) => {
     var xxx = document.querySelector('#unreadmessage_notification')
+    var xxxa = xxx.querySelector('a')
     xxx.classList.remove('hide', 'd-none')
-    xxx.innerHTML = `Du har ${count} nya olästa meddelanden`
+    xxxa.innerHTML = `Du har ${count} nya olästa meddelanden`
+    xxxa.href = `/message/${roomid}`
 }
 
 // Get id for current user
@@ -28,8 +32,8 @@ const unReadMessagesCheckAndFollowUp = (id, callback = console.log) => {
         .then(res => res.json())
         .then(json => {
 
-            if (json.length > 0)
-                runMessageNotification(json.length)
+            if (json.length > 0 && window.localStorage.getItem('__messages') < json.length)
+                runMessageNotification(json.length, json.relationShipID)
 
         })
         .catch(err => console.error(err))

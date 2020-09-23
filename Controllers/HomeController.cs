@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Sinder.Models;
 using System.Linq;
+using Sinder.Dtos;
 
 namespace Sinder.Controllers
 {
@@ -49,6 +50,19 @@ namespace Sinder.Controllers
             
             //Removes the logged in user from the list
             users.RemoveAt(indexOfCurrentUser);
+
+            var relationships = await Dataprovider.Instance.ReadUserByRelationships(currentUser.ID);
+            foreach (var relationship in relationships)
+            {
+                if (relationship.UserID1 == currentUser.ID)
+                {
+                    users.RemoveAll(User => User.ID == relationship.UserID2);
+                }
+                else
+                {
+                    users.RemoveAll(User => User.ID == relationship.UserID1);
+                }
+            }
 
             // Make match thingy
             // Convert usermodels => MatchUserDtocs model

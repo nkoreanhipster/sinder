@@ -20,7 +20,7 @@
                 <span class="input-group-text"> <i class="fas fa-map-marker-alt" style=" color: #eb6864"></i> </span>
             </div>
             <!--25 landskap nedanför-->
-            <select class="form-control" name="location">
+            <select class="form-control" name="location2">
                 <option selected>@Model.Location</option>
                 <option value="Blekinge">Blekinge</option>
                 <option value="Bohuslän">Bohuslän</option>
@@ -157,7 +157,7 @@
 
     var btnChangePassword = document.querySelector('button[name="btnChangePassword"]')
     var editbtn = document.querySelector('button[name="editbtn"]')
-    var location2 = document.querySelector('select[name="location"]')
+    var location2 = document.querySelector('select[name="location2"]')
     var firstname = document.querySelector('input[name="firstname"]')
     var surname = document.querySelector('input[name="surname"]')
     var currentPassword = document.querySelector('input[name="currentpassword"]')
@@ -290,6 +290,7 @@
             Firstname: firstname.value,
             Surname: surname.value,
             Password: password.value,
+            Location: location2.value,
             ID: document.querySelector("#id").textContent.replace(' ', ''),
             CurrentPassword: currentPassword.value
         }

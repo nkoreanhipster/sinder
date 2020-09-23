@@ -70,6 +70,21 @@ namespace Sinder
             }
         }
 
+        public async Task<List<UserModel>> ReadAllMale()
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE Gender = 'Man'")).ToList();
+            }
+        }
+        public async Task<List<UserModel>> ReadAllFemale()
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<UserModel>("SELECT * FROM Users WHERE Gender = 'Kvinna'")).ToList();
+            }
+        }
+
         public async Task<List<UserRelationshipDto>> ReadUserByRelationships(int id)
         {
             using (var connection = CreateDBConnection())

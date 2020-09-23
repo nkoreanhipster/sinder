@@ -36,20 +36,20 @@ namespace Sinder.Controllers
 
             // Get all active users (todo; limit this somehow, will be ass-slow if database gets larger)
             List<UserModel> users = new List<UserModel>();
-            users = await Dataprovider.Instance.ReadAllUsers();
-            int indexOfCurrentUser = 0;
+            if (currentUser.Gender == "Man")
+            {
+                users = await Dataprovider.Instance.ReadAllFemale();
+            }
+            else
+            {
+                users = await Dataprovider.Instance.ReadAllMale();
+            }
+            
             foreach (var user in users)
             {
-                if (user.ID == currentUser.ID)
-                {
-                    indexOfCurrentUser = users.IndexOf(user);
-                }
                 user.Images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
                 user.Interests = await Dataprovider.Instance.GetUserInterests(user.ID);
             }
-            
-            //Removes the logged in user from the list
-            users.RemoveAt(indexOfCurrentUser);
 
             var relationships = await Dataprovider.Instance.ReadUserByRelationships(currentUser.ID);
             foreach (var relationship in relationships)

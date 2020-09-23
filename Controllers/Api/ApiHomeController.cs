@@ -5,6 +5,7 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -39,8 +40,12 @@ namespace Sinder.Controllers.Api
 
         // PUT api/<ApiHomeController>/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id)
+        public async Task<IActionResult> Put(int id, [FromBody] string AcceptOrDecline)
         {
+            if (AcceptOrDecline == "Decline")
+            {
+                return await DeclineUser(id);
+            }
             var cookies = Request.Cookies["token"];
             string email = SecurityHelper.GetLoggedInUser(cookies);
             UserModel loggedinUser = await Dataprovider.Instance.ReadUserByEmail(email);
@@ -68,6 +73,28 @@ namespace Sinder.Controllers.Api
                 WriteIndented = true,
             });
         }
+
+        private async Task<IActionResult> DeclineUser(int id)
+        {
+            var cookies = Request.Cookies["token"];
+            string email = SecurityHelper.GetLoggedInUser(cookies);
+            UserModel loggedinUser = await Dataprovider.Instance.ReadUserByEmail(email);
+            if (loggedinUser.ID == id)
+            {
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Du kan inte skicka en vänförfrågan till dig själv!" }, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                });
+            }
+
+            UserModel ProtagonistUser = await Dataprovider.Instance.ReadUserById(id);
+            await Dataprovider.Instance.MatchRelationship(loggedinUser.ID, id, Relationship.Declined);
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Success", Message = $"Du har nu nekat {ProtagonistUser.Firstname}" }, new JsonSerializerOptions
+            {
+                WriteIndented = true,
+            });
+        }
+
 
         // DELETE api/<ApiHomeController>/5
         [HttpDelete("{id}")]

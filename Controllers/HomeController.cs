@@ -36,11 +36,19 @@ namespace Sinder.Controllers
             // Get all active users (todo; limit this somehow, will be ass-slow if database gets larger)
             List<UserModel> users = new List<UserModel>();
             users = await Dataprovider.Instance.ReadAllUsers();
+            int indexOfCurrentUser = 0;
             foreach (var user in users)
             {
-                user.Images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID); ;
+                if (user.ID == currentUser.ID)
+                {
+                    indexOfCurrentUser = users.IndexOf(user);
+                }
+                user.Images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
                 user.Interests = await Dataprovider.Instance.GetUserInterests(user.ID);
             }
+            
+            //Removes the logged in user from the list
+            users.RemoveAt(indexOfCurrentUser);
 
             // Make match thingy
             // Convert usermodels => MatchUserDtocs model

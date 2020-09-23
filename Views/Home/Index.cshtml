@@ -43,15 +43,6 @@
                                     }
                                 }
                             </div>
-                            @*<a class="carousel-control-prev" href="#profileimages" role="button" data-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                                <a class="carousel-control-next" href="#profileimages" role="button" data-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="sr-only">Next</span>
-                                </a>*@
-
                         </div>
 
                         <div class="container">
@@ -59,11 +50,13 @@
                             <p><i class="fas fa-venus-mars mr-2" style=" color: #eb6864"></i>@user.Gender</p>
                             <p><i class="fas fa-map-marker-alt mr-2" style=" color: #eb6864"></i>@user.Location</p>
 
-                            @*<p style="opacity:1; color: green;">MATCHPERCENTAGE:<span>@user.ProtagonistMatchPercentage</span><span>%</span></p>*@
-
+                            @if (user.ProtagonistMatchPercentage > 0)
+                            {
+                                <p style="opacity:1; color: green;">@user.ProtagonistMatchPercentage<span>%</span> Matchning<span></span></p>
+                            }
                         </div>
                         <div class="card-body profile-container border">
-                            <button class="btn bg-primary text-white btn-block mt-2 mr-2" type="submit" name="declineFriendrequest" onclick="DeclineFriend()">Neka</button>
+                            <button class="btn bg-primary text-white btn-block mt-2 mr-2" type="submit" name="declineFriendrequest" onclick="DeclineFriend(@user.ID)">Neka</button>
                             <button class="btn btn-success btn-block mt-2 ml-2" type="submit" name="friendrequest" onclick="FriendRequest(@user.ID)">Matcha</button>
                         </div>
                     </div>
@@ -76,60 +69,16 @@
     var declineFriendbtn = document.querySelector('button[name="declineFriendrequest"]')
     var friendRequestbtn = document.querySelector('button[name="friendrequest"]')
 
-    var slideIndex = 1;
-    showSlides(slideIndex);
-
-
-    // Next/previous controls
-    function plusSlides(n) {
-        showSlides(slideIndex += n);
-    }
-
-    // Thumbnail image controls
-    function currentSlide(n) {
-        showSlides(slideIndex = n);
-    }
-
-    function showSlides(n) {
-        console.log('n', n)
-        var i;
-        var slides = document.getElementsByClassName("mySlides");
-        var dots = document.getElementsByClassName("dot");
-        if (n > slides.length) { slideIndex = 1 }
-        if (n < 1) { slideIndex = slides.length }
-        for (i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
-        }
-
-        //for (i = 0; i < dots.length; i++) {
-        //    dots[i].className = dots[i].className.replace(" active", "");
-        //}
-
-        //Break if not element declared
-        if (slides.length < 1) {
-            console.error('Den här mobbades och var elak mot resten av projektet. Så gjorde en valideringscheck')
-            return
-        }
-
-        console.log('2',[...slides[slideIndex].querySelectorAll('img[data-src]')])
-
-            // Load all images in active user from data-src
-            ;[...slides[slideIndex-1].querySelectorAll('img[data-src]')]
-                .map(img => img.setAttribute('src', img.getAttribute('data-src')))
-
-
-        slides[slideIndex - 1].style.display = "block";
-        //dots[slideIndex - 1].className += " active";
-    }
+   
 
     function FriendRequest(id) {
-        //var done = false
-        console.log('friend')
 
         var data = {
-            //ID: document.querySelector("#id").textContent.replace(' ', '')
             ID: id
         }
+
+
+
 
 
         fetch(`/api/home/${data.ID}`, {
@@ -138,7 +87,49 @@
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: null
+            body: JSON.stringify("Accept")
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.Status === "Fail") {
+                    Successbox.element.classList.add('bg-danger')
+                    Successbox.setColor('white')
+                    Successbox.show(data.Message, "Fel")
+
+
+                    window.setTimeout(() => {
+                        Successbox.hide()
+                        plusSlides(1);
+                    }, 2000)
+
+                }
+                else {
+                    Successbox.element.classList.remove('bg-danger')
+                    Successbox.element.classList.add('bg-success')
+                    Successbox.setColor('white')
+                    Successbox.show(data.Message)
+                    window.setTimeout(() => {
+                        Successbox.hide()
+                        plusSlides(1);
+                    }, 2000)
+                }
+            })
+            .catch(err => console.error(err))
+
+    }
+
+    function DeclineFriend(id) {
+        var data = {
+            ID: id
+        }
+
+        fetch(`/api/home/${data.ID}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify("Decline")
         })
             .then(res => res.json())
             .then(data => {
@@ -165,14 +156,50 @@
                 }
             })
             .catch(err => console.error(err))
-
     }
 
-    function DeclineFriend() {
-        console.log('no friend')
+
+    //For javascript Carousel
+    var slideIndex = 1;
+    showSlides(slideIndex);
+
+    // Next/previous controls
+    function plusSlides(n) {
+        showSlides(slideIndex += n);
+    }
+
+    // Thumbnail image controls
+    function currentSlide(n) {
+        showSlides(slideIndex = n);
+    }
+
+    function showSlides(n) {
+        console.log('n', n)
+        var i;
+        var slides = document.getElementsByClassName("mySlides");
+        var dots = document.getElementsByClassName("dot");
+        if (n > slides.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = slides.length }
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
 
 
-        plusSlides(1)
+        //Break if not element declared
+        if (slides.length < 1) {
+            Console.error('Den här mobbades och var elak mot resten av projektet. Så gjorde en valideringscheck')
+            return
+        }
+
+        console.log('2', [...slides[slideIndex].querySelectorAll('img[data-src]')])
+
+            // Load all images in active user from data-src
+            ;[...slides[slideIndex - 1].querySelectorAll('img[data-src]')]
+                .map(img => img.setAttribute('src', img.getAttribute('data-src')))
+
+
+        slides[slideIndex - 1].style.display = "block";
+        //dots[slideIndex - 1].className += " active";
     }
 </script>
 

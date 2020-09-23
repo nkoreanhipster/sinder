@@ -28,13 +28,27 @@
             @*List loop of messages*@
             @{foreach (MessageModel message in @Model.Messages)
                 {
-                    <li class="list-group-item" style="display:flex;">
-                        <div style="max-width: 92px; display: flex; align-items: center; justify-content: center;">
-                            <img class="img img-fluid" src="@notMe.Images[0].Url" />
-                        </div>
-                        <div class="display-4" m-4>@message.Text</div>
-                        <span>@message.Timestamp</span>
-                    </li>
+                    if (message.Sender != me.ID)
+                    {
+                        <li class="list-group-item" style="display:flex;">
+                            <div style="max-width: 92px; display: flex; align-items: center; justify-content: center;">
+                                <img class="img img-fluid" src="@notMe.Images[0].Url" />
+                            </div>
+                            <div class="display-4" m-4>@message.Text</div>
+                            <span>@message.Timestamp</span>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="list-group-item" style="display:flex;">
+                            <div style="max-width: 92px; display: flex; align-items: center; justify-content: center;">
+                                <img class="img img-fluid" src="@me.Images[0].Url" />
+                            </div>
+                            <div class="display-4" m-4>@message.Text</div>
+                            <span>@message.Timestamp</span>
+                        </li>
+                    }
+
                 }
             }
         </ul>

@@ -13,6 +13,8 @@ namespace Sinder
         public string Surname { get; set; }
         public string Location { get; set; }
         public DateTime Age { get; set; }
+        public int RelationshipID { get; set; }
+
         public Relationship Status1 { get; set; }
         public Relationship Status2 { get; set; }
         public string Gender { get; set; }

@@ -1,8 +1,9 @@
-﻿@model (UserModel,List<UserMatchDto>, List<UserMatchDto>)
+﻿@model (UserModel, List<UserMatchDto>, List<UserMatchDto>, List<UserMatchDto>)
 @{
     int userID = Model.Item1.ID;
     List<UserMatchDto> recieved = new List<UserMatchDto>(@Model.Item2);
     List<UserMatchDto> requested = new List<UserMatchDto>(@Model.Item3);
+    List<UserMatchDto> matched = new List<UserMatchDto>(@Model.Item4);
     ViewData["Title"] = "Sinners";
 }
 
@@ -26,10 +27,10 @@
                     <img class="img img-fluid rounded is-32x32" src="@r.Images[0].Url" />
                 }
             }
-            
+
             <a href="/profile/user/@r.ID">@r.Firstname</a>
-            <button href="/api/user/@userID/accept/@r.ID/@r.Status1" name="acceptbtn" class="btn btn-success"> Accept</button>
-            <button herf="" name="denybtn" class="btn bg-primary text-white">Deny</button>
+            <button href="/api/user/@userID/accept/@r.ID/@RelationshipToInt(@r.Status1)" name="acceptbtn" class="btn btn-success"> Accept</button>
+            <button href="" name="denybtn" class="btn bg-primary text-white">Deny</button>
         </div>
     }
 
@@ -46,9 +47,23 @@
             <a href="/profile/user/@r.ID">@r.Firstname</a>
         </div>
     }
+    <p class="bg-secondary text-white mt-3">Matchningar</p>
+    @foreach (var m in matched)
+    {
+        <div class="">
+            @{
+                if (m.Images.Count > 0)
+                {
+                    <img class="img img-fluid rounded is-32x32" src="@m.Images[0].Url" />
+                }
+            }
+            <a href="/profile/user/@m.ID">@m.Firstname</a>
+            <button href="/message/@m.ID/@userID" name="message-page">Skicka meddelande</button>
+        </div>
+    }
 
 
-    
+
 </div>
 <script>
     // Accept request

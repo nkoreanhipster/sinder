@@ -44,7 +44,7 @@ namespace Sinder.Controllers
 
             // Make match thingy
             // Convert usermodels => MatchUserDtocs model
-            List<MatchUserDto> usersToBeMatched = new List<MatchUserDto>();
+            List<MatchUserDtocs> usersToBeMatched = new List<MatchUserDtocs>();
             usersToBeMatched = Converters.ConvertUserModelToMatchUserDto(users);
             // Match percentage gets added to MatchUserDtocs.ProtagonistMatchPercentage property
             MatchAlgorithm.CalculateMatchPercentage(currentUser, ref usersToBeMatched);

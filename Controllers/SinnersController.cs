@@ -19,11 +19,10 @@ namespace Sinder.Controllers
             UserModel user = await Dataprovider.Instance.ReadUserByEmail(email);
 
             List<UserMatchDto> recieved = await Dataprovider.Instance.ReadRecievedRequests(user.ID);
-            recieved.ForEach(r => r.ID = user.ID);
             List<UserMatchDto> requested = await Dataprovider.Instance.ReadRequests(user.ID);
-            requested.ForEach(r => r.ID = user.ID);
-      
-            (UserModel,List<UserMatchDto>, List<UserMatchDto>) tuple = (user,recieved, requested);
+            List<UserMatchDto> matched = await Dataprovider.Instance.ReadMatches(user.ID);
+            matched.RemoveAll(x => x.ID == user.ID);
+            (UserModel,List<UserMatchDto>, List<UserMatchDto>, List<UserMatchDto>) tuple = (user,recieved, requested, matched);
             return View(tuple);
         }
     }

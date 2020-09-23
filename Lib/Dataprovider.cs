@@ -218,7 +218,6 @@ namespace Sinder
             }
         }
 
-
         public async Task<bool> CheckIfSameRelationShip(int userA, int userB)
         {
             using (var connection = CreateDBConnection())
@@ -263,6 +262,11 @@ namespace Sinder
                 return relationshipDtos;
             }
         }
+        /// <summary>
+        /// Reads recieved requests for the specific user
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
         public async Task<List<UserMatchDto>> ReadRecievedRequests(int userID)
         {
             using (var connection = CreateDBConnection())
@@ -280,6 +284,11 @@ namespace Sinder
                 return requester;
             }
         }
+        /// <summary>
+        /// Reads the requests sent from the specific user
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
         public async Task<List<UserMatchDto>> ReadRequests(int userID)
         {
             using (var connection = CreateDBConnection())
@@ -297,14 +306,23 @@ namespace Sinder
                 return requests;
             }
         }
+
+        /// <summary>
+        /// Reads all the matches for the specific user
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
         public async Task<List<UserMatchDto>> ReadMatches(int userID)
         {
             using (var connection = CreateDBConnection())
             {
                 string query = @"SELECT * 
                 FROM Relationship r
-                RIGHT JOIN Users u on u.ID = r.UserID1
-                WHERE r.Status1 > 0 AND r.Status2 > 0;";
+                RIGHT JOIN Users u on u.ID = r.UserID1 OR u.ID = r.UserID2 
+                WHERE r.Status1 = r.Status2
+                AND r.UserID1 = @userID AND @userID != r.UserID2 
+                OR r.UserID2 = @userID AND r.UserID1 != r.UserID2 
+                AND r.Status1 = r.Status2;";
 
                 List<UserMatchDto> matches = (await connection.QueryAsync<UserMatchDto>(query, new { userID = userID })).ToList();
                 foreach (UserMatchDto m in matches)

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Sinder
 {
-    public class MatchUserDto
+    public class MatchUserDtocs
     {
         public int ID { get; set; }
         public string Email { get; set; }

@@ -1,4 +1,25 @@
-﻿/* Slideshow container */
+﻿/*Loading Spinner*/
+.loader {
+    border: 12px solid #f3f3f3; /* Light grey */
+    border-top: 12px solid #eb6864; /* Red i think */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* Slideshow container */
 .slideshow-container {
     max-width: 1000px;
     position: relative;
@@ -137,7 +158,7 @@ input.form-control[name] {
 }
 
 .home-page-headline-text{
-    font-size: 20px;
+    font-size: 30px;
     text-align:center;
     margin-top: 10px;
 }

@@ -57,23 +57,49 @@ namespace Sinder.Controllers.Api
         [HttpGet("{subjectID}/message/{targetID}/list")]
         public async Task<IActionResult> GetMessageHistory(int subjectID, int targetID)
         {
-            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.NotImplemented, Status = "Meh", Message = "Not yet implemented" }, new JsonSerializerOptions { WriteIndented = true });
+            var hasRelation = await Dataprovider.Instance.CheckIfRelationshipExists(subjectID, targetID);
+            if (!hasRelation)
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Ni behöver vara vänner först" }, new JsonSerializerOptions { WriteIndented = true });
+
+            // Hämta id från relationen mellan users
+            int relationshipId = await Dataprovider.Instance.ReadRealtionShipId(subjectID, targetID);
+
+            // Validera, i mySql börjar alltid alla id från 1
+            if (relationshipId < 0)
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.BadRequest, Status = "Fail", Message = "Kunde ej skicka" }, new JsonSerializerOptions { WriteIndented = true });
+
+            List<MessageModel> messages = await Dataprovider.Instance.ReadAllMessagesBetweenTwoUsers(relationshipId);
+
+            return new JsonResult(messages);
         }
 
         // PUT api/user/[id]/message/[id]
         // Love request throug the match function
         [HttpPut("{subjectID}/message/{targetID}")]
-        public async Task<IActionResult> SendMessage(int subjectID, int targetID)
+        public async Task<IActionResult> SendMessage(int subjectID, int targetID, [FromBody] MessageDto message)
         {
-            if (await Dataprovider.Instance.CheckIfRelationshipExists(subjectID, targetID))
-                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Ni behöver vara vänner först" }, new JsonSerializerOptions { WriteIndented = true });
+            try
+            {
+                var hasRelation = await Dataprovider.Instance.CheckIfRelationshipExists(subjectID, targetID);
+                if (!hasRelation)
+                    return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.Unauthorized, Status = "Fail", Message = "Ni behöver vara vänner först" }, new JsonSerializerOptions { WriteIndented = true });
 
-            // Not yet implemented
+                // Hämta id från relationen mellan users
+                int relationshipId = await Dataprovider.Instance.ReadRealtionShipId(subjectID, targetID);
 
+                // Validera, i mySql börjar alltid alla id från 1
+                if (relationshipId < 0)
+                    return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.BadRequest, Status = "Fail", Message = "Kunde ej skicka" }, new JsonSerializerOptions { WriteIndented = true });
 
-            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.NotImplemented, Status = "Meh", Message = "Not yet implemented" }, new JsonSerializerOptions { WriteIndented = true });
+                // Put message data into database
+                await Dataprovider.Instance.SendMessageFromTo(relationshipId, subjectID, message.Message);
+            }
+            catch
+            {
+                return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.InternalServerError, Status = "Fail", Message = "Något gick fel" }, new JsonSerializerOptions { WriteIndented = true });
+            }
 
-            //return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = "Meddelande skickat" }, new JsonSerializerOptions { WriteIndented = true });
+            return new JsonResult(new ResponseModel { StatusCode = (int)HttpStatusCode.OK, Status = "Success", Message = message.Message }, new JsonSerializerOptions { WriteIndented = true });
         }
 
         /// <summary>

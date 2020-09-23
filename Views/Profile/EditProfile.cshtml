@@ -257,6 +257,8 @@
             CurrentPassword: currentPassword.value
         }
 
+        console.log(data)
+
         fetch(`/api/profile/${data.ID}`, {
             method: 'PUT',
             headers: {

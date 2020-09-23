@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using System.Dynamic;
 
 namespace Sinder.Controllers
 {
@@ -42,10 +43,21 @@ namespace Sinder.Controllers
             UserModel antagonist = await Dataprovider.Instance.ReadUserById(currentUser.ID != relation.UserID1 ? relation.UserID1 : relation.UserID2);
             antagonist.Images = await Dataprovider.Instance.GetUserImagesByUserID(antagonist.ID);
             currentUser.Images = await Dataprovider.Instance.GetUserImagesByUserID(currentUser.ID);
+            List<MessageModel> messages = new List<MessageModel>();
+            var _ = await Dataprovider.Instance.ReadAllMessagesBetweenTwoUsers(relationshipId);
+            foreach (MessageModel m in _)
+            {
+                messages.Add(m);
+            }
 
-            (UserModel, UserModel) tuple = (currentUser, antagonist);
+            dynamic model = new System.Dynamic.ExpandoObject();
 
-            return View(tuple);
+            model.Me = currentUser;
+            model.NotMe = antagonist;
+            model.Messages = messages;
+
+            //(UserModel, UserModel, List<MessageModel>) tuple = (currentUser, antagonist, messages);
+            return View(model);
         }
         //public IActionResult Index()
         //{
@@ -81,10 +93,22 @@ namespace Sinder.Controllers
             UserModel antagonist = await Dataprovider.Instance.ReadUserById(currentUser.ID != relation.UserID1 ? relation.UserID1 : relation.UserID2);
             antagonist.Images = await Dataprovider.Instance.GetUserImagesByUserID(antagonist.ID);
             currentUser.Images = await Dataprovider.Instance.GetUserImagesByUserID(currentUser.ID);
+            List<MessageModel> messages = new List<MessageModel>();
+            var _ = await Dataprovider.Instance.ReadAllMessagesBetweenTwoUsers(relationshipId);
+            foreach (MessageModel m in _)
+            {
+                messages.Add(m);
+            }
 
-            (UserModel, UserModel) tuple = (currentUser, antagonist);
+            dynamic model = new System.Dynamic.ExpandoObject();
 
-            return View(tuple);
+            model.Me = currentUser;
+            model.NotMe = antagonist;
+            model.Messages = messages;
+
+            //(UserModel, UserModel, List<MessageModel>) tuple = (currentUser, antagonist, messages);
+
+            return View(model);
         }
     }
 }

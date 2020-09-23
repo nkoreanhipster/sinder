@@ -1,197 +1,97 @@
-﻿
-
-
-
-
-
-
-
-
-@model UserModel
+﻿@model dynamic
 @{
-    ViewData["Title"] = "message ";
+    UserModel me = @Model.Me;
+    UserModel notMe = @Model.NotMe;
+    ViewData["Title"] = $"Du chattar med {notMe.Firstname}";
 }
-
-
-
-<div class="container-fluid h-100">
-    <div class="row justify-content-center h-100">
-        <div class="col-md-4 col-xl-3 ">
-            <div class="card mb-sm-3 mb-md-0 contacts_card">
-                <div class="card-header">
-                    <div class="input-group">
-                        <input type="text" placeholder="Search..." name="" class="form-control search">
-
-                        <div class="input-group-prepend">
-                            <span class="input-group-text search_btn"><i class="fas fa-search"></i></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body ">
-                    <ui class="friends-list">
-                        <li class="active" style="color:green">
-                            <div>
-                                @*image*@
-                                <div class="user_info ">
-                                    <span>Jakob</span>
-                                    <p>Jakob is online</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex bd-highlight">
-                                <div>@*image*@</div>
-                                <div class="user_info">
-                                    <span>Meles</span>
-                                    <p>Meles left 7 mins ago</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex bd-highlight">
-                                <div class="img">
-                                    @*<image*@
-                                    <span class="online_icon"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span>Tomas</span>
-                                    <p>Tomas is online</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex bd-highlight">
-                                <div class="img_cont">
-                                    @*image*@
-                                    <span class="online_icon offline"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span>Pontus</span>
-                                    <p>pontus left 30 mins ago</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="d-flex bd-highlight">
-                                <div class="img">
-                                    @*<image >*@
-                                    <span class="online_icon offline"></span>
-                                </div>
-                                <div class="user_info">
-                                    <span>Jonathan</span>
-                                    <p>Jonathan left 50 mins ago</p>
-                                </div>
-                            </div>
-                        </li>
-                    </ui>
-                </div>
-                <div class="card-footer"></div>
+<div id="page_chat">
+    <div>
+        @*HEADER CONTENT*@
+        <div>
+            <div style="max-width: 92px; display: flex; align-items: center; justify-content: center;">
+                <img class="img img-fluid" src="@notMe.Images[0].Url" />
             </div>
+            <span>Du chattar med @notMe.Firstname</span>
         </div>
-        <div class="col-md-8 col-xl-6 ">
-            <div class="card">
-                <div class="card-header msg_head">
-                    <div class="d-flex bd-highlight">
-                        <div class="img">
-                            @*<img *@
-                            <span class="online_icon"></span>
-                        </div>
-                        <div class="user_info">
-                            <span>Chat with Jakob</span>
 
-                        </div>
+        <ul id="message_list" class="list-group">
 
-                    </div>
-
+            @* Empty list item, dont remove! Used for duplicating *@
+            <li class="list-group-item invisible" style="display:flex;">
+                <div style="max-width: 92px; display: flex; align-items: center; justify-content: center;">
+                    <img class="img img-fluid" src="@notMe.Images[0].Url" />
                 </div>
-                <div class="card-body msg_card_body">
-                    <div class="d-flex justify-content-start mb-4">
-                        <div class="img_msg">
-                            @*<image *@
-                        </div>
-                        <div class="msg_cotainer">
-                            Hi, how are you jakob?
-                            <span class="msg_time">8:40 AM, Today</span>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end mb-4">
-                        <div class="msg_cotainer_send">
-                            Hi Meles i am good what abt you?
-                            <span class="msg_time_send">8:55 AM, Today</span>
-                        </div>
-                        <div class="img_cont_msg">
+                <div class="display-4 m-4 text"></div>
+                <span class="timestamp"></span>
+            </li>
 
+            @*List loop of messages*@
+            @{foreach (MessageModel message in @Model.Messages)
+                {
+                    <li class="list-group-item" style="display:flex;">
+                        <div style="max-width: 92px; display: flex; align-items: center; justify-content: center;">
+                            <img class="img img-fluid" src="@notMe.Images[0].Url" />
                         </div>
-                    </div>
-                    <div class="d-flex justify-content-start mb-4">
-                        <div class="img_cont_msg">
-                            @*<image*@
-                        </div>
-                        <div class="msg_cotainer">
-                            I am good too, are you coming to school  tomorrow
-                            <span class="msg_time">9:00 AM, Today</span>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end mb-4">
-                        <div class="msg_cotainer_send">
-                            Yes i will come.
-                            <span class="msg_time_send">9:05 AM, Today</span>
-                        </div>
+                        <div class="display-4" m-4>@message.Text</div>
+                        <span>@message.Timestamp</span>
+                    </li>
+                }
+            }
+        </ul>
 
-                    </div>
-                    <div class="d-flex justify-content-start mb-4">
-                        <div class="img_cont_msg">
-                            @*image*@
-                        </div>
-                        <div class="msg_cotainer">
-                            Good ! it will be nice to see you at school.
-                            <span class="msg_time">9:07 AM, Today</span>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-end mb-4">
-                        <div class="msg_cotainer_send">
-                            Thanks, see you then.
-                            <span class="msg_time_send">9:10 AM, Today</span>
-                        </div>
-
-                    </div>
-                    <div class="d-flex justify-content-start mb-4">
-                        @*<div class="img_cont_msg">
-                                <img >
-                            </div>*@
-                        <div class="msg_cotainer">
-                            Bye, see you
-                            <span class="msg_time">9:12 AM, Today</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="input-group">
-
-                        <textarea name="" class="form-control type_msg" placeholder="Type your message..."></textarea>
-                        <div class="input-group-append">
-                            <button class="input-group-text btn-primary">send</button>
-                        </div>
-                    </div>
-                </div>
+        <div>
+            <div>
+                <textarea id="message_content"></textarea>
+            </div>
+            <div>
+                <button name="send-message">Send</button>
             </div>
         </div>
     </div>
 </div>
+<script>
 
-@*@model (UserModel, UserModel)
-    @{
-        UserModel me =  @Model.Item1;
-        UserModel notMe = @Model.Item2;
-        ViewData["Title"] = $"Du chattar med {notMe.Firstname}";
+    const createNewChatRow = (text, timestamp = null) => {
+        var c = document.querySelector('.list-group-item.invisible').cloneNode(true) || null
+        c.querySelector('.text').textContent = text || ''
+        //c.querySelector('.img').href = c.querySelector('.img').href
+        c.classList.remove('invisible')
+        c.querySelector('.timestamp').textContent = moment(timestamp).format('DD MM YYYY hh:mm:ss')
+        document.querySelector('#message_list').append(c)
     }
-    <div id="page_message">
-        <p>
-            You are chatting with @notMe.Firstname
-            <img class="img is-32x32" src="@notMe.Images[0].Url"/>
-        </p>
-
-        <input type="text" />
-    </div>*@
 
 
+    document.querySelector('button[name="send-message"]').addEventListener('click', (ev) => {
+        ev.preventDefault()
+
+        var contentToSend = document.querySelector('#message_content').value;
+
+        if (contentToSend === null || contentToSend == "")
+            return
+
+
+        console.log({ contentToSend: contentToSend })
+        // To be matched against backend model
+        var messageDataBody = {
+            Message: contentToSend
+        }
+
+        // Send message
+        fetch(`/api/user/@me.ID/message/@notMe.ID`, {
+            method: 'PUT',
+            body: JSON.stringify(messageDataBody),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(res => res.json())
+            .then(json => {
+                // Update chat dynamically with having to refresh window
+                console.log(json)
+                var { Message, Timestamp} = json
+                createNewChatRow(Message, Timestamp)
+            })
+            .catch(err => console.error(err))
+    })
+</script>

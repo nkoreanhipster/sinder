@@ -453,6 +453,26 @@ namespace Sinder
             }
         }
 
+        public async Task<List<MessageModel>> GetAllMessagesByStatus(int userId, int status)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                string query = @"
+SELECT 
+	m.ID, 
+	m.RelationShipID, 
+	m.Text, 
+	m.Sender, 
+	m.Timestamp, 
+	m.HasBeenRead 
+FROM Messages m, Users u, Relationship r 
+WHERE u.ID = @userId AND m.HasBeenRead = @status
+GROUP BY m.ID ;";
+
+                return (await connection.QueryAsync<MessageModel>(query, new { userId = userId, status = status })).ToList();
+            }
+        }
+
 
         /// <summary>
         /// Send a message to a relation

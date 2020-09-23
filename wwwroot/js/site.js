@@ -1,6 +1,11 @@
 // site.js
 const killAllChildren = (parent) => [...parent.childNodes].forEach(el => el.remove())
 
+// Get list of messages for user
+const GetMessagesList = () => {
+    // todo; skip this
+}
+
 const Eggplant = (function () {
     return {
         element: element = document.querySelector('#eggplant')

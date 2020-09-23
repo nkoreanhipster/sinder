@@ -70,6 +70,12 @@ namespace Sinder.Controllers.Api
 
             List<MessageModel> messages = await Dataprovider.Instance.ReadAllMessagesBetweenTwoUsers(relationshipId);
 
+            // 
+            // Note! Also sets Message.HasBeenRead to 1. Since it's assuming they get sent out once
+            //
+
+
+
             return new JsonResult(messages);
         }
 

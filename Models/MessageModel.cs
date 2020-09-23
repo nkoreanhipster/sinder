@@ -16,5 +16,6 @@ namespace Sinder
         public string Text { get; set; }
         public int Sender { get; set; }
         public DateTime Timestamp { get; set; }
+        public int HasBeenRead { get; set; }
     }
 }

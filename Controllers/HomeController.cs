@@ -77,45 +77,10 @@ namespace Sinder.Controllers
             // ... Order sorted the wrong way apparently
             usersToBeMatched.Reverse();
 
+            //(List<MatchUserDtocs>, UserModel) homeTupleThingyTooTiredToNameVariablesProperly = (usersToBeMatched, currentUser);
+
             return View(usersToBeMatched);
         }
-
-        //[HttpGet("/test")]
-        //public async Task<IActionResult> IndexTest()
-        //{
-        //    // Validate, else redirect to /login
-        //    var cookies = Request.Cookies["token"];
-        //    if (cookies == null)
-        //        return Redirect("/login");
-        //    InfoHelper.IsLoggedIn = true;
-
-
-        //    // Get current active user
-        //    string email = SecurityHelper.GetLoggedInUser(cookies);
-        //    UserModel currentUser = await Dataprovider.Instance.ReadUserByEmail(email);
-        //    currentUser.Images = await Dataprovider.Instance.GetUserImagesByUserID(currentUser.ID);
-        //    currentUser.Interests = await Dataprovider.Instance.GetUserInterests(currentUser.ID);
-
-        //    // Antoganists
-        //    List<MatchUserDtocs> usersToBeMatched = new List<MatchUserDtocs>();
-        //    List<UserModel> users = new List<UserModel>();
-        //    users = await Dataprovider.Instance.ReadAllUsers();
-        //    foreach (var user in users)
-        //    {
-        //        List<ImageModel> images = await Dataprovider.Instance.GetUserImagesByUserID(user.ID);
-        //        user.Images = images;
-        //        user.Interests = await Dataprovider.Instance.GetUserInterests(user.ID);
-        //    }
-            
-        //    // Make match thingy
-        //    usersToBeMatched = Converters.ConvertUserModelToMatchUserDto(users);
-        //    MatchAlgorithm.CalculateMatchPercentage(currentUser, ref usersToBeMatched);
-            
-
-
-        //    return View(usersToBeMatched);
-        //}
-
 
         public IActionResult Privacy()
         {

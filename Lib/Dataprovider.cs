@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Sinder.Models;
+using Sinder.Dtos;
 
 namespace Sinder
 {
@@ -66,6 +67,14 @@ namespace Sinder
             using (var connection = CreateDBConnection())
             {
                 return (await connection.QueryAsync<UserModel>("SELECT * FROM Users")).ToList();
+            }
+        }
+
+        public async Task<List<UserRelationshipDto>> ReadUserByRelationships(int id)
+        {
+            using (var connection = CreateDBConnection())
+            {
+                return (await connection.QueryAsync<UserRelationshipDto>("SELECT r.ID, r.UserID1, r.UserID2 FROM Users u JOIN Relationship r ON u.ID = r.UserID1 OR u.ID = r.UserID2 WHERE u.ID = @ID", new { ID = id })).ToList();
             }
         }
 
